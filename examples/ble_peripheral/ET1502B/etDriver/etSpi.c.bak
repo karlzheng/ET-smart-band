@@ -1,0 +1,743 @@
+#include "nrf_delay.h"
+#include "nrf_gpio.h"
+#include "app_error.h"
+#include "app_util_platform.h"
+//#include "spi_master.h"
+#include "bsp.h"
+#include "app_timer.h"
+#include "nordic_common.h"
+#include <stdint.h>
+
+//===============================
+#include "et_define.h"
+#include "etSpi.h"
+//#include "N_spiflash.h"
+#include "et_Spi_gpio.h"
+#include "et_debug.h"
+//#include "et_inc.h"
+
+//#define APP_TIMER_PRESCALER      0                      /**< Value of the RTC1 PRESCALER register. */
+//#define APP_TIMER_MAX_TIMERS     BSP_APP_TIMERS_NUMBER  /**< Maximum number of simultaneously created timers. */
+//#define APP_TIMER_OP_QUEUE_SIZE  2                      /**< Size of timer operation queues. */
+
+#define DELAY_MS                 1000                   /**< Timer Delay in milli-seconds. */
+#if ENABLE_HARDWARE_SPI
+
+/** @def  TX_RX_MSG_LENGTH
+ * number of bytes to transmit and receive. This amount of bytes will also be tested to see that
+ * the received bytes from slave are the same as the transmitted bytes from the master */
+//#define TX_RX_MSG_LENGTH         100
+
+#if defined(SPI_MASTER_0_ENABLE) || defined(SPI_MASTER_1_ENABLE)
+
+typedef enum
+{
+    TEST_STATE_SPI0_LSB,    /**< Test SPI0, bits order LSB */
+    TEST_STATE_SPI0_MSB,    /**< Test SPI0, bits order MSB */
+    TEST_STATE_SPI1_LSB,    /**< Test SPI1, bits order LSB */
+    TEST_STATE_SPI1_MSB     /**< Test SPI1, bits order MSB */
+} spi_master_ex_state_t;
+
+//static uint8_t m_tx_data_spi[TX_RX_MSG_LENGTH]; /**< SPI master TX buffer. */
+//static uint8_t m_rx_data_spi[TX_RX_MSG_LENGTH]; /**< SPI master RX buffer. */
+
+static volatile bool m_transfer_completed = true;
+
+#ifdef SPI_MASTER_0_ENABLE
+static spi_master_ex_state_t m_spi_master_ex_state = TEST_STATE_SPI0_MSB;//TEST_STATE_SPI0_LSB;
+#else
+static spi_master_ex_state_t m_spi_master_ex_state = TEST_STATE_SPI1_LSB;
+#endif
+
+/**@brief Function for error handling, which is called when an error has occurred. 
+ *
+ * @param[in] error_code  Error code supplied to the handler.
+ * @param[in] line_num    Line number where the handler is called.
+ * @param[in] p_file_name Pointer to the file name. 
+ */
+void app_error_handler(uint32_t error_code, uint32_t line_num, const uint8_t * p_file_name)
+{
+    UNUSED_VARIABLE(bsp_indication_set(BSP_INDICATE_FATAL_ERROR));
+
+    for (;; )
+    {
+        // No implementation needed.
+    }
+}
+
+
+
+/**@brief The function initializes TX buffer to values to be sent and clears RX buffer.
+ *
+ * @note Function initializes TX buffer to values from 0 to (len - 1).
+ *       and clears RX buffer (fill by 0).
+ *
+ * @param[out] p_tx_data    A pointer to a buffer TX.
+ * @param[out] p_rx_data    A pointer to a buffer RX.
+ * @param[in] len           A length of the data buffers.
+ */
+/*
+static void init_buf(uint8_t * const p_tx_buf,
+                     uint8_t * const p_rx_buf,
+                     const uint16_t  len)
+{
+    uint16_t i;
+
+    for (i = 0; i < len; i++)
+    {
+        p_tx_buf[i] = i;
+        p_rx_buf[i] = 0;
+    }
+}
+*/
+
+/**@brief Function for checking if buffers are equal.
+ *
+ * @note Function compares each element of p_tx_buf with p_rx_buf.
+ *
+ * @param[in] p_tx_data     A pointer to a buffer TX.
+ * @param[in] p_rx_data     A pointer to a buffer RX.
+ * @param[in] len           A length of the data buffers.
+ *
+ * @retval true     Buffers are equal.
+ * @retval false    Buffers are different.
+ */
+/*
+static bool check_buf_equal(const uint8_t * const p_tx_buf,
+                            const uint8_t * const p_rx_buf,
+                            const uint16_t        len)
+{
+    uint16_t i;
+
+    for (i = 0; i < len; i++)
+    {
+        if (p_tx_buf[i] != p_rx_buf[i])
+        {
+            return false;
+        }
+    }
+    return true;
+}
+*/
+
+#ifdef SPI_MASTER_0_ENABLE
+/**@brief Handler for SPI0 master events.
+ *
+ * @param[in] spi_master_evt    SPI master event.
+ */
+void spi_master_0_event_handler(spi_master_evt_t spi_master_evt)
+{
+    //uint32_t err_code = NRF_SUCCESS;
+    //bool result = false;
+
+    switch (spi_master_evt.evt_type)
+    {
+        case SPI_MASTER_EVT_TRANSFER_COMPLETED:
+            // Check if received data is correct.
+            //result = check_buf_equal(m_tx_data_spi, m_rx_data_spi, TX_RX_MSG_LENGTH);
+            //APP_ERROR_CHECK_BOOL(result);
+
+            // Close SPI master.
+            //spi_master_close(SPI_MASTER_0);
+
+            //err_code = bsp_indication_set(BSP_INDICATE_RCV_OK);
+           // APP_ERROR_CHECK(err_code);
+
+            m_transfer_completed = true;
+            break;
+
+        default:
+            // No implementation needed.
+            break;
+    }
+}
+#endif /* SPI_MASTER_0_ENABLE */
+
+
+#ifdef SPI_MASTER_1_ENABLE
+/**@brief Handler for SPI1 master events.
+ *
+ * @param[in] spi_master_evt    SPI master event.
+ */
+void spi_master_1_event_handler(spi_master_evt_t spi_master_evt)
+{
+    uint32_t err_code = NRF_SUCCESS;
+    bool result = false;
+
+    switch (spi_master_evt.evt_type)
+    {
+        case SPI_MASTER_EVT_TRANSFER_COMPLETED:
+            // Check if received data is correct.
+            result = check_buf_equal(m_tx_data_spi, m_rx_data_spi, TX_RX_MSG_LENGTH);
+            APP_ERROR_CHECK_BOOL(result);
+
+            // Close SPI master.
+            spi_master_close(SPI_MASTER_1);
+
+            err_code = bsp_indication_set(BSP_INDICATE_RCV_OK);
+            APP_ERROR_CHECK(err_code);
+
+            m_transfer_completed = true;
+            break;
+
+        default:
+            // No implementation needed.
+            break;
+    }
+}
+#endif /* SPI_MASTER_1_ENABLE */
+
+
+/**@brief Function for initializing a SPI master driver.
+ *
+ * @param[in] spi_master_instance       An instance of SPI master module.
+ * @param[in] spi_master_event_handler  An event handler for SPI master events.
+ * @param[in] lsb                       Bits order LSB if true, MSB if false.
+ */
+static void spi_master_init(spi_master_hw_instance_t   spi_master_instance,
+                            spi_master_event_handler_t spi_master_event_handler,
+                            const bool                 lsb)
+{
+    uint32_t err_code = NRF_SUCCESS;
+
+    // Configure SPI master.
+    spi_master_config_t spi_config = SPI_MASTER_INIT_DEFAULT;
+
+    switch (spi_master_instance)
+    {
+        #ifdef SPI_MASTER_0_ENABLE
+        case SPI_MASTER_0:
+        {
+            spi_config.SPI_Pin_SCK  = SPIM0_SCK_PIN;
+            spi_config.SPI_Pin_MISO = SPIM0_MISO_PIN;
+            spi_config.SPI_Pin_MOSI = SPIM0_MOSI_PIN;
+            spi_config.SPI_Pin_SS   = SPIM0_SS_PIN;//GSENSOR_SPIM0_SS_PIN_2;//GSENSOR_SPIM0_SS_PIN;
+        }
+        break;
+        #endif /* SPI_MASTER_0_ENABLE */
+
+        #ifdef SPI_MASTER_1_ENABLE
+        case SPI_MASTER_1:
+        {
+            spi_config.SPI_Pin_SCK  = SPIM1_SCK_PIN;
+            spi_config.SPI_Pin_MISO = SPIM1_MISO_PIN;
+            spi_config.SPI_Pin_MOSI = SPIM1_MOSI_PIN;
+            spi_config.SPI_Pin_SS   = SPIM1_SS_PIN;
+        }
+        break;
+        #endif /* SPI_MASTER_1_ENABLE */
+
+        default:
+            break;
+    }
+
+    spi_config.SPI_CONFIG_ORDER = (lsb ? SPI_CONFIG_ORDER_LsbFirst : SPI_CONFIG_ORDER_MsbFirst);
+
+    err_code = spi_master_open(spi_master_instance, &spi_config);
+    APP_ERROR_CHECK(err_code);
+
+    // Register event handler for SPI master.
+    spi_master_evt_handler_reg(spi_master_instance, spi_master_event_handler);
+}
+
+
+/**@brief Function for sending and receiving data.
+ *
+ * @param[in]   spi_master_hw_instance  SPI master instance.
+ * @param[in]   p_tx_data               A pointer to a buffer TX.
+ * @param[out]  p_rx_data               A pointer to a buffer RX.
+ * @param[in]   len                     A length of the data buffers.
+ */
+/*
+static void spi_send_recv(const spi_master_hw_instance_t spi_master_hw_instance,
+                          uint8_t * const                p_tx_data,
+                          uint8_t * const                p_rx_data,
+                          const uint16_t                 len)
+{
+    // Initalize buffers.
+    init_buf(p_tx_data, p_rx_data, len);
+
+    // Start transfer.
+	  //FLASH_CS_LOW;
+    uint32_t err_code =spi_master_send_recv(spi_master_hw_instance, p_tx_data, len, p_rx_data, len);
+	  //FLASH_CS_HIGH;
+    APP_ERROR_CHECK(err_code);
+}
+*/
+
+/**@brief Function for executing and switching state.
+ *
+ */
+static void switch_state(void)
+{
+    switch (m_spi_master_ex_state)
+    {
+        #ifdef SPI_MASTER_0_ENABLE
+        case TEST_STATE_SPI0_LSB:
+            spi_master_init(SPI_MASTER_0, spi_master_0_event_handler, true);
+						FLASH_CS_OUTPUT;
+				    FLASH_CS_HIGH;					
+				    SENSOR_CS_OUTPUT;
+				    SENSOR_CS_HIGH;
+				    
+#if DEBUG_UART_EN    
+    DbgPrintf("TEST_STATE_SPI0_LSB\r\n");
+#endif
+            //spi_send_recv(SPI_MASTER_0, m_tx_data_spi, m_rx_data_spi, TX_RX_MSG_LENGTH);
+            //m_spi_master_ex_state = TEST_STATE_SPI0_MSB;
+
+            break;
+
+        case TEST_STATE_SPI0_MSB:
+            spi_master_init(SPI_MASTER_0, spi_master_0_event_handler, false);
+						FLASH_CS_OUTPUT;
+				    FLASH_CS_HIGH;					
+				    SENSOR_CS_OUTPUT;
+				    SENSOR_CS_HIGH;			
+#if DEBUG_UART_EN    
+    DbgPrintf("TEST_STATE_SPI0_MSB\r\n");
+#endif
+            //spi_send_recv(SPI_MASTER_0, m_tx_data_spi, m_rx_data_spi, TX_RX_MSG_LENGTH);
+
+            //#ifdef SPI_MASTER_1_ENABLE
+            //m_spi_master_ex_state = TEST_STATE_SPI1_LSB;
+            //#else
+            //m_spi_master_ex_state = TEST_STATE_SPI0_LSB;
+            //#endif /* SPI_MASTER_1_ENABLE */
+
+            break;
+        #endif /* SPI_MASTER_0_ENABLE */
+
+        #ifdef SPI_MASTER_1_ENABLE
+        case TEST_STATE_SPI1_LSB:
+            spi_master_init(SPI_MASTER_1, spi_master_1_event_handler, true);
+#if DEBUG_UART_EN    
+    DbgPrintf("TEST_STATE_SPI1_LSB\r\n");
+#endif
+            //spi_send_recv(SPI_MASTER_1, m_tx_data_spi, m_rx_data_spi, TX_RX_MSG_LENGTH);
+            //m_spi_master_ex_state = TEST_STATE_SPI1_MSB;
+
+            break;
+
+        case TEST_STATE_SPI1_MSB:
+            spi_master_init(SPI_MASTER_1, spi_master_1_event_handler, false);
+#if DEBUG_UART_EN    
+    DbgPrintf("TEST_STATE_SPI1_MSB\r\n");
+#endif
+            //spi_send_recv(SPI_MASTER_1, m_tx_data_spi, m_rx_data_spi, TX_RX_MSG_LENGTH);
+
+            //#ifdef SPI_MASTER_0_ENABLE
+            //m_spi_master_ex_state = TEST_STATE_SPI0_LSB;
+            //#else
+            //m_spi_master_ex_state = TEST_STATE_SPI1_LSB;
+            //#endif /* SPI_MASTER_0_ENABLE */
+
+            break;
+        #endif /* SPI_MASTER_1_ENABLE */
+
+        default:
+            break;
+    }
+    nrf_delay_ms(DELAY_MS);
+}
+#endif
+#endif
+
+//=========================================================================
+//=============================kevin define SPI=============================
+//==========================================================================
+void etSpim1ReadNorFlashID(void)
+{
+
+#if	(ENABLE_HARDWARE_SPI==1)
+
+	uint8_t ins [4]={read_jedecid,0,0,0};//{0x8f};;
+	uint8_t data_buf[4]={0x00,0x00,0x00};
+	
+	m_transfer_completed=FALSE;
+	FLASH_CS_LOW;
+    spi_master_send_recv(SPI_MASTER_0,ins,4,data_buf,3);
+		
+    
+	DbgPrintf("flash ID:0x%x,0x%x,x%x,x%x,0x%x\r\n",data_buf[0],data_buf[1],data_buf[2],data_buf[3],!(data_buf[1] & NORFLASH_BUSY));
+	FLASH_CS_HIGH;
+	m_transfer_completed=FALSE;
+
+#else
+    uint8_t data_buf[4]={0x00,0x00,0x00};
+
+    FLASH_CS_LOW;
+    SpiSent_1Byte(FLASH_JedecDeviceID);
+    SpiReadByte(data_buf,3);
+	FLASH_CS_HIGH;
+	//DbgPrintf("flash ID:0x%x,0x%x,x%x\r\n",data_buf[0],data_buf[1],data_buf[2]);
+
+
+
+#endif	
+
+
+
+}
+void etSpim1CheckNorFlashBusy(void)
+{
+
+#if	(ENABLE_HARDWARE_SPI==1)
+
+	uint8_t ins [2]={0x05,0x00};//{0x8f};;
+	uint8_t data_buf[2]={0x00,0x00};
+	
+	//ins = 0x0F;//read_status_register1;//read_status_register1;
+	while(1)
+	{
+		m_transfer_completed=FALSE;
+		FLASH_CS_LOW;
+       spi_master_send_recv(SPI_MASTER_0,ins,2,data_buf,1);
+		
+		//while(m_transfer_completed==TRUE)
+		//DbgPrintf("flash status:0x%x,0x%x,0x%x\r\n",data_buf[0],data_buf[1],!(data_buf[1] & NORFLASH_BUSY));		
+		m_transfer_completed=FALSE;
+		FLASH_CS_HIGH;		
+		if(!(data_buf[1] & NORFLASH_BUSY))
+		{
+			break;
+		}
+	}
+#else
+   uint8_t data_buf[1]={0x00};
+   while(1)
+   {
+   FLASH_CS_LOW;
+   SpiSent_1Byte(FLASH_ReadStatusReg1);
+   SpiReadByte(data_buf,1);
+   FLASH_CS_HIGH;
+   //DbgPrintf("flash status:0x%x\r\n",data_buf[0]);
+    if(!(data_buf[0] & NORFLASH_BUSY))
+	{
+			break;
+	}   
+   }
+
+   //SPI_FLASH_WaitForWriteEnd();
+#endif
+}
+
+/** 
+ * @Spim1 check norflash write enable function
+ * @param  
+ * @return none
+ * @note
+ * - Spim1 check norflash write enable function
+ */
+void etSpim1CheckNorFlashWriteEnable(void)
+{
+
+#if	(ENABLE_HARDWARE_SPI==1)
+
+
+    uint8_t ins = 0;
+	  uint8_t data_buf;
+	  ins = write_enable;
+	  FLASH_CS_LOW;
+	  spi_master_send_recv(SPI_MASTER_0,&ins, 1,&data_buf,0);
+    FLASH_CS_HIGH;
+
+#else
+    	FLASH_CS_LOW;
+		SpiSent_1Byte(FLASH_WriteEnable);
+		FLASH_CS_HIGH;
+		etSpim1CheckNorFlashBusy();
+    //SPI_FLASH_WriteEnable();
+#endif
+}
+void etSpim1NorFlashSectorErase(uint32_t start_add)
+{
+	etSpim1CheckNorFlashWriteEnable();
+#if	(ENABLE_HARDWARE_SPI==1)
+
+
+	uint8_t databuf[4];
+
+	databuf[0]= sector_erase;
+	databuf[1]=(uint8_t)((start_add>>16)&0x000000ff);
+	databuf[2]=(uint8_t)((start_add>>8)&0x000000ff);
+	databuf[3]=(uint8_t)((start_add>>0)&0x000000ff);
+
+	etSpim1CheckNorFlashWriteEnable();
+	etSpim1CheckNorFlashBusy();
+	//Spim1SendData(0, databuf, 4);
+	FLASH_CS_LOW;
+    spi_master_send_recv(SPI_MASTER_0,databuf,4,NULL,0);
+	FLASH_CS_HIGH;
+	etSpim1CheckNorFlashBusy();
+
+#else
+	uint8_t databuf[4];
+    
+	FLASH_CS_LOW;
+	databuf[0]= FLASH_SectorErase;
+	databuf[1]=(uint8_t)((start_add>>16)&0x000000ff);
+	databuf[2]=(uint8_t)((start_add>>8)&0x000000ff);
+	databuf[3]=(uint8_t)((start_add>>0)&0x000000ff);
+	
+	
+	SpiSentByte(databuf,4);
+	FLASH_CS_HIGH;
+    etSpim1CheckNorFlashBusy();
+    //SPI_Flash_Erase_Sector(start_add);
+#endif
+
+} 
+void etSpim1NorFlashBlockErase(unsigned start_add)
+{
+	etSpim1CheckNorFlashWriteEnable();
+#if	(ENABLE_HARDWARE_SPI==1)
+
+
+	uint8_t databuf[4];
+
+	databuf[0]= block_erase;
+	databuf[1]=(uint8_t)((start_add>>16)&0x000000ff);
+	databuf[2]=(uint8_t)((start_add>>8)&0x000000ff);
+	databuf[3]=(uint8_t)((start_add>>0)&0x000000ff);
+
+	etSpim1CheckNorFlashWriteEnable();
+	etSpim1CheckNorFlashBusy();
+	//Spim1SendData(0, databuf, 4);
+	FLASH_CS_LOW;
+    spi_master_send_recv(SPI_MASTER_0,databuf,4,NULL,0);
+	FLASH_CS_HIGH;
+	etSpim1CheckNorFlashBusy(); 
+#else
+	uint8_t databuf[4];
+	FLASH_CS_LOW;
+	databuf[0]= FLASH_BlockErase;
+	databuf[1]=(uint8_t)((start_add>>16)&0x000000ff);
+	databuf[2]=(uint8_t)((start_add>>8)&0x000000ff);
+	databuf[3]=(uint8_t)((start_add>>0)&0x000000ff);
+	SpiSentByte(databuf,4);
+	FLASH_CS_HIGH;
+    etSpim1CheckNorFlashBusy();
+#endif
+
+} 
+void etSpim1NorFlashChipErase(void)
+{
+	etSpim1CheckNorFlashWriteEnable();
+#if	(ENABLE_HARDWARE_SPI==1)
+
+
+	uint8_t databuf[4];
+
+	databuf[0]= block_erase;
+	databuf[1]=(uint8_t)((start_add>>16)&0x000000ff);
+	databuf[2]=(uint8_t)((start_add>>8)&0x000000ff);
+	databuf[3]=(uint8_t)((start_add>>0)&0x000000ff);
+
+	etSpim1CheckNorFlashWriteEnable();
+	etSpim1CheckNorFlashBusy();
+	//Spim1SendData(0, databuf, 4);
+	FLASH_CS_LOW;
+    spi_master_send_recv(SPI_MASTER_0,databuf,4,NULL,0);
+	FLASH_CS_HIGH;
+	etSpim1CheckNorFlashBusy(); 
+#else
+	uint8_t databuf[4];
+	FLASH_CS_LOW;
+	databuf[0]= chip_erase;
+	//databuf[1]=(uint8_t)((start_add>>16)&0x000000ff);
+	//databuf[2]=(uint8_t)((start_add>>8)&0x000000ff);
+	//databuf[3]=(uint8_t)((start_add>>0)&0x000000ff);
+	SpiSentByte(databuf,1);
+	FLASH_CS_HIGH;
+    etSpim1CheckNorFlashBusy();
+#endif
+
+} 
+
+void etSpim1NorFlashPageProgrameStdMode(uint32_t start_add, uint8_t *write_buf, uint32_t write_len)
+{
+	//DbgPrintf("\r\nwrite address 0x%lx \r\n",start_add);
+  etSpim1CheckNorFlashBusy();
+	etSpim1CheckNorFlashWriteEnable();
+
+#if	(ENABLE_HARDWARE_SPI==1)
+
+	 uint32_t write_addr, tmplen, total_len;
+	 uint8_t ins_buf[4];
+	 
+	 total_len = 0;
+	 while (total_len < write_len)
+	 {
+		tmplen = write_len - total_len;
+		if (tmplen > FLASH_PAGE_SIZE)
+		{
+			tmplen = FLASH_PAGE_SIZE;
+		}
+		
+		write_addr = start_add + total_len;
+		ins_buf[0]= page_program;
+		ins_buf[1]=(uint8_t)((write_addr>>16)&0x000000ff); 
+		ins_buf[2]=(uint8_t)((write_addr>>8)&0x000000ff);
+		ins_buf[3]=(uint8_t)((write_addr>>0)&0x000000ff);
+		
+		etSpim1CheckNorFlashWriteEnable();
+		
+		
+    FLASH_CS_LOW;
+		m_transfer_completed=false;
+		
+		//Spim1SendData(0, ins_buf, 4);		
+    spi_master_send_recv(SPI_MASTER_0,ins_buf,4,NULL,0);
+		//Spim1SendData(0, write_buf + total_len, tmplen);
+		spi_master_send_recv(SPI_MASTER_0,write_buf + total_len,tmplen,NULL,0);
+		FLASH_CS_HIGH; 
+    while(m_transfer_completed==FALSE);
+		m_transfer_completed=FALSE;
+		etSpim1CheckNorFlashBusy();
+		total_len += tmplen;
+	 }
+#else
+	uint8_t databuf[4];
+	FLASH_CS_LOW;
+	databuf[0]= FLASH_PageProgram;
+	databuf[1]=(uint8_t)((start_add>>16)&0x000000ff);
+	databuf[2]=(uint8_t)((start_add>>8)&0x000000ff);
+	databuf[3]=(uint8_t)((start_add>>0)&0x000000ff);
+	SpiSentByte(databuf,4);
+	SpiSentByte(write_buf,write_len);
+	FLASH_CS_HIGH;
+    //etSpim1CheckNorFlashBusy();
+    //SPI_FLASH_BufferWrite(write_buf,start_add,write_len & 0xffff);
+#endif
+}
+void etSpim1ReadNorFlashStdMode(uint32_t start_add, uint8_t *data_buf, uint32_t read_len)
+{
+#if	(ENABLE_HARDWARE_SPI==1)
+
+
+	uint32_t read_addr;
+	uint32_t tmplen, total_len = 0;
+	uint8_t ins_buf[4];
+	 
+	 while (total_len < read_len)
+	 {
+		tmplen = read_len - total_len;
+		if (tmplen > FLASH_PAGE_SIZE)
+		{
+			tmplen = FLASH_PAGE_SIZE;
+		}
+		
+		read_addr = start_add + total_len;
+		ins_buf[0]= read_data;
+		ins_buf[1]=(uint8_t)((read_addr>>16) & 0x000000ff); 
+		ins_buf[2]=(uint8_t)((read_addr>>8) & 0x000000ff);
+		ins_buf[3]=(uint8_t)((read_addr>>0) & 0x000000ff);
+		
+		etSpim1CheckNorFlashBusy();
+		
+		FLASH_CS_LOW;
+		m_transfer_completed=false;
+		//Spim1SendData(0, ins_buf, 4);		
+		//Spim1RecvData(0, data_buf + total_len, tmplen);
+		spi_master_send_recv(SPI_MASTER_0,ins_buf,4,data_buf + total_len,tmplen);
+		FLASH_CS_HIGH;
+    while(m_transfer_completed==FALSE);
+		m_transfer_completed=FALSE;		
+		total_len += tmplen; 
+	 }
+
+#else
+	uint8_t databuf[4];
+    etSpim1CheckNorFlashBusy();
+	FLASH_CS_LOW;
+	databuf[0]= FLASH_ReadData;
+	databuf[1]=(uint8_t)((start_add>>16)&0x000000ff);
+	databuf[2]=(uint8_t)((start_add>>8)&0x000000ff);
+	databuf[3]=(uint8_t)((start_add>>0)&0x000000ff);
+	SpiSentByte(databuf,4);
+	SpiReadByte(data_buf,read_len);
+	FLASH_CS_HIGH;
+
+    //SPI_FLASH_BufferRead(data_buf,start_add,read_len & 0xffff);
+#endif
+}
+
+#if	(ENABLE_HARDWARE_SPI==1)
+void et_SPI_init(void)
+{
+        //#if defined(SPI_MASTER_0_ENABLE) || defined(SPI_MASTER_1_ENABLE)
+        //if (m_transfer_completed)
+        //{
+        //    m_transfer_completed = false;
+            switch_state();
+	
+        //}
+				//#endif
+
+}
+#endif
+#ifndef  ENABLE_NEW_BOARD
+void etGensor_spi_read(unsigned char reg_addr, unsigned char *buffer, unsigned short len)
+{
+	G_SPI_CS_LOW;
+	SpiSentByte(&reg_addr,1);
+	SpiReadByte(buffer,len);
+	G_SPI_CS_HIGH;
+}
+
+void etGensor_spi_write(unsigned char reg_addr, unsigned char *buffer, unsigned short len)
+{
+
+	G_SPI_CS_LOW;
+	SpiSentByte(&reg_addr,1);
+	SpiSentByte(buffer,len);
+	G_SPI_CS_HIGH;
+}
+#endif
+/*
+void etSPItest(void)
+{
+  unsigned char w_data[256];
+  unsigned char r_data[256];
+  UINT32 i=0,j=0;
+  for(i=0;i<100;i++)
+  {
+   etSpim1CheckNorFlashBusy(); 
+   etSpim1NorFlashSectorErase(0x00000000);
+    //DbgPrintf("erase OK:\r\n");
+    for(j=0;j<256;j++)
+   	 w_data[j]=i+1; 
+   //etSpim1CheckNorFlashBusy(); 
+   etSpim1NorFlashPageProgrameStdMode(0x00000000,w_data,0x100);
+   DbgPrintf("write OK:\r\n");
+   //etSpim1CheckNorFlashBusy(); 
+   for(j=0;j<256;j++)
+   	 r_data[j]=0; 
+   etSpim1ReadNorFlashStdMode(0x00000000,r_data,0x100);
+   DbgPrintf("read data:0x%x\r\n",i);
+   for(j=0;j<256;j++)
+   	DbgPrintf("0x%x ",(0xff&r_data[j]));
+   DbgPrintf("\r\n");
+   
+  }
+  
+}
+*/
+void etSpim1NorFlashInit(void)
+{
+#if	(ENABLE_HARDWARE_SPI==1)
+ 	et_SPI_init();    
+#else   
+    GPIO_Spi_init();
+#endif
+   //SPI_FLASH_Init();
+	nrf_delay_ms(1);
+	etSpim1CheckNorFlashBusy(); 
+	etSpim1ReadNorFlashID(); 
+	etSpim1CheckNorFlashBusy(); 
+	etSpim1CheckNorFlashWriteEnable(); 
+	//etSpim1CheckNorFlashBusy(); 
+	//etSPItest();
+}
+

@@ -1,0 +1,112 @@
+#include <stdint.h>
+#include <string.h>
+#include "nrf.h"
+#include "app_error.h"
+#include "nrf_gpio.h"
+#include "et_battery.h"
+#include "app_timer.h"
+#include "nrf_delay.h"
+#include "ET1502B.h"
+#include "et_debug.h"
+//#include "simple_uart.h"
+#define BATTER_MAX_VAL 420//0x1068//4200
+#define BATTER_MIN_VAL 330//0xce4 //3300 
+
+void battery_start(void)
+{
+    //start evey time use ADC
+    NRF_ADC->ENABLE     = ADC_ENABLE_ENABLE_Enabled;
+
+    NRF_ADC->EVENTS_END  = 0;    // Stop any running conversions.
+    NRF_ADC->TASKS_START = 1;
+}
+uint16_t battery_adc_read_once(void)
+{
+    uint32_t adc_result = 0;
+    uint16_t batt_lvl_in_milli_volts=0;
+    battery_start();
+    nrf_delay_ms(10);
+    while( !(NRF_ADC->EVENTS_END) ) {
+        nrf_delay_ms(10);
+    }
+
+    NRF_ADC->EVENTS_END     = 0;
+    adc_result              = NRF_ADC->RESULT;
+    //adc_result +=ADC_VALUE_OFFSET;
+    NRF_ADC->TASKS_STOP     = 1;
+#if DEBUG_UART_EN 
+					DbgPrintf("adc_result:%d\r\n",adc_result);
+#endif
+    //*batt_lvl_in_milli_volts = ((uint32_t)(ADC_RESULT_IN_MILLI_VOLTS(adc_result)) & 0xffff);
+		batt_lvl_in_milli_volts = ((uint32_t)(ADC_RESULT_IN_MILLI_VOLTS(adc_result)) & 0xffff);
+#if DEBUG_UART_EN 
+					DbgPrintf("milli_volts:%d\r\n",batt_lvl_in_milli_volts);
+#endif
+    //when charging, battery voltage need adjust
+//    if(charger_status()!= NoCharge) {
+       //*batt_lvl_in_milli_volts += BATTERY_VOLTAGE_ADJUSTMENT;
+		   batt_lvl_in_milli_volts += BATTERY_VOLTAGE_ADJUSTMENT;
+//    }
+		return batt_lvl_in_milli_volts;
+}
+
+uint8_t Get_BatteryPercent(void)
+{
+	uint16_t volt=0;
+	uint8_t PercentValue=0;    	
+    volt=battery_adc_read_once();
+	volt=volt/10;
+	if (BATTER_MAX_VAL > BATTER_MIN_VAL)
+	{
+		if (volt < BATTER_MIN_VAL)
+		{
+			PercentValue = 0;
+
+		}
+		else if (volt > BATTER_MAX_VAL)
+		{
+			PercentValue = 100;
+			//PercentValue = 99;
+
+		}
+		else
+		{
+
+			//PercentValue = (uint8_t)(((uint32_t)(volt - BATTER_MIN_VAL)	* (uint32_t)100) / (uint32_t)(BATTER_MAX_VAL - BATTER_MIN_VAL));
+			PercentValue = (uint8_t)(((uint32_t)(volt - BATTER_MIN_VAL)	*100) / (uint32_t)(BATTER_MAX_VAL - BATTER_MIN_VAL));
+			//if(PercentValue>=100)
+			//	PercentValue=99;
+		}
+	} 
+	return PercentValue;
+}
+
+void battery_adc_dev_init(void)
+{
+    // 1. Delay for ADC stable
+    //    nrf_delay_ms(500);
+
+
+    // Configure ADC
+    NRF_ADC->CONFIG     = BATTERY_ADC_RESOLUTION << ADC_CONFIG_RES_Pos    |
+                          ADC_CONFIG_INPSEL_AnalogInputNoPrescaling  << ADC_CONFIG_INPSEL_Pos |
+                          ADC_CONFIG_REFSEL_VBG << ADC_CONFIG_REFSEL_Pos |
+                          ADC_INPUT_CHANNEL << ADC_CONFIG_PSEL_Pos;
+
+    NRF_ADC->EVENTS_END = 0;
+}
+//================USB charing detect==================================
+uint8_t USB_detect(void)
+{ 
+   if(nrf_gpio_pin_read(USB_DETECT_PIN)==1)
+   	return 1;
+   return 0;
+}
+void USB_detect_init(void)
+{ 
+	//nrf_gpio_range_cfg_input(USB_DETECT_PIN, USB_DETECT_PIN_MASK, NRF_GPIO_PIN_PULLUP);
+	nrf_gpio_cfg_input(USB_DETECT_PIN, NRF_GPIO_PIN_PULLUP);
+  //nrf_gpio_cfg_input(USB_DETECT_PIN, NRF_GPIO_PIN_PULLDOWN);
+}
+
+

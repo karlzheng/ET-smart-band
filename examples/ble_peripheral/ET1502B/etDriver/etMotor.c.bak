@@ -1,0 +1,153 @@
+//#include "et_inc.h"
+//#include "etTimer.h"
+#include "etMotor.h"
+#include "ET1502B.h"
+#include "et_Spi_gpio.h"
+#include "etLcdDisplayApp.h"
+#include "et_debug.h"
+#include "et_pwm.h"
+//#define MOTOR_CTR_HI   NRF_GPIO->OUTSET = MOTOR_PW_PIN_MASK
+//#define MOTOR_CTR_LO   NRF_GPIO->OUTCLR = MOTOR_PW_PIN_MASK
+
+Motor_stru Motor_str;
+
+
+void MotorInit(void)
+{
+	//NRF_GPIO->DIRSET = MOTOR_PW_PIN_MASK;
+	//MOTOR_CTR_HI;
+	Motor_str.Motor_HiLevelTime=0;
+	Motor_str.Motor_LoLevelTime=0;
+	Motor_str.Motor_dispAlarm_flag=0;
+    Motor_str.Motor_shake_delay=0;
+	Motor_str.Motor_NoShake_delay=0;
+	Motor_str.Motor_enalbe=0;	
+	//et_pwm_init();
+}
+static void Motor_data_set(void)
+{
+	switch(Motor_str.Motor_shake_type)
+	{
+	 case MOTOR_TYPE_ALARM://alarm 
+	 Motor_str.Motor_shake_delay=MOTOR_TYPE_ALARM_DELAY;
+	 Motor_str.Motor_NoShake_delay=MOTOR_TYPE_ALARM_DELAY;
+	 break;
+	 case MOTOR_TYPE_INCOMING://incoming cal
+	 Motor_str.Motor_shake_delay=MOTOR_TYPE_INCOMING_DELAY;
+	 Motor_str.Motor_NoShake_delay=MOTOR_TYPE_INCOMING_DELAY;
+	 break;
+	 default:
+	 break;
+	}
+	Motor_str.Motor_HiLevelTime=0;
+    Motor_str.Motor_LoLevelTime=0;
+
+}
+
+void MotorVibrate(void)// motor PWM contorl
+{
+    //return;
+	if(Motor_str.Motor_enalbe==1)
+	{
+         if(Motor_str.Motor_shake_count)
+         {
+             if(Motor_str.Motor_shake_delay>0)
+             {
+							 if (Motor_str.Motor_LoLevelTime <MOTOR_PWM_LO_DELAY)
+							 {
+								//MOTOR_CTR_LO;
+								//if(Motor_str.Motor_LoLevelTime==0)
+               // et_pwm_enable();							 
+								Motor_str.Motor_LoLevelTime++;
+							 }
+
+							 else if(Motor_str.Motor_HiLevelTime<MOTOR_PWM_HI_DELAY)
+							 {
+							 //MOTOR_CTR_HI;	
+								//if(Motor_str.Motor_HiLevelTime==0)
+								//et_pwm_disable();
+								Motor_str.Motor_HiLevelTime++;
+								if(Motor_str.Motor_HiLevelTime==MOTOR_PWM_HI_DELAY)
+								{
+								 Motor_str.Motor_shake_delay--;
+								 if(Motor_str.Motor_shake_delay>0)
+								 {
+										Motor_str.Motor_HiLevelTime=0;
+										Motor_str.Motor_LoLevelTime=0;						
+								 }
+
+								}
+							 
+							 }
+             }
+						else if(Motor_str.Motor_NoShake_delay>0)
+						{
+							//MOTOR_CTR_HI;
+							//et_pwm_disable();
+							Motor_str.Motor_NoShake_delay--;			  
+							if(Motor_str.Motor_NoShake_delay==0)
+							{
+								Motor_str.Motor_HiLevelTime=0;
+								Motor_str.Motor_LoLevelTime=0;
+								Motor_data_set();
+							}
+
+							
+						}
+						else
+						{
+							Motor_str.Motor_shake_count--;                    
+							Motor_data_set();
+						}
+         }
+		 else
+		 {
+		  MotorCtr(0,0);		  
+		 }
+	}
+}
+void MotorCtr(uint8_t enable,unsigned char type)
+{
+   if(enable==0)
+	{
+	    //MOTOR_CTR_HI;
+		//et_pwm_disable(); 
+		Motor_str.Motor_enalbe=0;
+	    Motor_str.Motor_HiLevelTime=0;
+		Motor_str.Motor_LoLevelTime=0;
+		if(Motor_str.Motor_dispAlarm_flag==1)
+		{
+		  Motor_str.Motor_dispAlarm_flag=0;
+	     display_check_to_clear_Screen();
+		}
+		//MOTOR_CTR_HI;
+
+	}
+	else
+	{
+
+		switch(type)
+		{
+		 case MOTOR_TYPE_ALARM://alarm 
+		 Motor_str.Motor_shake_count=50;
+		 Motor_str.Motor_shake_type=MOTOR_TYPE_ALARM;
+		 Motor_data_set();
+		 break;
+		 case MOTOR_TYPE_INCOMING://incoming cal
+		 Motor_str.Motor_shake_count=3;
+		 Motor_str.Motor_shake_type=MOTOR_TYPE_INCOMING;
+		 Motor_data_set();
+		 break;
+		 default:
+		 break;
+		}
+		Motor_str.Motor_enalbe=1;
+		//MOTOR_CTR_LO;
+    //et_pwm_enable();		
+	}
+
+}
+
+
+
+

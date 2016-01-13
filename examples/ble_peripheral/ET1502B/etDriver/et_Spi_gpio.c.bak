@@ -1,0 +1,87 @@
+#include "et_Spi_gpio.h"
+#include "etSpi.h"
+#include "et_define.h"
+void SpiSent_1Byte(UINT8 dat)
+{
+	unsigned char temp1[8]={0x80, 0x40, 0x20, 0x10, 0x08, 0x04,0x02,0x01};
+	unsigned char tlen = 0;
+
+
+		for(tlen=0; tlen<8; tlen++)
+		{
+			SPI_CLK_LOW;
+			if(dat & temp1[tlen])
+				SPI_MOSI_HIGH;
+			else
+				SPI_MOSI_LOW;   
+			SPI_CLK_HIGH;
+		}
+
+    
+}
+
+void SpiSentByte(UINT8 *write,UINT32 len)
+{
+	unsigned char temp1[8]={0x80, 0x40, 0x20, 0x10, 0x08, 0x04,0x02,0x01},count=0;
+	UINT32 tlen = 0;
+	
+	while(tlen < len)
+	{
+
+		for(count=0; count<8; count++)
+		{
+			SPI_CLK_LOW;
+			if(write[tlen] & temp1[count])
+				SPI_MOSI_HIGH;
+			else
+				SPI_MOSI_LOW;   
+			SPI_CLK_HIGH;
+		}
+		/*SPI_CLK_HIGH;*/
+		tlen++;   
+	}
+    
+}
+
+void SpiReadByte(UINT8 *read, UINT32 len)
+{
+	unsigned char temp=0,count=0;
+	
+	UINT32 tlen = 0;
+	while(tlen < len)
+	{   
+		temp = 0x00;
+		for(count=0; count<8; count++)
+		{
+			temp = temp<<1;
+			SPI_CLK_LOW;
+			if((SPI_DATA_GET ==1))
+				temp |= 0x01;
+			SPI_CLK_HIGH;
+
+		}
+		read[tlen++] = temp & 0xff;
+	}    
+    
+}
+
+
+void GPIO_Spi_init(void)
+{
+#ifdef ENABLE_NEW_BOARD
+  NRF_GPIO->DIRSET = SFLASH_SPIM0_SS_PIN_MASK|SPIM0_SCK_PIN_MASK|SPIM0_MOSI_PIN_MASK;  
+#else
+	NRF_GPIO->DIRSET = SFLASH_SPIM0_SS_PIN_MASK|SPIM0_SCK_PIN_MASK|SPIM0_MOSI_PIN_MASK|GSENSOR_SPIM0_SS_PIN_MASK;
+#endif
+	//NRF_GPIO->DIRCLR = SPIM0_MISO_MASK;
+	 //nrf_gpio_range_cfg_input(SPIM0_MISO_PIN, SPIM0_MISO_PIN, NRF_GPIO_PIN_PULLUP);
+	nrf_gpio_cfg_input(SPIM0_MISO_PIN, NRF_GPIO_PIN_PULLUP);
+	SPI_CLK_HIGH;
+	FLASH_CS_HIGH;
+	SPI_MOSI_HIGH;
+#ifndef  ENABLE_NEW_BOARD
+	G_SPI_CS_HIGH;
+#endif
+}
+
+
