@@ -104,7 +104,7 @@ void ke_schedule(void)
 	if(gTimerTickFlg)
 	{
 		gTimerTickFlg = 0;
-		MotorVibrate();
+		//MotorVibrate();
 		for(unsigned short timer_id=0;timer_id<USR_TIMER_MAX;timer_id++)
 		{
 			if(usr_timer[timer_id].flag)

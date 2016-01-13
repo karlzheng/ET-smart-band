@@ -4,7 +4,7 @@
 #include "etMultiPageDisplay.h"
 #include "et_debug.h"
 #include "etMotor.h"
-
+#include "btprotocol.h"
 struct lcd_multi_page  g_lcdMultiPage = {0,  0,  0, {0,0,0},0};
 
 

@@ -86,7 +86,8 @@ void z8_Power_ctr(unsigned char onoff);
 void send_key_to_cos(unsigned char T_KEY);
 extern void ResendCosData_to_AG(void);
 
-void cos_send_string(unsigned char *str, unsigned short len);
+//void cos_send_string(unsigned char *str, unsigned short len);
+void AG_to_Cos_send(unsigned char *str, unsigned short len);
 void cos_clear_buff(void);
 void Clr_Cos_Ready(void);
 unsigned char Get_Cos_Ready(void);

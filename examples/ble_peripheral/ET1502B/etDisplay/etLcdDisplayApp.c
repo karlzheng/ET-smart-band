@@ -774,62 +774,6 @@ const unsigned char  Z8_STATUS_8to8_ICON[]= /*16*16*/
 };
 #endif
 
-//const unsigned char ParingAndConnectingMenu[]=" 可配对可连接 \n请打开应用，搜索并连接设备:\n";
-//const unsigned char BtHardwareVer[]="H-1.00.00C";//ET1302C
-
-//static struct bat_cos_level vBatCosLevel  = {0, 0, DISP_END};
-
-#if (DYNAMIC_DISPLAY_LOGO_BY_TIMER)
-//static unsigned int cos_sta_counter =100; //1000;
-#else
-//static unsigned int cos_sta_counter =1000; //1000;
-#endif
-
-//static struct bat_sta BatSta = {BAT_CHARGER_PROGRESS, 0};
-//static BOOL   bt_logo_flash_sta = BT_LOGO_FLASH_DISABLE;
-/*
-void BT_Get_KeyVersion(unsigned char * prt,unsigned char *str_length)
-{
-	uint8_t temp=0,temp2=0;
-
-	 prt[temp++]=FLAG_FIRMWARE_VERSION;	
-	 for(temp2=0;temp2<strlen(BTversion);temp2++)
-		prt[temp++]=BTversion[temp2];
-	
-	 prt[temp++]=FLAG_HW_VERSION;	 
-	 for(temp2=0;temp2<strlen(HWversion);temp2++)
-		prt[temp++]=HWversion[temp2];
-	
-	
-	 prt[temp++]=FLAG_COS_VERSION;	 
-	 for(temp2=0;temp2<strlen(cosversion);temp2++)
-	 {
-		prt[temp++]=cosversion[temp2];
-	 }
-	 *str_length=temp;
-}
-*/
-/*
-void set_display_flg(BOOL flg)
-{
-	vBatCosLevel.lcd_display_flg = flg;
-}
-
-static BOOL get_display_flg(void)
-{
-	return vBatCosLevel.lcd_display_flg;
-}
-*/
-
-//void set_bt_logo_flash_state(BOOL  bt_flash_enable)
-//{
-//	bt_logo_flash_sta = bt_flash_enable;
-//}
-
-//static BOOL get_bt_logo_flash_state(void)
-//{
-//	return bt_logo_flash_sta;
-//}
 void Set_lastDisplayTag(uint8_t now_tag)
 {
    disp_str.LCD_display_last_tag=now_tag;

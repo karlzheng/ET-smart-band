@@ -12,7 +12,7 @@
 #define UP_KEY          0xAA   //UP¼ü
 #define DOWN_KEY        0x55   //DOWN¼ü
 
-#define MAX_TOUCH_KEY_BUF_LEN    4//8
+#define MAX_TOUCH_KEY_BUF_LEN    8
 
 extern void Key_value_reset(void);
 extern void write_switch_val(uint8_t key_val);

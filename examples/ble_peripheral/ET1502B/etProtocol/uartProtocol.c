@@ -117,16 +117,25 @@ static void ResendBTdata_to_Cos(void)
 }
 void ResendCosData_to_AG(void)
 {
+  
   Protocol_COSData_2_AG(COS_ReSend_buff.resend_data,COS_ReSend_buff.resend_total_len);
 }
-void cos_send_string(uint8_t *str, unsigned short len)
+static void cos_send_string(unsigned char *str, unsigned short len)
+{  
+  //save_cos_data(str,len);
+	//set_uart_resend_tag(str[1],0);
+	//simple_uart_putstringbuff(COS_ReSend_buff.resend_data,COS_ReSend_buff.resend_total_len);
+  //uart_recv.cos_protocol_cos_mode=1;
+  simple_uart_putstringbuff(str,len);
+}
+void AG_to_Cos_send(unsigned char *str, unsigned short len)
 {  
   save_cos_data(str,len);
 	set_uart_resend_tag(str[1],0);
 	//simple_uart_putstringbuff(COS_ReSend_buff.resend_data,COS_ReSend_buff.resend_total_len);
+  //uart_recv.cos_protocol_cos_mode=1;
   simple_uart_putstringbuff(str,len);
 }
-
 void get_cos_ver_req(void)
 {
 	unsigned char gSendData[10] = {0};

@@ -89,6 +89,7 @@ static void Manage_other_Event(void)
 	if(system_time_get_second_ready())
 	{
      system_time_get_second_clr();
+     MotorVibrate();
 		 if(theSink.Step_RealtimeData_send_ok_flag>0)
 		 {
 		 theSink.Step_RealtimeData_send_ok_flag=0;
@@ -117,6 +118,8 @@ static void Manage_other_Event(void)
 
 void dev_init(void)
 {
+    Key_value_reset();
+    Protocol_data_init();
 #if DEBUG_UART_EN    
     DbgPrintf("\r\n===dev_init===\r\n");
 #endif  
@@ -193,21 +196,22 @@ void main_loop(void)
 #endif
   
 #if ENABLE_PEDOMETER 
+    if(Get_Cos_mode()==0)
+    {
     sensor_INT_enable_check();
 		ke_schedule();
-    
 		auto_send_sport_record_to_app_timer();//today each historical segment
 		auto_send_sleep_record_to_app_timer();//yesterday sleep record
 		auto_send_sport_Live_to_app((UINT8*)&g_sportInfoDMItem,14,SERVICE_STEP);//now step data
 		//SaveEveryDayHistySport_Data_info2_datamanger();
 		auto_send_histy_sport_record_to_app_timer();//history everyday sport data 
     auto_send_history_TotalSleepRecord();//history sleep record
-   //Get_sensor_ID();
+    }
 #endif
 
 
 #if ENABLE_DISPLAY		
 		DisplayKeyState(read_switch_val());		
 #endif
-      Manage_other_Event();
+    Manage_other_Event();
 }

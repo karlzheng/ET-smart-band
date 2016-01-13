@@ -294,15 +294,19 @@
 #define SLEEP_RECORD_DATA_ENABLE			(0)
 #endif
 
+#if WALK_STEP_RECORD_ARITHMETIC
 #define USE_ARITHMETIC_FROM					WUFAN_ARITHMETIC
-
-
+#endif
 
 #define USER_TIMER_COUNT					(3 + FIFO_USER_TIMER_COUNT)
 
-#define TEST_SLEEP_ENABLE					(0)
-
 #define DEBUG_UART_EN 						(0)
+
+
+/* version */
+#define COS_VERSION		"1.00.00"
+#define HW_VERSION		"2.0-1.6"
+#define BT_VERSION		"1.00.05"
 
 
 #endif // PCA10028_H

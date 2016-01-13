@@ -1008,7 +1008,7 @@ int main(void)
 //    const char  temp_str[]={0xaa,0x5c,0x00,0x02,0x00,0x00,0xa1,0x55};
     // Initialize.
     //bsp_configuration();
-    APP_TIMER_INIT(APP_TIMER_PRESCALER, APP_TIMER_MAX_TIMERS, APP_TIMER_OP_QUEUE_SIZE, false);
+    APP_TIMER_INIT(APP_TIMER_PRESCALER, APP_TIMER_MAX_TIMERS, APP_TIMER_OP_QUEUE_SIZE, false);    
     buttons_leds_init(&erase_bonds);
 #if ENABLE_COS
     simple_uart_init(UART_POWEROFF_BT_DELAY);

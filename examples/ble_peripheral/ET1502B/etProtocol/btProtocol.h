@@ -150,7 +150,32 @@ typedef enum
   BT_MODE_MAX
 }Bluetooth_MODE;
 typedef struct
-{    
+{     
+	unsigned cos_protocol_rev_data_ready:1;
+	unsigned cos_protocol_send_complete:1;
+  unsigned cos_protocol_cos_mode:2;
+	unsigned cos_protocol_noused2:28;
+	
+  unsigned cos_revDataTotalLen:16;
+	unsigned cos_revDataLen:16;
+	union{
+			unsigned char cos_taltol_data[PACKET_MAX_BYTE];
+			struct{
+				unsigned char cos_head; //all data item number ;
+				unsigned char cos_CMD; //one data item size;
+				unsigned char cos_length_h; //data crc16 value
+				unsigned char cos_length_l;	//the user id num !
+				unsigned char cos_part_data[PACKET_MAX_BYTE-4];//eq:if cmd is cmd_ack,so argv[0]=ack_type;
+				//unsigned char check;
+				//unsigned char tail;
+				//unsigned char packet_num;
+			}cos_data_str;
+     }cos_uart_union;     
+}stru_uart_recv;
+extern stru_uart_recv uart_recv;
+
+typedef struct
+{  
     
 	//unsigned protocol_receive_num:8;
 	//unsigned protocol_send_num:8;
@@ -160,10 +185,11 @@ typedef struct
 	//unsigned protocol_send_total_num:8;
 	//unsigned protocol_send_reach_num:8;
 	//unsigned protocol_send_CMD:8;
-	unsigned protocol_rev_data_ready:1;
+	
 	//unsigned protocol_send_data_busy:1;
-	unsigned protocol_send_complete:1;
-	unsigned protocol_noused2:30;
+	//unsigned protocol_send_complete:1;
+  unsigned protocol_rev_data_ready:1;
+	unsigned protocol_noused2:31;
 
 	
   unsigned revDataTotalLen:16;
@@ -176,29 +202,6 @@ typedef struct
 				unsigned char length_h; //data crc16 value
 				unsigned char length_l;	//the user id num !
 				unsigned char part_data[PACKET_COS_MAX_BYTE-4];//eq:if cmd is cmd_ack,so argv[0]=ack_type;
-				//unsigned char check;
-				//unsigned char tail;
-				//unsigned char packet_num;
-			}data_str;
-     }uart_union;
-}stru_uart_recv;
-extern stru_uart_recv uart_recv;
-
-typedef struct
-{  
-	unsigned protocol_rev_data_ready:1;
-	unsigned protocol_send_complete:1;
-	unsigned protocol_noused2:30;	
-  unsigned revDataTotalLen:16;
-	unsigned revDataLen:16;
-	union{
-			unsigned char taltol_data[PACKET_MAX_BYTE];
-			struct{
-				unsigned char head; //all data item number ;
-				unsigned char CMD; //one data item size;
-				unsigned char length_h; //data crc16 value
-				unsigned char length_l;	//the user id num !
-				unsigned char part_data[PACKET_MAX_BYTE-4];//eq:if cmd is cmd_ack,so argv[0]=ack_type;
 				//unsigned char check;
 				//unsigned char tail;
 				//unsigned char packet_num;
@@ -320,6 +323,9 @@ typedef struct
 	unsigned unused:14;	
 } hsTaskData;
 extern hsTaskData theSink ;
+
+extern void clr_cos_mode(void);
+extern unsigned char Get_Cos_mode(void);
 extern void Protocol_set_MTU(UINT8 t_mtu);
 extern void Protocol_set_TX_complete(void);
 //extern void Protocol_data_to_AG_continue(void);

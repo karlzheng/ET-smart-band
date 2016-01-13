@@ -37,12 +37,24 @@ hsTaskData theSink ;
 const UINT8 BT_DISCONNECT_CODE[]={0xaa,0x0d,0x00,0x05,0xFF,0x00,0x00,0x00,0x00,0xEE,0x55};
 extern uint32_t bt_send_to_AG(uint8_t* buff,uint16_t temp_length,UINT8 ser_flag);
 
+static void set_cos_mode(void)
+{
+  uart_recv.cos_protocol_cos_mode=1;
+}
+void clr_cos_mode(void)
+{
+  uart_recv.cos_protocol_cos_mode=0;
+}
+unsigned char Get_Cos_mode(void)
+{
+  return uart_recv.cos_protocol_cos_mode;
+}
 UINT8 Protocol_check_BT_connected(void)
 {
-      if((theSink.BLE_connected==1))
-      {
+    if((theSink.BLE_connected==1))
+    {
 		  return 1;
-      }
+    }
 	  return 0;
 
 }
@@ -55,23 +67,25 @@ void Protocol_set_BT_connected(void)
 void Protocol_set_BT_Disconnected(void)
 {
 	theSink.BLE_connected=0;
+  clr_cos_mode();
   display_clr_COSdata();
 }
+
 void Protocol_set_notify(unsigned char val)
 {
   theSink.notify_ok=val;
 }
 void Protocol_set_TX_complete(void)
 {
-  uart_recv.protocol_send_complete=1;
+  uart_recv.cos_protocol_send_complete=1;
 }
 static void Protocol_Clr_TX_complete(void)
 {
-  uart_recv.protocol_send_complete=0;
+  uart_recv.cos_protocol_send_complete=0;
 }
 static unsigned char Protocol_check_TX_complete(void)
 {
-  return uart_recv.protocol_send_complete;
+  return uart_recv.cos_protocol_send_complete;
 }
 
 void Protocol_set_MTU(UINT8 t_mtu)
@@ -81,14 +95,13 @@ void Protocol_set_MTU(UINT8 t_mtu)
 void Protocol_ctr_reset(void)
 {
 
-  //uart_recv.revDataLen=0;
-  //uart_recv.revDataTotalLen=0;
-  //uart_recv.uart_union.data_str.head=0x00;
-  //uart_recv.uart_union.data_str.CMD=CMD_NULL;
-
-  //theSink.BT_ctr.mtu.BLE_MTU=GATT_MTU_SIZE_DEFAULT-3;
-
-
+  uart_recv.cos_revDataLen=0;
+  uart_recv.cos_revDataTotalLen=0;
+  uart_recv.cos_protocol_rev_data_ready=0;
+  new_recv.protocol_rev_data_ready=0;
+  theSink.BT_ctr.mtu.BLE_MTU=GATT_MTU_SIZE_DEFAULT-3;
+  Protocol_Clr_TX_complete();
+  clr_cos_mode();
 }
 
 void Protocol_data_init(void)
@@ -790,8 +803,6 @@ static void Protocol_DataToCos(unsigned char * data_prt,unsigned short packet_le
 				 return;
 			
 			}
-
-
 		}
 		
 #if ENABLE_COS
@@ -799,12 +810,13 @@ static void Protocol_DataToCos(unsigned char * data_prt,unsigned short packet_le
 
       if(Get_Cos_Ready()==0)
 		  {
-			new_recv.protocol_rev_data_ready=1;
+			uart_recv.cos_protocol_rev_data_ready=1;
       simple_uart_init(UART_POWEROFF_BT_DELAY);//kevin add 160112
 			return;
       }
+      set_cos_mode();
 
-    cos_send_string(data_prt,packet_length);
+      AG_to_Cos_send(data_prt,packet_length);
 #endif
 		//copy apdu data
 		/*memcpy(&G_APDU_DataLV.head[1], data_prt[PACKET_DATA_OFFSET], packet_length-CMD_PACKET_BASE_LENGTH);
@@ -1569,10 +1581,10 @@ static void Protocol_handle_statusPacket(UINT8 * data_prt,UINT16 packet_length)
 }*/
 void protocol_data_can_send(void)
 {
-    if(uart_recv.protocol_rev_data_ready==1)
+    if(uart_recv.cos_protocol_rev_data_ready==1)
     {
-      uart_recv.protocol_rev_data_ready=0;
-			Protocol_handle(uart_recv.uart_union.taltol_data,uart_recv.revDataTotalLen,SERVICE_COS);		
+      uart_recv.cos_protocol_rev_data_ready=0;
+			Protocol_handle(uart_recv.cos_uart_union.cos_taltol_data,uart_recv.cos_revDataTotalLen,SERVICE_COS);		
 	}
 }
 
@@ -1590,16 +1602,16 @@ static void protocol_Save_data(UINT8 *buff,UINT16 temp_length,UINT8 ser_flag)
 							}
 							else
 							{
-									memcpy((uart_recv.uart_union.taltol_data),buff,temp_length);
-									uart_recv.revDataTotalLen=buff[PACKET_LENGTH_OFFSET]<<8 | buff[PACKET_LENGTH_OFFSET+1];			
+									memcpy((uart_recv.cos_uart_union.cos_taltol_data),buff,temp_length);
+									uart_recv.cos_revDataTotalLen=buff[PACKET_LENGTH_OFFSET]<<8 | buff[PACKET_LENGTH_OFFSET+1];			
 								//uart_recv.uart_union.data_str.head=PACKET_DATA_HEAD;
 								//uart_recv.uart_union.data_str.CMD=buff[PACKET_CMD_OFFSET];
 								//uart_recv.uart_union.data_str.length_h=buff[PACKET_DATA_OFFSET];
 								//uart_recv.uart_union.data_str.length_l=buff[PACKET_DATA_OFFSET+1];
-								 uart_recv.revDataTotalLen +=CMD_PACKET_BASE_LENGTH;
-								//uart_recv.revDataLen =CMD_PACKET_BASE_LENGTH-2;
+								 uart_recv.cos_revDataTotalLen +=CMD_PACKET_BASE_LENGTH;
+								uart_recv.cos_revDataLen =0;
 
-								uart_recv.protocol_rev_data_ready=1;
+								uart_recv.cos_protocol_rev_data_ready=1;
 			             if(buff[PACKET_CMD_OFFSET]==CMD_COS_DATA)
 			             {
 #if ENABLE_COS              
@@ -1616,42 +1628,42 @@ static void protocol_Save_data(UINT8 *buff,UINT16 temp_length,UINT8 ser_flag)
 				 break;
          case PACKET_MARK_MULTI:
 
-						 //     Protocol_ctr_reset();
-						uart_recv.revDataTotalLen=buff[PACKET_DATA_OFFSET]<<8 | buff[PACKET_DATA_OFFSET+1];			
-						uart_recv.uart_union.data_str.head=PACKET_DATA_HEAD;
-						uart_recv.uart_union.data_str.CMD=buff[PACKET_CMD_OFFSET];
-						uart_recv.uart_union.data_str.length_h=buff[PACKET_DATA_OFFSET];
-						uart_recv.uart_union.data_str.length_l=buff[PACKET_DATA_OFFSET+1];
-						uart_recv.revDataTotalLen +=CMD_PACKET_BASE_LENGTH;
-						uart_recv.revDataLen =CMD_PACKET_BASE_LENGTH-2;
-						uart_recv.protocol_rev_data_ready=0;
+
+						uart_recv.cos_revDataTotalLen=buff[PACKET_DATA_OFFSET]<<8 | buff[PACKET_DATA_OFFSET+1];			
+						uart_recv.cos_uart_union.cos_data_str.cos_head=PACKET_DATA_HEAD;
+						uart_recv.cos_uart_union.cos_data_str.cos_CMD=buff[PACKET_CMD_OFFSET];
+						uart_recv.cos_uart_union.cos_data_str.cos_length_h=buff[PACKET_DATA_OFFSET];
+						uart_recv.cos_uart_union.cos_data_str.cos_length_l=buff[PACKET_DATA_OFFSET+1];
+						uart_recv.cos_revDataTotalLen +=CMD_PACKET_BASE_LENGTH;
+						uart_recv.cos_revDataLen =CMD_PACKET_BASE_LENGTH-2;
+						uart_recv.cos_protocol_rev_data_ready=0;
 					break;
 					case PACKET_MARK_NEXT:		  
-            if((uart_recv.revDataLen+temp_length-CMD_PACKET_BASE_LENGTH)<PACKET_MAX_BYTE)
+            if((uart_recv.cos_revDataLen+temp_length-CMD_PACKET_BASE_LENGTH)<PACKET_MAX_BYTE)
             {
-						memcpy((uart_recv.uart_union.taltol_data+uart_recv.revDataLen),buff+PACKET_DATA_OFFSET,temp_length-CMD_PACKET_BASE_LENGTH);
-						uart_recv.revDataLen	+=temp_length-CMD_PACKET_BASE_LENGTH;
-						uart_recv.protocol_rev_data_ready=0;
+						memcpy((uart_recv.cos_uart_union.cos_taltol_data+uart_recv.cos_revDataLen),buff+PACKET_DATA_OFFSET,temp_length-CMD_PACKET_BASE_LENGTH);
+						uart_recv.cos_revDataLen	+=temp_length-CMD_PACKET_BASE_LENGTH;
+						uart_recv.cos_protocol_rev_data_ready=0;
             }
 					break;
 					case PACKET_MARK_COMPLETE:
 					{
-            if((uart_recv.revDataLen+temp_length-PACKET_DATA_OFFSET)<PACKET_MAX_BYTE)//kevin updated 151106
+            if((uart_recv.cos_revDataLen+temp_length-PACKET_DATA_OFFSET)<PACKET_MAX_BYTE)//kevin updated 151106
             {
-                memcpy((uart_recv.uart_union.taltol_data+uart_recv.revDataLen),buff+PACKET_DATA_OFFSET,temp_length-PACKET_DATA_OFFSET);
-                uart_recv.revDataLen  +=temp_length-PACKET_DATA_OFFSET;
+                memcpy((uart_recv.cos_uart_union.cos_taltol_data+uart_recv.cos_revDataLen),buff+PACKET_DATA_OFFSET,temp_length-PACKET_DATA_OFFSET);
+                uart_recv.cos_revDataLen  +=temp_length-PACKET_DATA_OFFSET;
 
-                if(uart_recv.revDataTotalLen==uart_recv.revDataLen)
+                if(uart_recv.cos_revDataTotalLen==uart_recv.cos_revDataLen)
                 {
-                  uart_recv.uart_union.taltol_data[uart_recv.revDataTotalLen-2]=Get_Datacheck(&uart_recv.uart_union.taltol_data[1],uart_recv.revDataTotalLen-3);//check byte
-                  uart_recv.uart_union.taltol_data[uart_recv.revDataTotalLen-1]=0x55;//tail byte
-                  uart_recv.protocol_rev_data_ready=1;
-                  if(buff[PACKET_CMD_OFFSET]==CMD_COS_DATA)
+                  uart_recv.cos_uart_union.cos_taltol_data[uart_recv.cos_revDataTotalLen-2]=Get_Datacheck(&uart_recv.cos_uart_union.cos_taltol_data[1],uart_recv.cos_revDataTotalLen-3);//check byte
+                  uart_recv.cos_uart_union.cos_taltol_data[uart_recv.cos_revDataTotalLen-1]=0x55;//tail byte
+                  uart_recv.cos_protocol_rev_data_ready=1;
+                 /* if(buff[PACKET_CMD_OFFSET]==CMD_COS_DATA)
                    {
 #if ENABLE_COS                     
                       simple_uart_init(UART_POWEROFF_BT_DELAY);
 #endif
-                   }
+                   }*/
                   return;
 
                  
@@ -1659,20 +1671,20 @@ static void protocol_Save_data(UINT8 *buff,UINT16 temp_length,UINT8 ser_flag)
                 else
                 {
                   Protocol_Packet_Status(buff,CMD_STATUS_CHECK_ERROR,ser_flag);
-                  Protocol_ctr_reset(); 
+ 
                 }	
             }
             else
             {
                 Protocol_Packet_Status(buff,CMD_STATUS_DATALENGTH_FAIL,ser_flag);
-                Protocol_ctr_reset(); 
+
             }  
-						uart_recv.protocol_rev_data_ready=0;
+						uart_recv.cos_protocol_rev_data_ready=0;
 					}						
 					break;  		   
 					default:
 						Protocol_Packet_Status(buff,CMD_STATUS_CHECK_ERROR,ser_flag);
-			   //Protocol_ctr_reset();		   	
+	   	
 					break;
 		}
 
@@ -1698,7 +1710,7 @@ void Protocol_data_manage(UINT8 * data_prt,UINT16 packet_length)
 	else
 	{
        Protocol_Packet_Status(data_prt,CMD_STATUS_CHECK_ERROR,SERVICE_COS);
-	   Protocol_ctr_reset();
+
 	}
 }
 //===================new service===========================
@@ -1726,32 +1738,26 @@ static void newService_protocol_Save_data(UINT8 *buff,UINT16 temp_length,UINT8 s
 						 {
 								 memcpy((new_recv.uart_union.taltol_data),buff,temp_length);
 								 new_recv.revDataTotalLen=buff[PACKET_LENGTH_OFFSET]<<8 | buff[PACKET_LENGTH_OFFSET+1];		 
-							 //uart_recv.uart_union.data_str.head=PACKET_DATA_HEAD;
-							 //uart_recv.uart_union.data_str.CMD=buff[PACKET_CMD_OFFSET];
-							 //uart_recv.uart_union.data_str.length_h=buff[PACKET_DATA_OFFSET];
-							 //uart_recv.uart_union.data_str.length_l=buff[PACKET_DATA_OFFSET+1];
+							 //new_recv.uart_union.data_str.head=PACKET_DATA_HEAD;
+							 //new_recv.uart_union.data_str.CMD=buff[PACKET_CMD_OFFSET];
+							 //new_recv.uart_union.data_str.length_h=buff[PACKET_DATA_OFFSET];
+							 //new_recv.uart_union.data_str.length_l=buff[PACKET_DATA_OFFSET+1];
 								new_recv.revDataTotalLen +=CMD_PACKET_BASE_LENGTH;
-							 uart_recv.revDataLen =0;
+							 new_recv.revDataLen =0;
 
 							 new_recv.protocol_rev_data_ready=1;
-									if(buff[PACKET_CMD_OFFSET]==CMD_COS_DATA)
+								/*	if(buff[PACKET_CMD_OFFSET]==CMD_COS_DATA)
 									{
 #if ENABLE_COS              
 										 simple_uart_init(UART_POWEROFF_BT_DELAY);
 #endif             
-									}
+									}*/
 						 }
-					 /*}
-					 else
-					 {
-						Protocol_handle_statusPacket(buff,temp_length);
-					 }*/
+
 
 
 				 break;
          case PACKET_MARK_MULTI:
-
-						 //     Protocol_ctr_reset();
 						new_recv.revDataTotalLen=buff[PACKET_DATA_OFFSET]<<8 | buff[PACKET_DATA_OFFSET+1];			
 						new_recv.uart_union.data_str.head=PACKET_DATA_HEAD;
 						new_recv.uart_union.data_str.CMD=buff[PACKET_CMD_OFFSET];
@@ -1781,12 +1787,12 @@ static void newService_protocol_Save_data(UINT8 *buff,UINT16 temp_length,UINT8 s
                   new_recv.uart_union.taltol_data[new_recv.revDataTotalLen-2]=Get_Datacheck(&new_recv.uart_union.taltol_data[1],new_recv.revDataTotalLen-3);//check byte
                   new_recv.uart_union.taltol_data[new_recv.revDataTotalLen-1]=0x55;//tail byte
                   new_recv.protocol_rev_data_ready=1;
-                  if(buff[PACKET_CMD_OFFSET]==CMD_COS_DATA)
+                  /*if(buff[PACKET_CMD_OFFSET]==CMD_COS_DATA)
                    {
 #if ENABLE_COS                     
                       simple_uart_init(UART_POWEROFF_BT_DELAY);
 #endif
-                   }
+                   }*/
                   return;
 
                  
@@ -1794,20 +1800,21 @@ static void newService_protocol_Save_data(UINT8 *buff,UINT16 temp_length,UINT8 s
                 else
                 {
                   Protocol_Packet_Status(buff,CMD_STATUS_CHECK_ERROR,ser_flag);
-                  Protocol_ctr_reset(); 
+
                 }	
             }
             else
             {
                 Protocol_Packet_Status(buff,CMD_STATUS_DATALENGTH_FAIL,ser_flag);
-                Protocol_ctr_reset(); 
+
             }  
 						new_recv.protocol_rev_data_ready=0;
+            
 					}						
 					break;  		   
 					default:
 						Protocol_Packet_Status(buff,CMD_STATUS_CHECK_ERROR,ser_flag);
-			   //Protocol_ctr_reset();		   	
+  	
 					break;
 		}
 
@@ -1824,15 +1831,13 @@ void newService_Protocol_data_manage(UINT8 * data_prt,UINT16 packet_length)
 			 {
           Protocol_set_BT_connected();  
        }
-       newService_protocol_Save_data(data_prt,packet_length,SERVICE_STEP);
-	   
-       
-	}
-	else
-	{
-       Protocol_Packet_Status(data_prt,CMD_STATUS_CHECK_ERROR,SERVICE_STEP);
-	   Protocol_ctr_reset();
-	}
+       newService_protocol_Save_data(data_prt,packet_length,SERVICE_STEP);       
+    }
+    else
+    {
+         Protocol_Packet_Status(data_prt,CMD_STATUS_CHECK_ERROR,SERVICE_STEP);
+
+    }
 }
 
 

@@ -2,7 +2,7 @@
 #include <stdint.h>
 #include "ET1502B.h"
 
-#define QPRINTF	DbgPrintf
+#define QPRINTF	DbgPrintf_nop//DbgPrintf
 #define MY_QPRINTF(fmt, ...)//		DbgPrintf
 // ce-link log debug 
 /* module log enable switchs */

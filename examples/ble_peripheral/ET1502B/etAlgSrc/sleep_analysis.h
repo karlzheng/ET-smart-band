@@ -4,6 +4,8 @@
 #if SLEEP_RECORD_ARITHMETIC
 #include "sleep_record.h"
 
+#define TEST_SLEEP_ENABLE					(0)
+
 #define SLEEP_ROCORD_SIZE	(12*24)
 #define SLEEP_NAP_SIZE		(96)
 #define SLEEP_STATUS_SIZE		SLEEP_NAP_SIZE

@@ -21,6 +21,7 @@
 #include "ET1502B.h"
 #include "uartProtocol.h"
 #include "btprotocol.h"
+#include "etLcdDisplayApp.h"
 #include "et_debug.h"
 #define SIMPLE_UART_RX_BUF_SIZE                512
 #define UART_INIT_ENABLE 1
@@ -234,10 +235,12 @@ void uart_init_lowPower(void)
 // #if(ENABLE_COS)    
       
     z8_Power_ctr(POWER_OFF); 
+    
     cos_clear_buff(); 
     save_COS_status(0x00);    
     Clr_Cos_Ready();
-        
+    display_clr_COSdata();
+    clr_cos_mode();    
 //#endif     
     uart_init_check=UART_INIT_DISABLE;
     
@@ -271,6 +274,7 @@ void simple_uart_init(unsigned char t_delay)
     NVIC_EnableIRQ(UART0_IRQn);
     uart_init_check=UART_INIT_ENABLE;
 #if(ENABLE_COS)
+    clr_cos_mode();
     Clr_Cos_Ready();
     save_COS_status(0x00);
     cos_clear_buff();

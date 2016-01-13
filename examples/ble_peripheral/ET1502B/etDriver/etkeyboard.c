@@ -26,8 +26,10 @@
 
 struct touch_key_event
 {
-	uint8_t key_rp:4;
-	uint8_t key_wp:4;
+	//uint8_t key_rp:4;
+	//uint8_t key_wp:4;
+	uint8_t key_rp;
+	uint8_t key_wp;  
 	uint8_t key_val[MAX_TOUCH_KEY_BUF_LEN];
 };
 /*
