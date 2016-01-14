@@ -202,7 +202,7 @@ void system_time_init(void)
 	s_tm tm;
 	tm.year = 2016;
 	tm.month = 1;
-	tm.day = 13;
+	tm.day = 14;
 	tm.hour = 12;
 	tm.minute = 0;
 	tm.second= 0;

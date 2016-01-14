@@ -305,7 +305,7 @@
 
 /* version */
 #define COS_VERSION		"1.00.00"
-#define HW_VERSION		"2.0-1.6"
+#define HW_VERSION		"2.0-1.7"
 #define BT_VERSION		"1.00.05"
 
 

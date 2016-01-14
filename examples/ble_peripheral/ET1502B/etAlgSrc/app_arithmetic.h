@@ -16,7 +16,7 @@ extern unsigned int g_arthCurSec;
 
 extern void arithmetic_write_data2buf(char* fifoData, unsigned char frameNum);
 extern void app_start_step_arithmetic_cal(void);
-extern void app_stop_step_arithmetic_cal(unsigned char flag);
+extern void app_stop_step_arithmetic_cal(void);
 extern unsigned char app_get_pedometer_state(void);
 
 #endif

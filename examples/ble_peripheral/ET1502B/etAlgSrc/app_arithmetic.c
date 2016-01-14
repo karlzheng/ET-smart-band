@@ -91,9 +91,7 @@ static bool arithmetic_gsensor_write_data(char* fifoData, unsigned char frameNum
 		yVal = TwoCharGetShort(fifoData + i*6 + 2);
 		zVal = TwoCharGetShort(fifoData + i*6 + 4);
 
-		//gArithTransBuf.pDataBuf[i] = xVal+yVal+zVal;
-		//gArithTransBuf.pDataBuf[i] = (sqrt_16(xVal*xVal) + sqrt_16(yVal*yVal) + sqrt_16(zVal*zVal))/2;
-		gArithTransBuf.pDataBuf[i] = sqrt_16((xVal*xVal + yVal*yVal + zVal*zVal)/2);
+		gArithTransBuf.pDataBuf[i] = sqrt_16(xVal*xVal + yVal*yVal + zVal*zVal);
 	}
 	
 	gArithTransBuf.dataNum = frameNum;
@@ -192,23 +190,23 @@ void app_start_step_arithmetic_cal(void)
 	}
 }
 
-void app_stop_step_arithmetic_cal(unsigned char flag)
+void app_stop_step_arithmetic_cal(void)
 {
 	if(StepArithmeticStartFalg)
 	{
 		unsigned char sportMode = 0, steps = 0;
 		StepArithmeticStartFalg = false;
 
-		#if LIS3DH_LOWPOWER_MODE_EN
+	#if LIS3DH_LOWPOWER_MODE_EN
 		ARITH_INFO("gSensor in low power mode\r\n");
 		LIS3DH_SetMode(LIS3DH_LOW_POWER);
-		#endif
+	#endif
 		
-		#if LIS3DH_FIFO_READ_MODE == LIS3DH_FIFO_READ_BY_INTR
+	#if LIS3DH_FIFO_READ_MODE == LIS3DH_FIFO_READ_BY_INTR
 		gSensor_FWM_Interrupt_Enable(0);
-		#elif LIS3DH_FIFO_READ_MODE == LIS3DH_FIFO_READ_BY_TIMER
+	#elif LIS3DH_FIFO_READ_MODE == LIS3DH_FIFO_READ_BY_TIMER
 		operate_usr_gsensor_fifo_read_timer(0);
-		#endif
+	#endif
 		
 		steps = deal_raw_data((unsigned short *)gArithmeticBuf.pDataBuf, gArithmeticBuf.dataNum, &sportMode,app_arithmetic_get_left_right_hand());
 		clear_arithmetic_buf(&gArithmeticBuf);
@@ -218,9 +216,7 @@ void app_stop_step_arithmetic_cal(unsigned char flag)
 			app_arthmetic_get_total_steps(),
 			app_arthmetic_get_total_calorie(),
 			app_arthmetic_get_total_distance());
-		
-		//LCD_disp_stepNUM(app_arthmetic_get_total_steps());
-		
+				
 	#if LIS3DH_FIFO_ENABLE
 		gSensor_Clear_Fifo_Data();
 	#endif
@@ -282,7 +278,7 @@ static void app_arithmetic_cal_timer_handler(void)
 			
 				g_walkStartDetectParseSteps = g_walkStartDetectParseSteps <= daltStartTime*2 ? g_walkStartDetectParseSteps : daltStartTime*2;
 
-				app_arithmetic_store_steps(g_walkStartDetectParseSteps,sportMode,1,app_get_pedometer_state());
+				app_arithmetic_store_steps(g_walkStartDetectParseSteps,sportMode,1,1);
 				g_walkStartDetectParseSteps = 0;
 			}
 			else if(daltStartTime > ARTH_WORK_START_TIME_THRESHOLD)
@@ -305,10 +301,7 @@ static void app_arithmetic_cal_timer_handler(void)
 	}
 
 	if(g_zeroStepCount >= ARTH_ZERO_STOP_MAX) /*连续 ARTH_ZERO_STOP_MAX 次没有计步，stop 计步*/
-	{
-		app_stop_step_arithmetic_cal(0);
-		g_arthStartSec = g_arthCurSec;
-	}	
+		app_stop_step_arithmetic_cal();
 }
 s_tm g_preChangeTime;
 

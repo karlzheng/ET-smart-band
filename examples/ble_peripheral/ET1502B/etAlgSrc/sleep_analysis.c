@@ -96,10 +96,21 @@ static void get_sleep_end_info_index(unsigned int curSec,unsigned char *index)
 	unsigned char i = 0;
 	for(i=0;i<g_sleeep_state_index;i++)
 	{
-		if(curSec > g_pSleepStateItem[i-1].startSec && curSec <= g_pSleepStateItem[i].startSec)
+		if(i == 0)
 		{
-			*index = i; 
-			break;
+			if(curSec == g_pSleepStateItem[i].startSec)
+			{
+				*index = 0; 
+				break;
+			}
+		}
+		else
+		{
+			if(curSec > g_pSleepStateItem[i-1].startSec && curSec <= g_pSleepStateItem[i].startSec)
+			{
+				*index = i; 
+				break;
+			}
 		}
 	}
 }
@@ -119,73 +130,73 @@ void CESleepGSensorCfg(unsigned char gsensorEnum)
         g_gsensro_cfg.slopeDebounceSec 	= 1;
 		g_gsensro_cfg.stepArithmeticYMin= 1000;
 
-        g_gsensro_cfg.middle_sb_nomotion_ratio = DAY_MIDDLE_SB_NOMOTION_RATIO;
-        g_gsensro_cfg.middle_sb_max_slope_num = DAY_MIDDLE_SB_MAX_SLOPE_NUM;
-        g_gsensro_cfg.middle_se_nomotion_ratio = DAY_MIDDLE_SE_NOMOTION_RATIO;
-        g_gsensro_cfg.middle_se_max_slope_num = DAY_MIDDLE_SE_MAX_SLOPE_NUM;
-        g_gsensro_cfg.middle_ss_nomotion_ratio = 80;//0.8;
-        g_gsensro_cfg.middle_ss_max_slope_num = 4;
-        g_gsensro_cfg.middle_sd_nomotion_ratio = 85;//0.85;
-        g_gsensro_cfg.middle_sd_max_slope_num = 1;
-        g_gsensro_cfg.begin_samp_num= 12;
-		g_gsensro_cfg.end_samp_num = 6;
+        g_gsensro_cfg.middle_sb_nomotion_ratio 	= DAY_MIDDLE_SB_NOMOTION_RATIO;
+        g_gsensro_cfg.middle_sb_max_slope_num 	= DAY_MIDDLE_SB_MAX_SLOPE_NUM;
+        g_gsensro_cfg.middle_se_nomotion_ratio 	= DAY_MIDDLE_SE_NOMOTION_RATIO;
+        g_gsensro_cfg.middle_se_max_slope_num 	= DAY_MIDDLE_SE_MAX_SLOPE_NUM;
+        g_gsensro_cfg.middle_ss_nomotion_ratio 	= 80;//0.8;
+        g_gsensro_cfg.middle_ss_max_slope_num 	= 4;
+        g_gsensro_cfg.middle_sd_nomotion_ratio 	= 85;//0.85;
+        g_gsensro_cfg.middle_sd_max_slope_num 	= 1;
+        g_gsensro_cfg.begin_samp_num	= 12;
+		g_gsensro_cfg.end_samp_num 		= 6;
      }
      else if (gsensorEnum == GSENSOR_CFG_MORING) 
 	 {
-        g_gsensro_cfg.slopeThreshold 	= 6;//7;
+        g_gsensro_cfg.slopeThreshold 	= 4;//6;//7;
         g_gsensro_cfg.slopeDuration 	= 0;
         g_gsensro_cfg.rcdMinInterval 	= 5;
         g_gsensro_cfg.slopeDebounceSec 	= 2;
 		g_gsensro_cfg.stepArithmeticYMin= 1000;
 
-        g_gsensro_cfg.middle_sb_nomotion_ratio = MORING_MIDDLE_SB_NOMOTION_RATIO;
-        g_gsensro_cfg.middle_sb_max_slope_num = MORING_MIDDLE_SB_MAX_SLOPE_NUM;
-        g_gsensro_cfg.middle_se_nomotion_ratio = MORING_MIDDLE_SE_NOMOTION_RATIO;
-        g_gsensro_cfg.middle_se_max_slope_num = MORING_MIDDLE_SE_MAX_SLOPE_NUM;
-        g_gsensro_cfg.middle_ss_nomotion_ratio = 80;//0.8;
-        g_gsensro_cfg.middle_ss_max_slope_num = 4;
-        g_gsensro_cfg.middle_sd_nomotion_ratio = 85;//0.85;
-        g_gsensro_cfg.middle_sd_max_slope_num = 1;
-        g_gsensro_cfg.begin_samp_num = 6;
-		g_gsensro_cfg.end_samp_num = 6;
+        g_gsensro_cfg.middle_sb_nomotion_ratio 	= MORING_MIDDLE_SB_NOMOTION_RATIO;
+        g_gsensro_cfg.middle_sb_max_slope_num 	= MORING_MIDDLE_SB_MAX_SLOPE_NUM;
+        g_gsensro_cfg.middle_se_nomotion_ratio 	= MORING_MIDDLE_SE_NOMOTION_RATIO;
+        g_gsensro_cfg.middle_se_max_slope_num 	= MORING_MIDDLE_SE_MAX_SLOPE_NUM;
+        g_gsensro_cfg.middle_ss_nomotion_ratio 	= 80;//0.8;
+        g_gsensro_cfg.middle_ss_max_slope_num 	= 4;
+        g_gsensro_cfg.middle_sd_nomotion_ratio 	= 85;//0.85;
+        g_gsensro_cfg.middle_sd_max_slope_num 	= 1;
+        g_gsensro_cfg.begin_samp_num 	= 6;
+		g_gsensro_cfg.end_samp_num 		= 6;
      }
      else if (gsensorEnum == GSENSOR_CFG_EVENING) 
 	 {
-        g_gsensro_cfg.slopeThreshold 	= 9;//10;
+        g_gsensro_cfg.slopeThreshold 	= 4;//9;//10;
         g_gsensro_cfg.slopeDuration 	= 0;
         g_gsensro_cfg.rcdMinInterval 	= 5;
         g_gsensro_cfg.slopeDebounceSec 	= 2;
 		g_gsensro_cfg.stepArithmeticYMin= 1000;
 
-        g_gsensro_cfg.middle_sb_nomotion_ratio = EVENING_MIDDLE_SB_NOMOTION_RATIO;
-        g_gsensro_cfg.middle_sb_max_slope_num = EVENING_MIDDLE_SB_MAX_SLOPE_NUM;
-        g_gsensro_cfg.middle_se_nomotion_ratio = EVENING_MIDDLE_SE_NOMOTION_RATIO;
-        g_gsensro_cfg.middle_se_max_slope_num = EVENING_MIDDLE_SE_MAX_SLOPE_NUM;
-        g_gsensro_cfg.middle_ss_nomotion_ratio = 80;//0.8;
-        g_gsensro_cfg.middle_ss_max_slope_num = 3;
-        g_gsensro_cfg.middle_sd_nomotion_ratio = 85;//0.85;
-        g_gsensro_cfg.middle_sd_max_slope_num = 1;
-        g_gsensro_cfg.begin_samp_num = 12;
-		g_gsensro_cfg.end_samp_num = 6;
+        g_gsensro_cfg.middle_sb_nomotion_ratio 	= EVENING_MIDDLE_SB_NOMOTION_RATIO;
+        g_gsensro_cfg.middle_sb_max_slope_num 	= EVENING_MIDDLE_SB_MAX_SLOPE_NUM;
+        g_gsensro_cfg.middle_se_nomotion_ratio 	= EVENING_MIDDLE_SE_NOMOTION_RATIO;
+        g_gsensro_cfg.middle_se_max_slope_num 	= EVENING_MIDDLE_SE_MAX_SLOPE_NUM;
+        g_gsensro_cfg.middle_ss_nomotion_ratio 	= 80;//0.8;
+        g_gsensro_cfg.middle_ss_max_slope_num 	= 3;
+        g_gsensro_cfg.middle_sd_nomotion_ratio 	= 85;//0.85;
+        g_gsensro_cfg.middle_sd_max_slope_num 	= 1;
+        g_gsensro_cfg.begin_samp_num 	= 12;
+		g_gsensro_cfg.end_samp_num 		= 6;
      }
      else if (gsensorEnum == GSENSOR_CFG_NIGHT) 
 	 {
-        g_gsensro_cfg.slopeThreshold 	= 15;//20;
+        g_gsensro_cfg.slopeThreshold 	= 7;//15;//20;
         g_gsensro_cfg.slopeDuration 	= 0;
         g_gsensro_cfg.rcdMinInterval 	= 5;
         g_gsensro_cfg.slopeDebounceSec 	= 3;
 		g_gsensro_cfg.stepArithmeticYMin= 1000;
 
-        g_gsensro_cfg.middle_sb_nomotion_ratio = NIGHT_MIDDLE_SB_NOMOTION_RATIO;
-        g_gsensro_cfg.middle_sb_max_slope_num = NIGHT_MIDDLE_SB_MAX_SLOPE_NUM;
-        g_gsensro_cfg.middle_se_nomotion_ratio = NIGHT_MIDDLE_SE_NOMOTION_RATIO;
-        g_gsensro_cfg.middle_se_max_slope_num = NIGHT_MIDDLE_SE_MAX_SLOPE_NUM;
-        g_gsensro_cfg.middle_ss_nomotion_ratio = 80;//0.8;
-        g_gsensro_cfg.middle_ss_max_slope_num = 4;
-        g_gsensro_cfg.middle_sd_nomotion_ratio = 80;//0.85;
-        g_gsensro_cfg.middle_sd_max_slope_num = 1;
-        g_gsensro_cfg.begin_samp_num = 12;
-		g_gsensro_cfg.end_samp_num = 6;
+        g_gsensro_cfg.middle_sb_nomotion_ratio 	= NIGHT_MIDDLE_SB_NOMOTION_RATIO;
+        g_gsensro_cfg.middle_sb_max_slope_num 	= NIGHT_MIDDLE_SB_MAX_SLOPE_NUM;
+        g_gsensro_cfg.middle_se_nomotion_ratio 	= NIGHT_MIDDLE_SE_NOMOTION_RATIO;
+        g_gsensro_cfg.middle_se_max_slope_num 	= NIGHT_MIDDLE_SE_MAX_SLOPE_NUM;
+        g_gsensro_cfg.middle_ss_nomotion_ratio 	= 80;//0.8;
+        g_gsensro_cfg.middle_ss_max_slope_num 	= 4;
+        g_gsensro_cfg.middle_sd_nomotion_ratio 	= 90;//80;//0.85;
+        g_gsensro_cfg.middle_sd_max_slope_num 	= 1;
+        g_gsensro_cfg.begin_samp_num 	= 12;
+		g_gsensro_cfg.end_samp_num 		= 6;
       }
 	#else
 	
@@ -456,7 +467,6 @@ bool isSleepBegin(sleepRawDataStruct sleep_list[],unsigned short list_size,unsig
 	int avg_noMotionTotalNum = 0;
     unsigned short avg_slopeMaxNum = 0;
     unsigned short avg_stepNum = 0;
-	int avg_xAxisSameOnceMaxNum = 0;
 	unsigned int preTime = 0,curTime=0,timeLongDif=0;
 	unsigned short slopeMaxNum = 0;
 	unsigned short noMotionMaxNum = 0;
@@ -495,18 +505,18 @@ bool isSleepBegin(sleepRawDataStruct sleep_list[],unsigned short list_size,unsig
         avg_noMotionTotalNum 	+= sleep_list[i].noMotionTotalNum;
         avg_slopeMaxNum 		+= sleep_list[i].slopeOnceMaxNum;
         avg_stepNum 			+= sleep_list[i].stepsTotalNum;
-        avg_xAxisSameOnceMaxNum += sleep_list[i].xAxisSameOnceMaxNum;
     }
 
 	avg_noMotionTotalNum 	/= list_size;
 	avg_slopeMaxNum 		/= list_size;
 	avg_stepNum 			/= list_size;
 	QPRINTF("avg_noMotionTotalNum=%d,avg_slopeMaxNum=%d,avg_stepNum=%d,\r\n",avg_noMotionTotalNum,avg_slopeMaxNum,avg_stepNum);
-	slopeMaxNum = g_gsensro_cfg.middle_se_max_slope_num * g_gsensro_cfg.rcdMinInterval;
+	
 	
 	if(flg == SLEEP_BEGIN_FLG)
 	{
 		noMotionMaxNum = (g_gsensro_cfg.rcdMinInterval * 4) * g_gsensro_cfg.middle_sb_nomotion_ratio/100;
+		slopeMaxNum = g_gsensro_cfg.middle_sb_max_slope_num * g_gsensro_cfg.rcdMinInterval;
 		QPRINTF("SLEEP_BEGIN_FLG:slopeMaxNum=%d,noMotionMaxNum=%d,\r\n",slopeMaxNum,noMotionMaxNum);
 		if (avg_noMotionTotalNum > noMotionMaxNum && 
 			avg_slopeMaxNum < slopeMaxNum && 
@@ -518,6 +528,7 @@ bool isSleepBegin(sleepRawDataStruct sleep_list[],unsigned short list_size,unsig
 	else if(flg == SLEEP_END_FLG)
 	{
 		noMotionMaxNum = (g_gsensro_cfg.rcdMinInterval * 4) * g_gsensro_cfg.middle_se_nomotion_ratio/100;
+		slopeMaxNum = g_gsensro_cfg.middle_se_max_slope_num * g_gsensro_cfg.rcdMinInterval;
 		QPRINTF("SLEEP_END_FLG:slopeMaxNum=%d,noMotionMaxNum=%d,\r\n",slopeMaxNum,noMotionMaxNum);
 		if ((avg_noMotionTotalNum < noMotionMaxNum ||
             avg_slopeMaxNum > slopeMaxNum )||
@@ -808,6 +819,7 @@ void sleepDataAnalysis(void)
 {
 	unsigned short rawItemNum =0;
 	unsigned int curTime =0;
+	unsigned char hour = 0,begin_analysis_flg = 0;
 	sleepRawDataStruct *pCurRawDataItem;
 	CENapDataStruct pCurNap;
 
@@ -825,92 +837,99 @@ void sleepDataAnalysis(void)
 	{
 		pCurRawDataItem = &gSleepRawItem[rawItemNum];
 		curTime 		= FourCharGetInt((char*)pCurRawDataItem->startSecs);
-		sleep_gsensor_cfg_judge(get_hour_from_sec(curTime));
-
-		if (pCurNap.napBeginFlag != 1) // search for begin point
+		hour			= get_hour_from_sec(curTime);
+		if(hour >= 16 || begin_analysis_flg)//from 16 hour start analysis
 		{
-			if (g_sleep_rocord_size - rawItemNum < g_gsensro_cfg.begin_samp_num)  
-            	break;
+			begin_analysis_flg = 1;
 
-			QPRINTF("IN isBegin analysis  .rawItemNum=%d,g_gsensro_cfg.begin_samp_num=%d,\r\n",rawItemNum,g_gsensro_cfg.begin_samp_num);
-			if(isSleepBegin(pCurRawDataItem,g_gsensro_cfg.begin_samp_num,SLEEP_BEGIN_FLG))
+			sleep_gsensor_cfg_judge(hour);
+
+			if (pCurNap.napBeginFlag != 1) // search for begin point
 			{
-				QPRINTF("sleep start.......\r\n");
-				pCurNap.napBeginFlag 	= 1;
-				pCurNap.beginRawDataPos = rawItemNum;
-				pCurNap.startSec 		= curTime;
+				if (g_sleep_rocord_size - rawItemNum < g_gsensro_cfg.begin_samp_num)  
+	            	break;
+
+				QPRINTF("IN isBegin analysis  .rawItemNum=%d,g_gsensro_cfg.begin_samp_num=%d,\r\n",rawItemNum,g_gsensro_cfg.begin_samp_num);
+				if(isSleepBegin(pCurRawDataItem,g_gsensro_cfg.begin_samp_num,SLEEP_BEGIN_FLG))
+				{
+					QPRINTF("sleep start.......\r\n");
+					pCurNap.napBeginFlag 	= 1;
+					pCurNap.beginRawDataPos = rawItemNum;
+					pCurNap.startSec 		= curTime;
+				}
+	          	else
+	            	continue;
 			}
-          	else
-            	continue;
-		}
-		else // search for end point
-        {
-        	QPRINTF("sleep is begin time=%d,rawItemNum=%d,g_gsensro_cfg.end_samp_num=%d,\r\n\r\n",pCurNap.startSec,rawItemNum,g_gsensro_cfg.end_samp_num);
-			if (g_sleep_rocord_size - rawItemNum >= g_gsensro_cfg.end_samp_num)
-			{
-				//如果剩余的采样点大于6个点，则走正常流程，否则算他直接结束
-				if (isSleepBegin(pCurRawDataItem,g_gsensro_cfg.end_samp_num,SLEEP_END_FLG))
-	            {
-	            	QPRINTF("sleep end.......\r\n");
-	                rawItemNum = rawItemNum + g_gsensro_cfg.end_samp_num - 1;
-	                pCurRawDataItem = &gSleepRawItem[rawItemNum];
-	                
-					// if get currect raw data is charing, change the last raw data to
-					// end
-					// state; don't get charging status to nap;
-					pCurNap.endRawDataPos = rawItemNum;
+			else // search for end point
+	        {
+	        	QPRINTF("sleep is begin time=%d,rawItemNum=%d,g_gsensro_cfg.end_samp_num=%d,\r\n\r\n",pCurNap.startSec,rawItemNum,g_gsensro_cfg.end_samp_num);
+				if (g_sleep_rocord_size - rawItemNum >= g_gsensro_cfg.end_samp_num)
+				{
+					//如果剩余的采样点大于6个点，则走正常流程，否则算他直接结束
+					if (isSleepBegin(pCurRawDataItem,g_gsensro_cfg.end_samp_num,SLEEP_END_FLG))
+		            {
+		            	QPRINTF("sleep end.......\r\n");
+		                rawItemNum = rawItemNum + g_gsensro_cfg.end_samp_num - 1;
+		                pCurRawDataItem = &gSleepRawItem[rawItemNum];
+		                
+						// if get currect raw data is charing, change the last raw data to
+						// end
+						// state; don't get charging status to nap;
+						pCurNap.endRawDataPos = rawItemNum;
 
+						if (pCurRawDataItem->devStatus.bits.chargerFlag)
+						{
+							if (rawItemNum + 1 < g_sleep_rocord_size - 1) 
+							{
+								pCurRawDataItem = &gSleepRawItem[rawItemNum + 1];
+								curTime 		= FourCharGetInt((char*)pCurRawDataItem->startSecs);
+							}
+							pCurNap.endRawDataPos = rawItemNum + 1;
+						}
+					  	pCurNap.napEndFlag		= 1;
+						pCurNap.endSec			= curTime;
+						pCurNap.sleepTotalMin 	= (pCurNap.endSec - pCurNap.startSec)/60;
+		              	
+		              	if(pCurNap.sleepTotalMin >= g_gsensro_cfg.rcdMinInterval * 3)
+		              	{
+		              		QPRINTF("sleep is END start:%d ,end:%d, total time=%d,\r\n",pCurNap.startSec,pCurNap.endSec,pCurNap.sleepTotalMin);
+							sleepOneNapAnalysis(&pCurNap);
+							memcpy(&gNapArray[gNapArrayCount++],&pCurNap,sizeof(CENapDataStruct));
+		              	}
+		                
+		              	memset((unsigned char*)&pCurNap,0,sizeof(CENapDataStruct));
+		            }
+		            else 
+	            		continue;
+				}
+				else
+				{
+					pCurNap.endRawDataPos = rawItemNum;
+								
 					if (pCurRawDataItem->devStatus.bits.chargerFlag)
 					{
-						if (rawItemNum + 1 < g_sleep_rocord_size - 1) 
+					  	if (rawItemNum + 1 < g_sleep_rocord_size - 1) 
 						{
 							pCurRawDataItem = &gSleepRawItem[rawItemNum + 1];
 							curTime 		= FourCharGetInt((char*)pCurRawDataItem->startSecs);
 						}
 						pCurNap.endRawDataPos = rawItemNum + 1;
 					}
-				  	pCurNap.napEndFlag		= 1;
+					pCurNap.napEndFlag		= 1;
 					pCurNap.endSec			= curTime;
 					pCurNap.sleepTotalMin 	= (pCurNap.endSec - pCurNap.startSec)/60;
-	              	
-	              	if(pCurNap.sleepTotalMin >= g_gsensro_cfg.rcdMinInterval * 3)
-	              	{
-	              		QPRINTF("sleep is END start:%d ,end:%d, total time=%d,\r\n",pCurNap.startSec,pCurNap.endSec,pCurNap.sleepTotalMin);
+	              	if(pCurNap.sleepTotalMin >= g_gsensro_cfg.rcdMinInterval * 3) 
+	                {
+						QPRINTF("sleep is not end but size < 2 start:%d ,end:%d , total time=%d,\r\n",pCurNap.startSec,pCurNap.endSec,pCurNap.sleepTotalMin);
 						sleepOneNapAnalysis(&pCurNap);
-						memcpy(&gNapArray[gNapArrayCount++],&pCurNap,sizeof(CENapDataStruct));
-	              	}
+		                memcpy(&gNapArray[gNapArrayCount++],&pCurNap,sizeof(CENapDataStruct));
+		            }
 	                
 	              	memset((unsigned char*)&pCurNap,0,sizeof(CENapDataStruct));
-	            }
-	            else 
-            		continue;
-			}
-			else
-			{
-				pCurNap.endRawDataPos = rawItemNum;
-							
-				if (pCurRawDataItem->devStatus.bits.chargerFlag)
-				{
-				  	if (rawItemNum + 1 < g_sleep_rocord_size - 1) 
-					{
-						pCurRawDataItem = &gSleepRawItem[rawItemNum + 1];
-						curTime 		= FourCharGetInt((char*)pCurRawDataItem->startSecs);
-					}
-					pCurNap.endRawDataPos = rawItemNum + 1;
 				}
-				pCurNap.napEndFlag		= 1;
-				pCurNap.endSec			= curTime;
-				pCurNap.sleepTotalMin 	= (pCurNap.endSec - pCurNap.startSec)/60;
-              	if(pCurNap.sleepTotalMin >= g_gsensro_cfg.rcdMinInterval * 3) 
-                {
-					QPRINTF("sleep is not end but size < 2 start:%d ,end:%d , total time=%d,\r\n",pCurNap.startSec,pCurNap.endSec,pCurNap.sleepTotalMin);
-					sleepOneNapAnalysis(&pCurNap);
-	                memcpy(&gNapArray[gNapArrayCount++],&pCurNap,sizeof(CENapDataStruct));
-	            }
-                
-              	memset((unsigned char*)&pCurNap,0,sizeof(CENapDataStruct));
 			}
 		}
+		
 	}
 
 	getRealSleepData();

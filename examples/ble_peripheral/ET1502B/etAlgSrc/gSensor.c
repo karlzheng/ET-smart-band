@@ -74,7 +74,7 @@ void gsensor_fifo_timer_handle(void * val)
 			if(fifoReadFailCount >= 10)
 			{
 				BOSCH_INFO("gsensor fifo read failed count > 10, stop arithmetic \r\n");
-				app_stop_step_arithmetic_cal(0);
+				app_stop_step_arithmetic_cal();
 			}
 		}
 	}
