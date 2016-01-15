@@ -4,6 +4,7 @@
 #include "app_timer.h"
 #include "ke_timer.h"
 #include "et_debug.h"
+#include "arithmetic_data_manger.h"
 #define YEAR_BASE (1970)
 #define DAY_SEC      (86400)		/* one day second = 24*60*60 */
 
@@ -12,7 +13,8 @@
 #define ONE_SECOND_INTERVAL         APP_TIMER_TICKS(1000, APP_TIMER_PRESCALER)
 
 static unsigned int gTime_sec = 0;
-volatile unsigned int todayBeginSec = 0;
+//volatile unsigned int todayBeginSec = 0;
+volatile unsigned int sport_record_SaveTime=0;
 volatile unsigned int todayEndSec = 0;
 static unsigned char second_ready=0;
 systime_sleep_str timeSave_str;
@@ -47,10 +49,30 @@ void system_day_sec_init(void)
 	system_time_get(&curTime);
 	curSec = system_sec_get();  
 	// todayMaxSec = curSec + (23h59m59s - curTime)sec + 1sec
-	todayBeginSec = curSec - curTime.second - 60*curTime.minute - 60*60*curTime.hour;
-	todayEndSec = curSec + (59 - curTime.second) + 60*(59 - curTime.minute) + 60*60*(23 - curTime.hour) + 1; 
-}
+	//todayBeginSec = curSec - curTime.second - 60*curTime.minute - 60*60*curTime.hour;
+	todayEndSec = curSec + (59 - curTime.second) + 60*(59 - curTime.minute) + 60*60*(23 - curTime.hour) + 1;
+	if(ARTH_SPORT_SAVE2DATAMANGER_INTERVAL<=60)
+	{
+	sport_record_SaveTime=curSec-curTime.second+ARTH_SPORT_SAVE2DATAMANGER_INTERVAL;
+	}
+	else
+	{
+		sport_record_SaveTime=curSec-(curTime.minute%(ARTH_SPORT_SAVE2DATAMANGER_INTERVAL/60))*60-curTime.second+ARTH_SPORT_SAVE2DATAMANGER_INTERVAL;
 
+	}
+}
+unsigned char Check_is_save_sportRecordTime(void)
+{
+#if DEBUG_UART_EN    
+    //DbgPrintf("gTime_sec=%d, sportSaveTime=%d, sportSaveTime-gTime_sec=%d\r\n",gTime_sec,sport_record_SaveTime,sport_record_SaveTime-gTime_sec);
+#endif  
+  if(system_sec_get()>=sport_record_SaveTime)
+  {
+    sport_record_SaveTime +=ARTH_SPORT_SAVE2DATAMANGER_INTERVAL;
+		return 1;
+	}
+	return 0;
+}
 void system_time_set(s_tm tm)
 {
 	unsigned int retDay = 0;
@@ -170,10 +192,6 @@ void system_time_tick(void * p_context)
 	gTime_sec++;
 	second_ready=1;
   ke_timer_flag_set();
-  //gTimerTickFlg = 1;	
-//#if DEBUG_UART_EN    
-		//DbgPrintf(" rtc counter = %d \r\n", gTime_sec);
-//#endif
 }
 UINT8 system_time_get_second_ready(void)
 {
@@ -187,14 +205,13 @@ void system_time_updated(UINT32 temp_systime)
 {
   gTime_sec=temp_systime;
 }
-void systemTime_save_sleepmode(void)
-{
+//void systemTime_save_sleepmode(void)
+//{
  // timeSave_str.systime_save=TbcGetCnt();
-}
-void systemTimeUpdated_wakeup(void)
-{
-//  gTime_sec+=TbcGetCnt()-timeSave_str.systime_save;
-}
+//}
+//void systemTimeUpdated_wakeup(void)
+//{
+//}
 
 void system_time_init(void)
 {
@@ -213,13 +230,11 @@ void system_time_init(void)
     err_code = app_timer_start(wallClockID, ONE_SECOND_INTERVAL, NULL);
     APP_ERROR_CHECK(err_code);
 }
-
+/*
 void system_time_init_from_sleep(void)
 {
 	systemTimeUpdated_wakeup();
-	//TbcIntDis(SECINT);//kai.ter add because not disable tbc intr have boot false
-	//TbcIntEn(SECINT);
 }
-
+*/
 
 

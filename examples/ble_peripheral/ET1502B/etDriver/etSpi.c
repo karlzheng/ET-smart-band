@@ -32,14 +32,14 @@ void etSpim1ReadNorFlashID(void)
 
 #if ENABLE_SPI
     uint8_t data_buf[4]={0x00,0x00,0x00};
-		GPIO_Spi_MISO_high();
+
     FLASH_CS_LOW;
     SpiSent_1Byte(FLASH_JedecDeviceID);
     SpiReadByte(data_buf,3);
 	FLASH_CS_HIGH;
 	//DbgPrintf("flash ID:0x%x,0x%x,x%x\r\n",data_buf[0],data_buf[1],data_buf[2]);
 
-   GPIO_Spi_MISO_low();
+
 
 #endif	
 
@@ -50,7 +50,7 @@ void etSpim1CheckNorFlashBusy(void)
 {
 #if ENABLE_SPI
    uint8_t data_buf[1]={0x00};
-   GPIO_Spi_MISO_high();
+
    while(1)
    {
    FLASH_CS_LOW;
@@ -63,7 +63,7 @@ void etSpim1CheckNorFlashBusy(void)
 			break;
 	} 		 
    }
-   GPIO_Spi_MISO_low();
+
 
 #endif
 }
@@ -89,7 +89,8 @@ void etSpim1NorFlashSectorErase(uint32_t start_add)
 {
 #if ENABLE_SPI
 	uint8_t databuf[4];
-  GPIO_Spi_MISO_high(); 
+
+	etSpim1CheckNorFlashBusy();
 	etSpim1CheckNorFlashWriteEnable();	
 	FLASH_CS_LOW;
 	databuf[0]= FLASH_SectorErase;
@@ -101,17 +102,18 @@ void etSpim1NorFlashSectorErase(uint32_t start_add)
 	SpiSentByte(databuf,4);
 	FLASH_CS_HIGH;
   etSpim1CheckNorFlashBusy();
-  GPIO_Spi_MISO_low();
+
 #endif
 
 } 
 void etSpim1NorFlashBlockErase(unsigned start_add)
 {
 #if ENABLE_SPI
-	etSpim1CheckNorFlashWriteEnable();
+	//etSpim1CheckNorFlashWriteEnable();
 
 	uint8_t databuf[4];
-	GPIO_Spi_MISO_high(); 
+
+	etSpim1CheckNorFlashBusy();
 	etSpim1CheckNorFlashWriteEnable();
 
 	FLASH_CS_LOW;
@@ -123,7 +125,6 @@ void etSpim1NorFlashBlockErase(unsigned start_add)
 	FLASH_CS_HIGH;
   etSpim1CheckNorFlashBusy();
 
-	GPIO_Spi_MISO_low();
 #endif
 
 } 
@@ -131,7 +132,8 @@ void etSpim1NorFlashChipErase(void)
 {
 #if ENABLE_SPI
 	uint8_t databuf[4];
-	GPIO_Spi_MISO_high(); 
+
+	etSpim1CheckNorFlashBusy();
 	etSpim1CheckNorFlashWriteEnable();
 	FLASH_CS_LOW;
 	databuf[0]= chip_erase;
@@ -141,7 +143,7 @@ void etSpim1NorFlashChipErase(void)
 	SpiSentByte(databuf,1);
 	FLASH_CS_HIGH;
     etSpim1CheckNorFlashBusy();
-	GPIO_Spi_MISO_low();
+
 #endif
 
 } 
@@ -150,7 +152,7 @@ void etSpim1NorFlashPageProgrameStdMode(uint32_t start_add, uint8_t *write_buf, 
 {
 #if ENABLE_SPI
 	uint8_t databuf[4];
-	GPIO_Spi_MISO_high();	
+
   etSpim1CheckNorFlashBusy();
 	etSpim1CheckNorFlashWriteEnable();
 
@@ -162,7 +164,7 @@ void etSpim1NorFlashPageProgrameStdMode(uint32_t start_add, uint8_t *write_buf, 
 	SpiSentByte(databuf,4);
 	SpiSentByte(write_buf,write_len);
 	FLASH_CS_HIGH;
-	GPIO_Spi_MISO_low();
+
     //etSpim1CheckNorFlashBusy();
     //SPI_FLASH_BufferWrite(write_buf,start_add,write_len & 0xffff);
 #endif
@@ -171,7 +173,7 @@ void etSpim1ReadNorFlashStdMode(uint32_t start_add, uint8_t *data_buf, uint32_t 
 {
 #if ENABLE_SPI
 	uint8_t databuf[4];
-	GPIO_Spi_MISO_high();
+
   etSpim1CheckNorFlashBusy();
 	FLASH_CS_LOW;
   //nrf_delay_10us(1);
@@ -182,7 +184,7 @@ void etSpim1ReadNorFlashStdMode(uint32_t start_add, uint8_t *data_buf, uint32_t 
 	SpiSentByte(databuf,4);
 	SpiReadByte(data_buf,read_len);
 	FLASH_CS_HIGH;
-	GPIO_Spi_MISO_low();
+
 #endif
 }
 
@@ -190,24 +192,24 @@ void etSpim1ReadNorFlashStdMode(uint32_t start_add, uint8_t *data_buf, uint32_t 
 void etGensor_spi_read(unsigned char reg_addr, unsigned char *buffer, unsigned short len)
 {
 #if ENABLE_SPI
-	GPIO_Spi_MISO_high();
+
 	G_SPI_CS_LOW;
 	SpiSentByte(&reg_addr,1);
 	SpiReadByte(buffer,len);
 	G_SPI_CS_HIGH;
-	GPIO_Spi_MISO_low();
+
 #endif
 }
 
 void etGensor_spi_write(unsigned char reg_addr, unsigned char *buffer, unsigned short len)
 {
 #if ENABLE_SPI
- GPIO_Spi_MISO_high();
+
 	G_SPI_CS_LOW;
 	SpiSentByte(&reg_addr,1);
 	SpiSentByte(buffer,len);
 	G_SPI_CS_HIGH;
-	GPIO_Spi_MISO_low();
+
 #endif
 }
 #endif

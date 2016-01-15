@@ -979,7 +979,7 @@ static void Protocol_SET_AUTOSEND_STEP_NUM(unsigned char * data_prt,UINT16 packe
 {	
 	
 #if 1
-	if(data_prt[4])
+	if(data_prt[4] &&(packet_length>6))
 	{
 		//theSink.Enable_Send_stepNum=1;
 		theSink.AutoSend_RealtimeDataFlg=1;
@@ -993,7 +993,7 @@ static void Protocol_SET_AUTOSEND_STEP_NUM(unsigned char * data_prt,UINT16 packe
 		theSink.Step_RealtimeData_send_ok_flag=0;
 	}
 
-	if(data_prt[5])
+	if(data_prt[5] &&(packet_length>7))
 	{
 		theSink.AutoSend_TadayDataFlg = 1;
 		theSink.SportDataFlg_over = 1;
@@ -1012,7 +1012,7 @@ static void Protocol_SET_AUTOSEND_STEP_NUM(unsigned char * data_prt,UINT16 packe
 		theSink.SportDataFlg_end=0;
 	}
 
-	if(data_prt[6])
+	if(data_prt[6] &&(packet_length>8))
 	{
 		theSink.AutoSend_HistoricalDataFlg=1;
 		theSink.AutoSend_HistoricalDataFlg_end=0;
@@ -1024,7 +1024,7 @@ static void Protocol_SET_AUTOSEND_STEP_NUM(unsigned char * data_prt,UINT16 packe
 		theSink.AutoSend_HistoricalDataFlg_end=0;
 	}
 
-	if(data_prt[7])
+	if(data_prt[7]&&(packet_length>9))
 	{
 		theSink.AutoSend_SleepDataFlg=1;
 		theSink.SleepDataFlg_over=1;
@@ -1037,7 +1037,7 @@ static void Protocol_SET_AUTOSEND_STEP_NUM(unsigned char * data_prt,UINT16 packe
 		theSink.SleepDataFlg_over=0;
 		theSink.SleepDataFlg_end=0;
 	}
-	if(data_prt[5])
+	if(data_prt[8]&&(packet_length>10))
 	{
 		theSink.AutoSend_EveryDataTotalSleepRecordFlg=1;
 		theSink.EveryDataTotalSleepRecord_over=1;

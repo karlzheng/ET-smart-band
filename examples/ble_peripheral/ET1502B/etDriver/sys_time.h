@@ -20,9 +20,10 @@ typedef struct{
 }systime_sleep_str;
 extern systime_sleep_str timeSave_str;
 //unsigned int gTime_sec;
-extern volatile unsigned int todayBeginSec;
+//extern volatile unsigned int todayBeginSec;
 extern volatile unsigned int todayEndSec;
 extern void system_day_sec_init(void);
+extern unsigned char Check_is_save_sportRecordTime(void);
 //extern void system_time_tick(void);
 extern unsigned int system_sec_get(void);
 extern void system_time_set(s_tm tm);
@@ -31,10 +32,10 @@ extern void system_time_get_hourS(s_tm *tm,unsigned int sys_sencond);
 extern UINT8 system_time_get_second_ready(void);
 extern void system_time_get_second_clr(void);
 extern void system_time_updated(UINT32 temp_systime);
-extern void systemTime_save_sleepmode(void);
-extern void systemTimeUpdated_wakeup(void);
+//extern void systemTime_save_sleepmode(void);
+//extern void systemTimeUpdated_wakeup(void);
 extern void system_time_init(void);
-extern void system_time_init_from_sleep(void);
+//extern void system_time_init_from_sleep(void);
 
 #endif
 

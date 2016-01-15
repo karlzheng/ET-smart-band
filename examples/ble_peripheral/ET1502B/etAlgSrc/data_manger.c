@@ -35,7 +35,7 @@ flash_erase_label_t g_erase_label = {"ENTONG"};
 
 
 //unsigned char DateChangeFlg=0;/*每天结束标志*/
-static unsigned short DATANumber=0;/*总存储多少天的记录最大255天*/
+//static unsigned short DATANumber=0;/*总存储多少天的记录最大255天*/
 
 
 
@@ -307,7 +307,38 @@ unsigned char flush_mem_poll2flash(unsigned char dataType)
 	}
 	return ret;
 }
-
+#if 0
+unsigned char get_mem_data(unsigned char *str)//kevin add
+{
+	//unsigned char ret = 0;
+	//if((dataType == DATA_TYPE_SPORT) || (dataType == DATA_TYPE_SLEEP))
+	//{
+		data_block_t* pRamBlock = get_ram_block(DATA_TYPE_SPORT);
+    //unsigned char * pRamBlock = (unsigned char *)get_ram_block(DATA_TYPE_SPORT);
+		if(pRamBlock->head->dataItemNums == 0)
+			return 0;
+		str= (unsigned char *)pRamBlock;
+	  return pRamBlock->head->dataItemNums;
+		
+	  #if 0
+		data_manger_set_previous_head(pRamBlock->head->previousHead);/*加头0x22命令包头*/
+		//data_manger_set_time_stamp(pRamBlock->head->timeStamp);
+		pRamBlock->head->sotreMedia = STORE_MEDIA_FLASH;
+	
+        ret = ram_gsensor_data_write_block_2_flash(dataType);
+		ram_block_reset(pRamBlock);
+		if(ret == 0)
+		{
+            		//DATA_MANA_DUG("write data item 2 mem pool: gsensor data write pool fail\r\n");
+			//DATA_MANA_DUG("ram to flash fail\r\n");
+			return 1;
+    }
+		#endif
+	//}
+	//return ret;
+	
+}
+#endif
 unsigned char write_data_item_2_mem_pool(unsigned char dataType, unsigned char* pData)
 {
 	data_block_t* pRamBlock = get_ram_block(dataType);
@@ -646,8 +677,7 @@ static void flash_gsensor_sport_sleep_data_partition_refresh(unsigned char dataT
 	memset((void*)pEraseBitMaps,0,dataPartition->sector_num*sizeof(unsigned short));
 	dataPartition->writeSectorNum = 0;
 	dataPartition->readSectorNum = 0;
-	for(i = 0; i < dataPartition->sector_num; i++)
-		
+	for(i = 0; i < dataPartition->sector_num; i++)		
 	{
 		flashAddr = dataPartition->base_addr + i*FLASH_SECTOR_PRE_SIZE;
 		num = 0;
@@ -757,7 +787,7 @@ static void flash_gsensor_sport_sleep_data_partition_refresh(unsigned char dataT
 }
 
 
-
+/*
 static void flash_gsensor_histry_sport_data_partition_refresh(void)
 {
 	unsigned char buf[16];
@@ -770,12 +800,12 @@ static void flash_gsensor_histry_sport_data_partition_refresh(void)
 		DATANumber=buf[7];
 	}
 
-}
+}*/
 static void flash_gsensor_data_partition_refresh(void)
 {
 	flash_gsensor_sport_sleep_data_partition_refresh(DATA_TYPE_SPORT);	//Nick Remove
 	flash_gsensor_sport_sleep_data_partition_refresh(DATA_TYPE_SLEEP);      //Nick Remove
-	flash_gsensor_histry_sport_data_partition_refresh();/*历史运动数据累计刷新*/
+	//flash_gsensor_histry_sport_data_partition_refresh();/*历史运动数据累计刷新*/
 }
 
 static void read_flash_data_to_struct(unsigned int addr ,unsigned char *data ,unsigned short length)
@@ -977,9 +1007,10 @@ void SaveEveryDayHistySport_Data_info2_datamanger(void)
 
 		data_block_t* pRamBlock = get_ram_block(DATA_TYPE_SPORT);
 		//unsigned char Recordation[DEV_GSENSOR_SPORT_Histry_DATA_Size]={0};
-		unsigned char headHistry[16]={0x1A, 0x2B, 0x3C, 0x4D,0x01,0x10,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+		unsigned char headHistry[16]={0x1A, 0x2B, 0x3C, 0x4D,0x01,0x00,0x10,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
 		
 		unsigned char Buf[256]={0};
+		unsigned char DATANumber=0;
 	 // unsigned char Buf2[256]={0};
 		unsigned int flashAddr = 0;
 
@@ -1019,6 +1050,9 @@ void SaveEveryDayHistySport_Data_info2_datamanger(void)
 			/*??????Flash??*/
 			sector_erase_flash(DEV_GSENSOR_SPORT_DATA_START_ADDR,DEV_GSENSOR_SPORT_DATA_SECTOR_NUM);
 			flash_gsensor_sport_sleep_data_partition_refresh(DATA_TYPE_SPORT);		
+#if DEBUG_UART_EN    
+				DbgPrintf("erase yesterday step record:\r\n");
+#endif 			
 	}
 #endif
 #endif

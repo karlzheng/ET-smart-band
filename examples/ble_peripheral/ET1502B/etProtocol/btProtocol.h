@@ -318,8 +318,6 @@ typedef struct
 	unsigned AutoSend_EveryDataTotalSleepRecordFlg:1;
   unsigned EveryDataTotalSleepRecord_over:1;
   unsigned EveryDataTotalSleepRecord_end:1;
-	//unsigned second_ready:1;
-	//unsigned AG_status:1;	
 	unsigned unused:14;	
 } hsTaskData;
 extern hsTaskData theSink ;

@@ -18,8 +18,10 @@ extern void Sleep_Set_Motor_Vibrate_Flag(unsigned char flag);
 //#include "Boards.h"
 //#include "et_spi_gpio.h"
 const nrf_drv_timer_t TIMER_PWM = NRF_DRV_TIMER_INSTANCE(1);
-#define MOTOR_CTR_HI   NRF_GPIO->OUTSET = MOTOR_PW_PIN_MASK
-#define MOTOR_CTR_LO   NRF_GPIO->OUTCLR = MOTOR_PW_PIN_MASK
+//#define MOTOR_CTR_HI   NRF_GPIO->OUTSET = MOTOR_PW_PIN_MASK
+//#define MOTOR_CTR_LO   NRF_GPIO->OUTCLR = MOTOR_PW_PIN_MASK
+#define MOTOR_CTR_DISABLE   NRF_GPIO->OUTSET = MOTOR_PW_PIN_MASK
+#define MOTOR_CTR_ENABLE   NRF_GPIO->OUTCLR = MOTOR_PW_PIN_MASK
 
 Motor_stru Motor_str;
 static unsigned char toggle=0;
@@ -51,20 +53,41 @@ void timer_pwm_event_handler(nrf_timer_event_t event_type, void* p_context)
             //Do nothing.
             break;
     }  */ 
-					if(toggle==0)
+					//if(toggle==0)
+          //toggle=1;
+         /* if(toggle<2)
 					{
-						 toggle=1;
+						 toggle ++;
 						 //nrf_gpio_pin_clear(MOTOR_PW_PIN);
-						MOTOR_CTR_LO;	
+						MOTOR_CTR_ENABLE;	
 					}
 					else
 					{
 						toggle++;
-						if(toggle>3)
+						//if(toggle>3)
+            if(toggle>4)
 							toggle=0;
 						//nrf_gpio_pin_set(MOTOR_PW_PIN);
-						MOTOR_CTR_HI;	
-					}		
+						MOTOR_CTR_DISABLE;	
+					}*/	
+          toggle ++;
+          if(toggle>2)
+					toggle=0;
+          if(toggle<1)
+					{
+						 //toggle ++;
+						 //nrf_gpio_pin_clear(MOTOR_PW_PIN);
+						MOTOR_CTR_ENABLE;	
+					}
+					else 
+					{
+						//toggle++;
+						//if(toggle>3)
+            //if(toggle>4)
+						//	toggle=0;
+						//nrf_gpio_pin_set(MOTOR_PW_PIN);
+						MOTOR_CTR_DISABLE;	
+					}          
 }
 //===================================================================
 void ETTimer1Init(void)
@@ -98,13 +121,13 @@ void enable_pwm(void)
 void disable_pwm(void)
 {
   nrf_drv_timer_disable(&TIMER_PWM);
-	MOTOR_CTR_HI;
+	MOTOR_CTR_DISABLE;//MOTOR_CTR_HI;
 }
 //=====================================================================
 void MotorInit(void)
 {
 	NRF_GPIO->DIRSET = MOTOR_PW_PIN_MASK;
-	MOTOR_CTR_HI;//IomSetVal(MOTOR_GPIO,1); //
+	MOTOR_CTR_DISABLE;//MOTOR_CTR_HI;//IomSetVal(MOTOR_GPIO,1); //
 //	Motor_str.Motor_HiLevelTime=0;
 //	Motor_str.Motor_LoLevelTime=0;
 	Motor_str.Motor_dispAlarm_flag=0;
@@ -148,26 +171,7 @@ void MotorVibrate(void)// motor PWM contorl
          {
              if(Motor_str.Motor_shake_delay>0)
              {
-							 /*if (Motor_str.Motor_LoLevelTime <MOTOR_PWM_LO_DELAY)
-							 {
-								MOTOR_CTR_LO;			  
-								Motor_str.Motor_LoLevelTime++;
-							 }
 
-							 else if(Motor_str.Motor_HiLevelTime<MOTOR_PWM_HI_DELAY)
-							 {
-							 MOTOR_CTR_HI;			 
-								Motor_str.Motor_HiLevelTime++;
-								if(Motor_str.Motor_HiLevelTime==MOTOR_PWM_HI_DELAY)
-								{
-								 Motor_str.Motor_shake_delay--;
-								 if(Motor_str.Motor_shake_delay>0)
-								 {
-										Motor_str.Motor_HiLevelTime=0;
-										Motor_str.Motor_LoLevelTime=0;						
-								 }
-								}							 
-							 }*/
 							 Motor_str.Motor_shake_delay--;
 							 if(Motor_str.Motor_shake_delay==0)
 							 {
@@ -176,28 +180,32 @@ void MotorVibrate(void)// motor PWM contorl
              }
 						else if(Motor_str.Motor_NoShake_delay>0)
 						{
-							//MOTOR_CTR_HI;
+
 							Motor_str.Motor_NoShake_delay--;			  
 							if(Motor_str.Motor_NoShake_delay==0)
 							{
-								//Motor_str.Motor_HiLevelTime=0;
-								//Motor_str.Motor_LoLevelTime=0;
-								Motor_str.Motor_shake_count--;
+								//Motor_str.Motor_shake_count--;
 								if(Motor_str.Motor_shake_count>0)
 								{
 								Motor_data_set();
 								enable_pwm();
+                Motor_str.Motor_shake_count--;
 								}
 							}						
 						}
 						else
 						{
-								Motor_str.Motor_shake_count--;                    
+								                    
 								if(Motor_str.Motor_shake_count>0)
 								{
 								Motor_data_set();
 								enable_pwm();
+                Motor_str.Motor_shake_count--;
 								}
+                else
+                {
+                 		MotorCtr(0,0);	
+                }
 						}
          }
 				 else
@@ -210,18 +218,16 @@ void MotorCtr(uint8_t enable,unsigned char type)
 {
   if(enable==0)
 	{
+    MOTOR_CTR_DISABLE;//MOTOR_CTR_HI;
     if(Motor_str.Motor_enalbe==1)
     {
       disable_pwm();
       Motor_str.Motor_enalbe=0;
-     //   Motor_str.Motor_HiLevelTime=0;
-      //Motor_str.Motor_LoLevelTime=0;
       if(Motor_str.Motor_dispAlarm_flag==1)
       {
         Motor_str.Motor_dispAlarm_flag=0;
          display_check_to_clear_Screen();
       }
-      //MOTOR_CTR_HI;
       disable_pwm();
    }
 	}
@@ -233,7 +239,7 @@ void MotorCtr(uint8_t enable,unsigned char type)
 		switch(type)
 		{
 		 case MOTOR_TYPE_ALARM://alarm 
-		 Motor_str.Motor_shake_count=7;
+		 Motor_str.Motor_shake_count=10;
 		 Motor_str.Motor_shake_type=MOTOR_TYPE_ALARM;
 		 Motor_data_set();
 		 break;
@@ -254,10 +260,9 @@ void MotorCtr(uint8_t enable,unsigned char type)
         Sleep_Set_Motor_Vibrate_Flag(1);
 		#endif
 		Motor_str.Motor_enalbe=1;
-		//MOTOR_CTR_LO;
-		enable_pwm();
-
-		
+    toggle=0;
+    MOTOR_CTR_ENABLE;	
+		enable_pwm();		
 	}
 
 }

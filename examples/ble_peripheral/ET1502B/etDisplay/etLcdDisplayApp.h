@@ -45,7 +45,7 @@
 
 #define DISP_MODE_DELAY 1 //second
 #define DISP_KEYID_DELAY 30 //second
-#define DISP_INCOMING_LOGO_DELAY 30 //second
+#define DISP_INCOMING_LOGO_DELAY 60 //second
 /***********************************************************************************************/
 #define LCD_ADDRESS 0x78
 #define LCD_CMD_REG 0x00

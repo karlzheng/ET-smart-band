@@ -103,39 +103,4 @@ void GPIO_Spi_init(void)
 #endif
 }
 
-void GPIO_Spi_MISO_high(void)
-{
-#if ENABLE_SPI
-  if(SPI_GPIO_init==SPI_NO_INIT)
-  {
- /*   SPI_CLK_HIGH;
-    SPI_MOSI_HIGH;
-   // GPIO_Spi_init();
-	 nrf_gpio_cfg_input(SPIM0_MISO_PIN, NRF_GPIO_PIN_PULLUP);
-   //Gensor_nrf_gpio_cfg_output(SPIM0_MOSI_PIN, NRF_GPIO_PIN_PULLUP);
-   //Gensor_nrf_gpio_cfg_output(SPIM0_SCK_PIN, NRF_GPIO_PIN_PULLUP); 
-   // nrf_delay_100us(1);
-	 SPI_GPIO_init=SPI_INIT;
-    */
-  }
-#endif
-}
-
-void GPIO_Spi_MISO_low(void)
-{
-#if ENABLE_SPI
-  if(SPI_GPIO_init==SPI_INIT)
-  {
-/*	 nrf_gpio_cfg_input(SPIM0_MISO_PIN, NRF_GPIO_PIN_PULLDOWN);
-  // nrf_gpio_cfg_input(SPIM0_MOSI_PIN, NRF_GPIO_PIN_PULLDOWN);
-  // nrf_gpio_cfg_input(SPIM0_SCK_PIN, NRF_GPIO_PIN_PULLDOWN);
-    SPI_MOSI_LOW; 
-    SPI_CLK_LOW;
-	 SPI_GPIO_init=SPI_NO_INIT;
-    */
-  }
-#endif
-}
-
-
 

@@ -201,9 +201,10 @@ unsigned char auto_send_sport_record_to_app_timer(void)
 		{
 			read_flash((DEV_GSENSOR_SPORT_DATA_START_ADDR+FLASH_RW_BLOCK_SIZE*Read_SportBlock), pbuf, FLASH_RW_BLOCK_SIZE);
 
-			Read_SportBlock=Read_SportBlock+1;
+			
 			if((pbuf[0]==0x1A)&&(pbuf[1]==0x2B)&&(pbuf[2]==0x3C)&&(pbuf[3]==0x4D))
 			{	
+			  Read_SportBlock=Read_SportBlock+1;
 				theSink.AutoSend_TadayDataFlg=0;
 				#if SERVICE_STEP_EN
 				Protocol_send_sport_data_to_ag(pbuf,(pbuf[7]+1)*16,SERVICE_STEP);/*发送*/
@@ -232,6 +233,18 @@ unsigned char auto_send_sport_record_to_app_timer(void)
 		}
 		else
 		{
+			if(pRamBlock->head->dataItemNums)/*发送RAM 里的片段历史数据*/
+			{ 
+				theSink.AutoSend_TadayDataFlg=0;
+				data_manger_set_previous_head(pRamBlock->head->previousHead);/*加命令包头*/
+				#if SERVICE_STEP_EN
+				Protocol_send_sport_data_to_ag((unsigned char*)pRamBlock->head,(pRamBlock->head->dataItemNums+1)*16,SERVICE_STEP);/*STEP通道*/
+				#else
+				Protocol_send_sport_data_to_ag((unsigned char*)pRamBlock->head,(pRamBlock->head->dataItemNums+1)*16,SERVICE_COS);/*COS 通道*/
+				#endif
+				ke_timer_set(USR_SEND_DATA_TIMEOUT_TIMER,SEND_DATA_TIME_OUT_TIME);
+			}
+
 			theSink.AutoSend_TadayDataFlg=0;
 			theSink.SportDataFlg_over=0;
 			Read_SportBlock=0;

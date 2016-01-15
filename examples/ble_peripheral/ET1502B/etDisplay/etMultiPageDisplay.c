@@ -347,6 +347,7 @@ void lcd_clear_handle(void)
 	free_display_buff();
 	lcd_power_control(LCD_CLOSE);
 	Set_lastDisplayTag(DISP_TAG_NULL);
+  clr_cos_mode();
 	
 }
 

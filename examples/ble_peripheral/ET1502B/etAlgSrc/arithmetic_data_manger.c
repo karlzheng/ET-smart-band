@@ -28,7 +28,7 @@ static arth_personal_info g_arthPersonalInfo = {60,70,ARITHMETIC_STEPS_HAND};
 
 //s_tm curTime_Temp;
 //	system_time_get(&curTime_Temp);
-
+//static unsigned char Step_can_Save=0;
 
 unsigned int app_arthmetic_get_total_steps(void)
 {
@@ -318,7 +318,7 @@ static void app_arithmetic_save_sportinfo(const signed short steps, unsigned cha
 		g_walkInfoStruct.sustainSecs += daltSec;
 		
 		theSink.Step_Flag=1;//有STEP 标志
-		
+//		Step_can_Save=1;
 		#if ARI_MODULE_LOG_EN
 		unsigned char sportModeStr[3][12] = {"Walk","Run","HalfWalkRun"};
 		ARITH_INFO("arith %s : add %d steps, total %d steps\r\n", sportModeStr[sportMode], steps,g_walkInfoStruct.steps);
@@ -332,9 +332,9 @@ static void app_arithmetic_save_sportinfo(const signed short steps, unsigned cha
 	if(flushFlag || (g_arthCurSec - g_arthStoreSec) >= ARTH_SPORT_SAVE2DATAMANGER_INTERVAL)/*10 分钟强制保存一次数据*/
 	//if(1)
 	{
-		ARITH_INFO("//////////////////////////////////////\r\n");
-		ARITH_INFO("ble disconnect sync %d steps, dalt time = %d,flushFlag = %d\r\n",g_walkInfoStruct.steps,(g_arthCurSec - g_arthStoreSec),flushFlag);
-		send_sport_info2_datamanger(&g_sportInfoDMItem);
+		//ARITH_INFO("//////////////////////////////////////\r\n");
+		//ARITH_INFO("ble disconnect sync %d steps, dalt time = %d,flushFlag = %d\r\n",g_walkInfoStruct.steps,(g_arthCurSec - g_arthStoreSec),flushFlag);
+		//send_sport_info2_datamanger(&g_sportInfoDMItem);//kevin delete
 	}
 	
 
@@ -402,7 +402,7 @@ void app_arthmetic_clear_steps(unsigned char flag)
 	{
 		sportInfo2DMDataItem(SPORT_TYPE_WALKING,&g_walkInfoStruct, 
 								g_arthStoreSec,g_arthCurSec - g_arthStoreSec);
-		send_sport_info2_datamanger(&g_sportInfoDMItem);
+		//send_sport_info2_datamanger(&g_sportInfoDMItem);//kevin delete
 	}
 
 	memset(&g_walkInfoStruct,0,sizeof(walk_info_t));
@@ -413,11 +413,29 @@ void app_arthmetic_clear_steps(unsigned char flag)
 	{
 		sportInfo2DMDataItem(SPORT_TYPE_WALKING,&g_walkInfoStruct, 
 								g_arthStoreSec,g_arthCurSec - g_arthStoreSec);
-		send_sport_info2_datamanger(&g_sportInfoDMItem);
+		//send_sport_info2_datamanger(&g_sportInfoDMItem);//kevin delete
 	}
 
 }
 
+void save_sport_info2_datamanger(void)
+{
+  if(Check_is_save_sportRecordTime()/*&&(Step_can_Save==1)*/)
+  {
+    unsigned int temp=0;
+//		Step_can_Save=0;
+	  send_sport_info2_datamanger(&g_sportInfoDMItem);//kevin delete
+	  temp=system_sec_get();
+	  g_sportInfoDMItem.startSecs[0]=temp&0xff;
+		g_sportInfoDMItem.startSecs[1]=(temp>>8)&0xff;
+		g_sportInfoDMItem.startSecs[2]=(temp>>16)&0xff;
+		g_sportInfoDMItem.startSecs[3]=(temp>>24)&0xff;
+#if DEBUG_UART_EN    
+				DbgPrintf("save action time=%d:\r\n",temp);
+#endif 
+
+  }
+}
 #endif
 
 

@@ -244,6 +244,7 @@
 #define XIAOMI_ARITHMETIC				0
 #define WUFAN_ARITHMETIC				1
 #define MODIFY_WUFAN_ARITHMETIC			2
+#define LYB_ARITHMETIC					3
 
 //===================================================
 //#define GSENSOR_DEV_TYPE	GSENSOR_TYPE_LIS3DH
@@ -295,7 +296,7 @@
 #endif
 
 #if WALK_STEP_RECORD_ARITHMETIC
-#define USE_ARITHMETIC_FROM					WUFAN_ARITHMETIC
+#define USE_ARITHMETIC_FROM					LYB_ARITHMETIC//WUFAN_ARITHMETIC
 #endif
 
 #define USER_TIMER_COUNT					(3 + FIFO_USER_TIMER_COUNT)
@@ -305,7 +306,7 @@
 
 /* version */
 #define COS_VERSION		"1.00.00"
-#define HW_VERSION		"2.0-1.7"
+#define HW_VERSION		"2.0-1.8"
 #define BT_VERSION		"1.00.05"
 
 

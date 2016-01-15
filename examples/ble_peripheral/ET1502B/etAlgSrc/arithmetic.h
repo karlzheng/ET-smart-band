@@ -47,6 +47,27 @@ typedef struct{
 
 extern void Arithmetic_Set_YAxis_Min_Threshold(unsigned short data);
 extern unsigned char deal_raw_data(unsigned short *yArray, unsigned short length, unsigned char* pSportMode,unsigned char hand);
+#elif USE_ARITHMETIC_FROM == LYB_ARITHMETIC
+#define FIR_SMOOTH_INTERVAL		(10)
+#define SMOOTH_WIDTH			(10)
+#define BLE_ARTH_BUF_SIZE		(192)
+
+#define X_AXIS_WALK_MIN_THRESHOLD			(36)
+#define X_AXIS_RUN_MIN_THRESHOLD			(22)
+
+#define Y_AXIS_DALT_DAY_MIN_THRESHOLD		(2000)
+#define Y_AXIS_DALT_EVENING_MIN_THRESHOLD	(2000)
+#define Y_AXIS_DALT_MORING_MIN_THRESHOLD	(2000)
+#define Y_AXIS_DALT_NIGHT_MIN_THRESHOLD		(2000)
+
+typedef struct{
+	unsigned short* xArray;
+	unsigned short* yArray;
+	unsigned short num;
+}XYDataArray;
+
+extern void Arithmetic_Set_YAxis_Min_Threshold(unsigned short data);
+extern unsigned char deal_raw_data(unsigned short *yArray, unsigned short length, unsigned char* pSportMode,unsigned char hand);
 
 #elif USE_ARITHMETIC_FROM == MODIFY_WUFAN_ARITHMETIC
 

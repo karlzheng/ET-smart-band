@@ -1047,6 +1047,690 @@ MEM_FREE:
 }
 
 
+#elif USE_ARITHMETIC_FROM == LYB_ARITHMETIC
+static unsigned short g_yAxisDaltMinThreshold = Y_AXIS_DALT_DAY_MIN_THRESHOLD;
+unsigned short x_axis_run_min_threshold 	= X_AXIS_RUN_MIN_THRESHOLD;
+unsigned short x_axis_walk_min_threshold 	= X_AXIS_WALK_MIN_THRESHOLD;
+unsigned short yAverage = 0,yMax=0,yMin=0;
+
+void Arithmetic_Set_YAxis_Min_Threshold(unsigned short data) 
+{
+	g_yAxisDaltMinThreshold = data;
+}
+
+static void FIRProcess(unsigned short *InData, unsigned short length, unsigned short *OutData)
+{
+	unsigned int sum = 0; 
+	unsigned short i;
+	unsigned short  j = 0;
+	if(length > FIR_SMOOTH_INTERVAL)
+	{
+		for(i = 0;i < length - FIR_SMOOTH_INTERVAL;i++)
+		{	
+			sum = 0;
+			for(j = 0;j < FIR_SMOOTH_INTERVAL;j++)
+			{
+				sum += InData[i+j];  
+			} 
+			OutData[i] = sum/FIR_SMOOTH_INTERVAL;
+		}
+
+		for(i = length - FIR_SMOOTH_INTERVAL; i < length; i++)
+		{	
+			sum = 0;
+			for(j = 0;j < FIR_SMOOTH_INTERVAL;j++)
+			{
+				sum += InData[i-j];  
+			}
+			OutData[i] = sum/FIR_SMOOTH_INTERVAL;
+		}
+	}
+	else
+	{
+		for(i = 0; i < length; i++)
+			OutData[i] = InData[i];
+	}
+	return;
+}
+
+/* derivative function input param: 
+ * src : input vector 
+ * length : input vector length
+ * dist: output result vector  */
+static void derivativeFunc(unsigned short length, unsigned short *src, signed short *dist)
+{
+	unsigned short i = 0;
+	if(length > 2)
+	{
+		#if 1
+		*dist = *(src+1) - *src;
+		*(dist + length - 1) = *(src + length - 1) - *(src + length - 2);
+
+		for(i = 1; i < length - 2; i++)
+			*(dist + i) = (*(src + i + 1) - *(src + i - 1))/2;
+		#else
+		for(i = 0; i < length - 2; i++)
+			*(dist + i) = (*(src + i + 1) - *(src + i))/2;
+		#endif
+	}
+	else
+	{
+		for(i = 0; i < length; i++)
+			*(dist + i) = *(src + i);
+	}
+	return;
+}
+
+/* smooth function input param: 
+ * src : input vector 
+ * length : input vector length
+ * dist: output result vector 
+ * sw : width 
+ * ends: end points, "ends" controls how the "ends" of the signal */
+static void smoothfunc(unsigned short length, unsigned short ends,signed short* src, signed short* dist)
+{
+	unsigned short sw = SMOOTH_WIDTH;
+	unsigned short i = 0, j = 0, halfSW = 0, startPoint = 0;
+	signed int sumVal = 0;
+	if(length <= sw)
+		sw = length/2;
+	halfSW = sw/2;
+
+	if(length <= 2)
+	{
+		for(i = 0; i < length; i++)
+			*(dist + i) = *(src + i);
+		return;
+	}
+	
+	for(i = 0; i < sw; i++)
+		sumVal += *(src+i);
+		
+	for(i = 0; i < length - sw -1; i++)
+	{
+		*(dist + i +halfSW - 2) = (signed short)sumVal;
+		sumVal -= *(src + i);
+		sumVal += *(src + i + sw - 1);
+	}
+	
+	sumVal = 0;
+	for(j = length-sw -1; j < length; j++)
+		sumVal += *(src + j);
+		
+	*(dist + i +halfSW - 1) = (signed short)sumVal;
+	for(j = 0; j < length; j++)
+	{
+		*(dist + j) = *(dist + j)/sw;
+	}
+	
+	if(ends == 1)
+	{
+		startPoint = sw/2;
+		*dist = (*src + *(src+1))/2;
+		for(i = 1; i < startPoint; i++)
+		{
+			sumVal = 0;
+			for(j = 0; j < 2*i - 1; j++)
+				sumVal += *(src+j);
+			*(dist + i) = (signed short)(sumVal/j);
+			
+			sumVal = 0;
+			for(j = length - 2*i + 1; j < length; j++)
+				sumVal += *(src+j);
+			*(dist + length - i - 1) = (signed short)(sumVal/(2*i - 1));
+		}
+		*(dist + length - 1) = (*(src + length - 1) + *(src + length - 2))/2;
+	}
+
+	return;
+}
+
+static unsigned short FindPeaks(unsigned short *y, unsigned short length,unsigned short AmpThreshold, signed short* smoothYArray, XYDataArray* pPeaksArray)
+{
+	unsigned short j = 0, peakCount = 0, startPos = 0;
+	unsigned short smoothwidth = SMOOTH_WIDTH;
+	if(length <= smoothwidth)
+		smoothwidth = length/2;
+
+	if(length <= 2)
+	{
+		return length;
+	}
+	
+    if(smoothwidth > 1)
+		startPos = 2*(smoothwidth/2) - 1;
+	else
+		startPos = 1;
+
+    for (j = startPos-1 ; j < length - smoothwidth - 1 ;j++)
+    {
+        if(((*(smoothYArray+j) > 0)&&(*(smoothYArray+j+1) <= 0)) ||
+			((*(smoothYArray+j) == 0) && (*(smoothYArray+j+1) < 0)))//Detects zero-crossing
+        {
+            if(*(y + j) > AmpThreshold)   //  if height of peak is larger than AmpThreshold
+            {
+				*(pPeaksArray->xArray + peakCount) = j;
+				*(pPeaksArray->yArray + peakCount) = *(y + j);
+				peakCount++;
+            } 
+        }
+    }
+	pPeaksArray->num = peakCount;
+	return peakCount;
+}
+
+static unsigned short FindValleys(unsigned short *y,unsigned short length,unsigned short AmpThreshold, signed short* smoothYArray, XYDataArray* pValleysArray)
+{
+	unsigned short j = 0, valleyCount = 0, startPos = 0;
+	unsigned short smoothwidth = SMOOTH_WIDTH;
+	if(length <= smoothwidth)
+		smoothwidth = length/2;
+
+	if(length <= 2)
+	{
+		return length;
+	}
+	
+    if(smoothwidth > 1)
+		startPos = 2*(smoothwidth/2) - 1;
+	else
+		startPos = 1;
+
+    for (j = startPos-1 ; j < length - smoothwidth - 1 ;j++)
+    {
+        if(((*(smoothYArray+j) <= 0)&&(*(smoothYArray+j+1) > 0)) ||
+			((*(smoothYArray+j) < 0) && (*(smoothYArray+j+1) == 0)))//Detects zero-crossing
+        {       
+            if(*(y + j) > AmpThreshold)   //  if height of peak is larger than AmpThreshold
+            {                 
+				*(pValleysArray->xArray + valleyCount) = j;
+				*(pValleysArray->yArray + valleyCount) = *(y + j);
+				valleyCount++;
+                    
+            }
+        }
+    }
+	pValleysArray->num = valleyCount;
+	return valleyCount;
+}
+
+static void peaks_valleys_Merge(XYDataArray* pPeaksArray, XYDataArray* pValleysArray, XYDataArray* pMergeArray)
+{
+	unsigned short i = 0, count = 0, peakPos = 0, valleyPos = 0;
+	
+	memset(pMergeArray->xArray,0,BLE_ARTH_BUF_SIZE);
+	memset(pMergeArray->yArray,0,BLE_ARTH_BUF_SIZE);
+	pMergeArray->num = 0;
+	
+	while(i < (pPeaksArray->num + pValleysArray->num))
+	{
+		if((peakPos < pPeaksArray->num) && (valleyPos < pValleysArray->num))
+		{
+			if(*(pPeaksArray->xArray + peakPos) < *(pValleysArray->xArray + valleyPos))
+			{
+				*(pMergeArray->xArray + count) = *(pPeaksArray->xArray + peakPos);
+				*(pMergeArray->yArray + count) = *(pPeaksArray->yArray + peakPos);
+				peakPos++;
+				count++;
+				i++;
+			}
+			else if(*(pPeaksArray->xArray + peakPos) > *(pValleysArray->xArray + valleyPos))
+			{
+				*(pMergeArray->xArray + count) = *(pValleysArray->xArray + valleyPos);
+				*(pMergeArray->yArray + count) = *(pValleysArray->yArray + valleyPos);
+				valleyPos++;
+				count++;
+				i++;
+			}
+			else 
+			{
+				*(pMergeArray->xArray + count) = *(pPeaksArray->xArray + peakPos);
+				*(pMergeArray->yArray + count) = *(pPeaksArray->yArray + peakPos);
+				peakPos++;
+				valleyPos++;
+				count++;
+				i+=2;
+			}
+		}
+		else if(peakPos >= pPeaksArray->num)
+		{
+			*(pMergeArray->xArray + count) = *(pValleysArray->xArray + valleyPos);
+			*(pMergeArray->yArray + count) = *(pValleysArray->yArray + valleyPos);
+			valleyPos++;
+			count++;
+			i++;
+		}
+		else
+		{
+			*(pMergeArray->xArray + count) = *(pPeaksArray->xArray + peakPos);
+			*(pMergeArray->yArray + count) = *(pPeaksArray->yArray + peakPos);
+			peakPos++;
+			count++;
+			i++;
+		}
+	}
+
+	pMergeArray->num = count;
+#if ARI_MODULE_LOG_EN
+	ARITH_INFO("\r\n %d totalPeaksAndValleys array: \r\n",count);
+	for(i = 0; i < count; i++)
+	{
+		ARITH_INFO("[%d] %d, ",*(pMergeArray->xArray + i), *(pMergeArray->yArray + i));
+	}
+	ARITH_INFO("\r\n");
+#endif	
+}
+
+static void peaksValleys_mergeArray_arrange(XYDataArray* pMergeArray)
+{
+	if(pMergeArray->num < 2)
+		return;
+	
+	unsigned short arrangeXArray[BLE_ARTH_BUF_SIZE/2];
+	unsigned short arrangeYArray[BLE_ARTH_BUF_SIZE/2];
+	unsigned short i = 0, j = 0,daltX = 0, daltY = 0, minYVal = 0, count = 0, beginPos = 0, find = 0;
+	
+	for(i = 0; i < pMergeArray->num - 1; i++)
+	{
+		daltX = *(pMergeArray->xArray + i + 1) - *(pMergeArray->xArray + i);
+		daltY = *(pMergeArray->yArray + i + 1) >= *(pMergeArray->yArray + i) ? *(pMergeArray->yArray + i + 1) - *(pMergeArray->yArray + i) : *(pMergeArray->yArray + i)  - *(pMergeArray->yArray + i + 1) ;
+		minYVal = *(pMergeArray->yArray + i + 1) >= *(pMergeArray->yArray + i) ? *(pMergeArray->yArray + i) : *(pMergeArray->yArray + i + 1);
+		if(daltX <= 5 && daltY <= minYVal/8)
+		{
+			if(find == 0)
+			{
+				find = 1;
+				beginPos = i;
+			}
+		}
+		else
+		{
+			if(find == 1)
+			{
+				unsigned int sumX = 0, sumY = 0;
+				unsigned short avgX = 0, avgY = 0;
+				find = 0;
+				for(j = beginPos; j <= i; j++)
+				{
+					sumX += *(pMergeArray->xArray + j);
+					sumY += *(pMergeArray->yArray + j);
+				}
+			
+				avgX = sumX/(i - beginPos+1);
+				avgY = sumY/(i - beginPos+1);
+
+				*(arrangeXArray + count) = avgX;
+				*(arrangeYArray + count) = avgY;
+				count++;
+			}
+			else
+			{
+				*(arrangeXArray + count) = *(pMergeArray->xArray + i);
+				*(arrangeYArray + count) = *(pMergeArray->yArray + i);
+				count++;
+			}
+		}
+	}
+
+	if(find == 1)
+	{
+		unsigned int sumX = 0, sumY = 0;
+		unsigned short avgX = 0, avgY = 0;
+		find = 0;
+		for(j = beginPos; j <= i; j++)
+		{
+			sumX += *(pMergeArray->xArray + j);
+			sumY += *(pMergeArray->yArray + j);
+		}
+	
+		avgX = sumX/(i - beginPos+1);
+		avgY = sumY/(i - beginPos+1);
+
+		*(arrangeXArray + count) = avgX;
+		*(arrangeYArray + count) = avgY;
+		count++;
+	}
+	else
+	{
+		if(i == pMergeArray->num - 1)
+		{
+			*(arrangeXArray + count) = *(pMergeArray->xArray + i);
+			*(arrangeYArray + count) = *(pMergeArray->yArray + i);
+			count++;
+		}
+	}
+	memset(pMergeArray->xArray, 0 ,pMergeArray->num*2);
+	memset(pMergeArray->yArray, 0 ,pMergeArray->num*2);
+	pMergeArray->num = count;
+	memcpy(pMergeArray->xArray, arrangeXArray ,count*2);
+	memcpy(pMergeArray->yArray, arrangeYArray ,count*2);
+
+#if ARI_MODULE_LOG_EN
+	ARITH_INFO("\r\n arrangeMergeArray %d items: \r\n",count);
+	for(i = 0; i < count; i++)
+	{
+		ARITH_INFO("[%d] %d, ",*(pMergeArray->xArray + i), *(pMergeArray->yArray + i));
+	}
+	ARITH_INFO("\r\n");
+#endif
+
+}
+
+static unsigned char steps_matchArray_verfy(unsigned short* xArray, unsigned short* yArray, unsigned short arrayNum, unsigned char sportMode)
+{
+	unsigned short i = 0, xDaltMin = 0, invalidTotalCount = 0, disconnectCount = 0, onceMaxNum = 0, validTotalCount = 0, steps = 0, find = 0, daltX = 0, beginPos = 0;
+	if(sportMode) // run mode
+		xDaltMin = x_axis_run_min_threshold;//X_AXIS_RUN_MIN_THRESHOLD;
+	else // walk mode
+		xDaltMin = x_axis_walk_min_threshold;//X_AXIS_WALK_MIN_THRESHOLD;
+
+	while(i < arrayNum - 1)
+	{
+		daltX = *(xArray + i + 1) - *(xArray + i);
+		if(daltX >= xDaltMin)
+		{
+			if(find == 0)
+			{
+				find = 1;
+				beginPos = i;	
+			}
+			validTotalCount++;
+		}
+		else
+		{
+			if(find == 1)
+			{
+				find = 0;
+				disconnectCount++;
+				if(i - beginPos > onceMaxNum)
+					onceMaxNum = i - beginPos;
+			}
+			invalidTotalCount++;
+		}
+		i++;
+	}
+
+	if(find == 1)
+	{
+		if(i - beginPos > onceMaxNum)
+			onceMaxNum = i - beginPos;
+	}
+
+	ARITH_INFO("i = %d, arrayNum = %d, sportMode = %d,validTotalCount = %d,onceMaxNum = %d,invalidTotalCount = %d, disconnectCount = %d\r\n",
+		i,arrayNum,sportMode,validTotalCount,onceMaxNum,invalidTotalCount,disconnectCount);
+
+ 	if((validTotalCount > invalidTotalCount) && (validTotalCount > disconnectCount))
+ 	{
+ 	//	if(onceMaxNum > validTotalCount/2)
+			steps = onceMaxNum;	
+	//	else
+	//		steps = validTotalCount;
+	}
+
+	if(steps > 5)
+		return 0;
+	
+	if(sportMode)
+		steps = steps > 4 ? 4 : steps;
+	else
+		steps = steps > 2 ? 2 : steps;
+	return steps;
+}
+
+static unsigned char peaks_valleys_final_match(XYDataArray* pMergeArray, unsigned char* pSportMode)
+{
+	unsigned short tempDaltX = 0, tempDaltY = 0, tempMinY = 0;
+	signed short i = 0, walkCount = 0, runCount = 0, invalidXCount = 0, invalidXYCount = 0, steps = 0;
+	unsigned short pWalkXArray[BLE_ARTH_BUF_SIZE/2];
+	unsigned short pWalkYArray[BLE_ARTH_BUF_SIZE/2];
+	unsigned short pRunXArray[BLE_ARTH_BUF_SIZE/2];
+	unsigned short pRunYArray[BLE_ARTH_BUF_SIZE/2];
+	
+	for(i = 0; i < pMergeArray->num - 1; i++)
+	{
+		tempDaltX = *(pMergeArray->xArray + i + 1) - *(pMergeArray->xArray + i);
+		tempDaltY = *(pMergeArray->yArray + i + 1) >= *(pMergeArray->yArray + i) ? *(pMergeArray->yArray + i + 1) - *(pMergeArray->yArray + i) : *(pMergeArray->yArray + i) - *(pMergeArray->yArray + i + 1);
+		tempMinY = *(pMergeArray->yArray + i + 1) >= *(pMergeArray->yArray + i) ? *(pMergeArray->yArray + i) : *(pMergeArray->yArray + i + 1);
+		ARITH_INFO("i = %d, tempDaltX = %d, tempDaltY = %d, tempMinY = %d\r\n",i,tempDaltX,tempDaltY,tempMinY);
+
+		if((tempDaltX >= x_axis_run_min_threshold) && (tempDaltY > g_yAxisDaltMinThreshold && tempDaltY > tempMinY/5 && tempDaltY < tempMinY*5))
+		{
+			ARITH_INFO("Run: runCount = %d, runx = %d,runy = %d, mergeX[%d] = %d, mergeY[%d] = %d, mergeX[%d] = %d, mergeY[%d] = %d\r\n",
+				runCount, runCount > 0 ? *(pRunXArray + runCount - 1): 0, runCount > 0 ? *(pRunXArray + runCount - 1): 0,
+				i,*(pMergeArray->xArray + i),i,*(pMergeArray->yArray + i),i+1,*(pMergeArray->xArray + i + 1),i+1,*(pMergeArray->yArray + i + 1));
+			if(runCount == 0 || *(pRunXArray + runCount - 1) != *(pMergeArray->xArray + i))
+			{
+				*(pRunXArray+runCount) = *(pMergeArray->xArray + i);
+				*(pRunYArray+runCount) = *(pMergeArray->yArray + i);
+				runCount++;
+			}
+
+			if(runCount == 0 || *(pRunXArray + runCount - 1) != *(pMergeArray->xArray + i + 1))
+			{
+				*(pRunXArray+runCount) = *(pMergeArray->xArray + i + 1);
+				*(pRunYArray+runCount) = *(pMergeArray->yArray + i + 1);
+				runCount++;
+			}
+
+			if((tempDaltX >= x_axis_walk_min_threshold) && (tempDaltY > g_yAxisDaltMinThreshold && tempDaltY > tempMinY/3 && tempDaltY < tempMinY*5))
+		//	if(tempDaltX >= X_AXIS_WALK_MIN_THRESHOLD)
+			{
+				ARITH_INFO("Walk: walkCount = %d, walkx = %d, walky = %d, mergeX[%d] = %d, mergeY[%d] = %d, mergeX[%d] = %d, mergeY[%d] = %d\r\n",
+					walkCount, walkCount > 0 ? *(pWalkXArray + walkCount - 1): 0, walkCount > 0 ? *(pWalkYArray + walkCount - 1): 0,
+					i,*(pMergeArray->xArray + i),i,*(pMergeArray->yArray + i),i+1,*(pMergeArray->xArray + i + 1),i+1,*(pMergeArray->yArray + i + 1));
+				if(walkCount == 0 || *(pWalkXArray + walkCount - 1) != *(pMergeArray->xArray + i))
+				{
+					*(pWalkXArray+walkCount) = *(pMergeArray->xArray + i);
+					*(pWalkYArray+walkCount) = *(pMergeArray->yArray + i);
+					walkCount++;
+				}
+
+				if(walkCount == 0 || *(pWalkXArray + walkCount - 1) != *(pMergeArray->xArray + i + 1))
+				{
+					*(pWalkXArray+walkCount) = *(pMergeArray->xArray + i + 1);
+					*(pWalkYArray+walkCount) = *(pMergeArray->yArray + i + 1);
+					walkCount++;
+				}
+			}
+		}
+		else if((tempDaltX < x_axis_run_min_threshold) && (tempDaltY > g_yAxisDaltMinThreshold && tempDaltY > tempMinY/5 && tempDaltY < tempMinY*5))
+		{
+			invalidXCount++;
+		}
+		else if(tempDaltX >= x_axis_run_min_threshold)
+		{
+			invalidXYCount++;
+		}
+	}
+
+#if ARI_MODULE_LOG_EN
+	ARITH_INFO("\r\n invalidXCount = %d\r\nWalk Temp Array %d items: \r\n",invalidXCount, walkCount);
+	for(i = 0; i < walkCount; i++)
+	{
+		ARITH_INFO("[%d :% d], ",*(pWalkXArray+i),*(pWalkYArray+i));
+	}
+	ARITH_INFO("\r\nRun Temp Array %d items: \r\n", walkCount);
+	for(i = 0; i < runCount; i++)
+	{
+		ARITH_INFO("[%d :% d], ",*(pRunXArray+i),*(pRunYArray+i));
+	}
+	ARITH_INFO("\r\n");
+#endif
+
+
+	if((walkCount >= 2 && (runCount - 1) >= 3*(walkCount - 1)) ||
+		(walkCount < 2))
+	{
+		*pSportMode = 1;
+
+		if((invalidXCount <= runCount*3/2) && (invalidXCount + invalidXYCount <= runCount*2))
+			steps = steps_matchArray_verfy(pRunXArray,pRunYArray,runCount,1);
+	}
+	else
+	{
+		*pSportMode = 0;
+
+		steps = steps_matchArray_verfy(pWalkXArray,pWalkYArray,walkCount,0);
+	}
+
+	return steps;
+}
+
+unsigned char deal_raw_data(unsigned short *yArray, unsigned short length, unsigned char* pSportMode,unsigned char hand)
+{
+	unsigned char steps = 0;
+	unsigned short *firYArray = NULL;
+	signed short *derivativeYArray = NULL;
+	signed short *smoothYArray = NULL;
+	unsigned short i=0;
+	unsigned int sum=0;
+	XYDataArray peaksArray = {0};
+	XYDataArray valleysArray = {0};
+	XYDataArray mergeArray = {0};
+	
+	unsigned short buf_size_256_1[BLE_ARTH_BUF_SIZE]={0};
+	signed short buf_size_256_2[BLE_ARTH_BUF_SIZE]={0};
+	signed short buf_size_256_3[BLE_ARTH_BUF_SIZE]={0};
+
+	firYArray = (unsigned short*)buf_size_256_1;
+	memset(firYArray,0,length*2);
+	FIRProcess(yArray,length,firYArray);// 滤波
+
+	yMax= *(firYArray+0);
+	yMin= *(firYArray+0);
+	for(i=0;i<length;i++)
+	{
+		if(*(firYArray+i) > yMax)
+			yMax = *(firYArray+i);
+
+		if(*(firYArray+i) < yMin)
+			yMin = *(firYArray+i);
+
+		sum += *(firYArray+i);
+	}
+	yAverage = sum / length;
+	MY_QPRINTF("yAverage=%d,	yMax=%d,	yMin=%d,	\r\n",yAverage,yMax,yMin);
+
+	if(yAverage < 17000)
+	{
+		x_axis_run_min_threshold 	= X_AXIS_RUN_MIN_THRESHOLD+2;
+		x_axis_walk_min_threshold 	= X_AXIS_WALK_MIN_THRESHOLD+2;
+		g_yAxisDaltMinThreshold		= 850;
+		MY_QPRINTF("MODE 0000\r\n");
+	}
+	if(yAverage < 18000)
+	{
+		x_axis_run_min_threshold 	= X_AXIS_RUN_MIN_THRESHOLD+1;
+		x_axis_walk_min_threshold 	= X_AXIS_WALK_MIN_THRESHOLD+1;
+		g_yAxisDaltMinThreshold		= 950;
+		MY_QPRINTF("MODE 1111\r\n");
+	}
+	else if(yAverage < 20000)
+	{
+		x_axis_run_min_threshold 	= X_AXIS_RUN_MIN_THRESHOLD;
+		x_axis_walk_min_threshold 	= X_AXIS_WALK_MIN_THRESHOLD;
+		g_yAxisDaltMinThreshold		= 1000;
+		MY_QPRINTF("MODE 2222\r\n");
+	}
+	else if(yAverage < 30000)
+	{
+		if(yMax - yMin > 10000)
+		{
+			x_axis_run_min_threshold 	= X_AXIS_RUN_MIN_THRESHOLD-2;
+			x_axis_walk_min_threshold 	= X_AXIS_WALK_MIN_THRESHOLD-2;
+			g_yAxisDaltMinThreshold		= 1100;
+			MY_QPRINTF("MODE 3333\r\n");
+		}
+		else
+		{
+			x_axis_run_min_threshold 	= X_AXIS_RUN_MIN_THRESHOLD-1;
+			x_axis_walk_min_threshold 	= X_AXIS_WALK_MIN_THRESHOLD-1;
+			g_yAxisDaltMinThreshold		= 1100;
+			MY_QPRINTF("MODE 4444\r\n");
+		}
+	}
+	else
+	{
+		if(yMax > 48000 && yMin > 30000)
+		{
+			x_axis_run_min_threshold 	= X_AXIS_RUN_MIN_THRESHOLD-6;
+			x_axis_walk_min_threshold 	= X_AXIS_WALK_MIN_THRESHOLD-6;
+			g_yAxisDaltMinThreshold		= 1000;
+			MY_QPRINTF("MODE 5555\r\n");
+		}
+		else if(yMax >30000)
+		{
+			x_axis_run_min_threshold 	= X_AXIS_RUN_MIN_THRESHOLD-5;
+			x_axis_walk_min_threshold 	= X_AXIS_WALK_MIN_THRESHOLD-5;
+			g_yAxisDaltMinThreshold		= 1000;
+			MY_QPRINTF("MODE 6666\r\n");
+		}
+		else
+		{
+			if(yMax - yMin > 10000)
+			{
+				x_axis_run_min_threshold 	= X_AXIS_RUN_MIN_THRESHOLD-4;
+				x_axis_walk_min_threshold 	= X_AXIS_WALK_MIN_THRESHOLD-3;
+				g_yAxisDaltMinThreshold		= 1200;
+				MY_QPRINTF("MODE 7777\r\n");
+			}
+			else
+			{
+				x_axis_run_min_threshold 	= X_AXIS_RUN_MIN_THRESHOLD-3;
+				x_axis_walk_min_threshold 	= X_AXIS_WALK_MIN_THRESHOLD-2;
+				g_yAxisDaltMinThreshold		= 1150;
+				MY_QPRINTF("MODE 8888\r\n");
+			}
+		}
+		
+	}
+
+	derivativeYArray = (signed short*)buf_size_256_2;
+	memset(derivativeYArray,0,length*2);
+	derivativeFunc(length,yArray,derivativeYArray);// 求导
+
+	smoothYArray = (signed short*)buf_size_256_3;
+	memset(smoothYArray,0,length*2);
+	smoothfunc(length,0,derivativeYArray,smoothYArray);//平滑
+
+
+	peaksArray.xArray = (unsigned short*)buf_size_256_1;
+	peaksArray.yArray = (unsigned short*)(buf_size_256_1+1*(BLE_ARTH_BUF_SIZE/2));
+	valleysArray.xArray = (unsigned short*)(buf_size_256_2);
+	valleysArray.yArray = (unsigned short*)(buf_size_256_2+1*(BLE_ARTH_BUF_SIZE/2));
+	memset(peaksArray.xArray,0,length);
+	memset(peaksArray.yArray,0,length);
+	memset(valleysArray.xArray,0,length);
+	memset(valleysArray.yArray,0,length);
+
+	peaksArray.num = 0;
+	FindPeaks(yArray,length,0,smoothYArray,&peaksArray);// 找波峰
+	if(peaksArray.num == 0)
+	{
+		goto MEM_FREE;
+	}
+
+	valleysArray.num = 0;
+	FindValleys(yArray,length,0,smoothYArray,&valleysArray);
+	if(valleysArray.num == 0)
+	{
+		goto MEM_FREE;
+	}
+
+	mergeArray.xArray = (unsigned short*)buf_size_256_3;
+	mergeArray.yArray = (unsigned short*)(buf_size_256_3+(BLE_ARTH_BUF_SIZE/2));
+	peaks_valleys_Merge(&peaksArray,&valleysArray,&mergeArray);//合并
+	
+	peaksValleys_mergeArray_arrange(&mergeArray);
+
+	if(mergeArray.num <= 1)
+		goto MEM_FREE;
+	
+	steps = peaks_valleys_final_match(&mergeArray, pSportMode);
+MEM_FREE:
+	return steps;
+}
+
 #elif USE_ARITHMETIC_FROM == MODIFY_WUFAN_ARITHMETIC
 
 unsigned char g_steps_start_flag = 1;

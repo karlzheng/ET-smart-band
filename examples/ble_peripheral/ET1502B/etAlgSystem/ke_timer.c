@@ -30,13 +30,14 @@ const nrf_drv_timer_t TIMER_GSensor = NRF_DRV_TIMER_INSTANCE(2);
 /**
  * @brief Handler for timer events.
  */
+/*
 void timer2_event_handler(nrf_timer_event_t event_type, void* p_context)
 {
     	switch(event_type)
     	{
 				case NRF_TIMER_EVENT_COMPARE0:
 					//gTimerTickFlg = 1;	
-					//MotorVibrate();
+
 					//#if 0
 					//if(Timer2flag==FALSE)
 					//{
@@ -60,7 +61,7 @@ void timer2_event_handler(nrf_timer_event_t event_type, void* p_context)
           break;
     }    
 }
-
+*/
 void ETTimer2Init(void)
 { 
     /*UINT32 time_ms = 10;//10; //Time(in miliseconds) between consecutive compare events.
@@ -94,10 +95,7 @@ void ke_timer_clear(unsigned short const timer_id)
 }
 void ke_timer_flag_set(void)
 {
-  gTimerTickFlg = 1;	
-#if DEBUG_UART_EN    
-		//DbgPrintf("gTimerTickFlg\r\n");
-#endif
+  gTimerTickFlg = 1;
 }
 void ke_schedule(void)
 {	
@@ -132,30 +130,6 @@ void ke_schedule(void)
 				}
 			}
 		}
-	}
-	
+	}	
 }
-/*
-void timer_tick(void)//kevin 10ms
-{ 
-	gTimerTickFlg = 1;	
-	//key_board_scan();
-#if DEBUG_UART_EN    
-    DbgPrintf("loop timer_tick\r\n");
-#endif
-}*/
-/*
-void ke_timer_init(uint8_t temp)
-{
-
-    ModuleIrqRemoval(Timer4_Exception); //kevin add
-	gUsrUsingTimerCount = get_usr_using_timer_count();
-	ModuleIrqRegister(Timer4_Exception, timer_tick_10ms);
-	TimerInit(T4, SCU_OSC_100K, 0, TIMER_TICK_10MS_VALUE);	
-	TimerIrqEn(T4);
-	TimerStart(T4);
-	
-}
-*/
-
 

@@ -41,21 +41,33 @@ void sleep_record_flash_init(void)
 	unsigned char i=0;
 
 	flash_read(SLEEP_RECORD_FLASH_ADDR,flashBuf,256);
+
 	for(i=0;i<100;i++)
 	{
 		if(flashBuf[i] != 0xff)
 			break;
 	}
 
-	if(i>90)//frist init sleep flash ,neet to init
+	if(i>90 || !(flashBuf[0] == 0x1a && flashBuf[1] == 0x2b && flashBuf[2] == 0x3c))//frist init sleep flash ,neet to init
 	{
 		QPRINTF("frist boot from sleep in flash erase******\r\n");
 		memset(flashBuf,0,256);
 		flashBuf[0] = 0x1a;
 		flashBuf[1] = 0x2b;
 		flashBuf[2] = 0x3c;
-		flashBuf[3] = 0x00;//length
+		flashBuf[3] = 0x0;//length
+		flash_erase(SLEEP_RECORD_FLASH_ADDR, 1);
 		flash_write(SLEEP_RECORD_FLASH_ADDR,flashBuf,256);
+
+		#if SLEEP_RECORD_DATA_ENABLE
+		memset(flashBuf,0,256);
+		flash_read(SLEEP_RECORD_FLASH_ADDR,flashBuf,256);
+		QPRINTF("2222read 0x%02x,0x%02x,0x%02x,0x%02x\r\n",flashBuf[0],flashBuf[1],flashBuf[2],flashBuf[3]);
+		if(flashBuf[0] == 0x1a && flashBuf[1] == 0x2b && flashBuf[2] == 0x3c)
+			QPRINTF("sleep data frist write is success\r\n");
+		else
+			QPRINTF("sleep data frist write is false\r\n");
+		#endif
 	}
 
 }

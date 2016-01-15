@@ -132,8 +132,9 @@ USR Information 用户信息   :8K		(0x2000~0x3FFF)
 
 
 /*All data sector number*/
-#define DEV_FLASH_SECTOR_TOTAL_NUM  		(32)  // 8K(APP) + 80K(sport_gsensor) + 40K(sleep_gsensor)  = 128K / 4 = 32
-
+//#define DEV_FLASH_SECTOR_TOTAL_NUM  		(32)  // 8K(APP) + 80K(sport_gsensor) + 40K(sleep_gsensor)  = 128K / 4 = 32
+/*All data sector number*/
+#define DEV_FLASH_SECTOR_TOTAL_NUM  		(19)// from 0x2000 to 0x14fff, total 19 sectors
 
 #define FLASH_RW_BLOCK_SIZE				(256)	// every write operation must be 256 intergrate times bytes
 #define FLASH_PRE_SECTOR_BLOCK_NUM  	(FLASH_SECTOR_PRE_SIZE/FLASH_RW_BLOCK_SIZE)
@@ -157,6 +158,7 @@ USR Information 用户信息   :8K		(0x2000~0x3FFF)
 // item remain max size
 #define SPORT_ITEM_MAX_SIZE				(16) 
 #define SLEEP_ITEM_MAX_SIZE				(16) 
+
 /************************* flash data define ********************************/
 #define FLASH_ERASE_LEBAL_SIZE       6
 typedef struct

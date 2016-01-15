@@ -256,8 +256,8 @@ static void app_arithmetic_cal_timer_handler(void)
 			
 		if(app_get_pedometer_state())/*是否开始计步?8S 10步条件是否成立*/
 		{
-			app_arithmetic_store_steps(steps, sportMode,0,1);
-			//app_arithmetic_store_steps(steps, sportMode,1,1);//NICK Add
+			//app_arithmetic_store_steps(steps, sportMode,0,1);//NICK Remove
+			app_arithmetic_store_steps(steps, sportMode,1,1);
 			#if FREE_NOTIC_ARITHMETIC
 			free_notic_onoff(0);
 			#endif

@@ -3,7 +3,9 @@
 #include "ET1502B.h"
 #if WALK_STEP_RECORD_ARITHMETIC
 
-#define ARTH_SPORT_SAVE2DATAMANGER_INTERVAL		(10*60) // 10 min
+#define ARTH_SPORT_SAVE2DATAMANGER_INTERVAL		600//(10*60) // 10 min
+
+
 
 typedef enum
 {
@@ -85,6 +87,7 @@ extern signed short app_arithmetic_store_steps(unsigned char steps, unsigned cha
 extern void app_arthmetic_clear_steps(unsigned char flag);
 extern void receive_userInfo_from_app(unsigned char *data);
 extern void Get_userInfo_from_app(unsigned char *data);
+extern void save_sport_info2_datamanger(void);
 #if FREE_NOTIC_ARITHMETIC
 extern void receive_freeInfo_from_app(unsigned char *data);
 #endif

@@ -29,6 +29,7 @@
 #include "data_transfer.h"
 #include "arithmetic_data_manger.h"
 
+
 unsigned char g_charge_status = 0;
 unsigned char charger_exist_check(void)
 {
@@ -200,6 +201,7 @@ void main_loop(void)
     {
     sensor_INT_enable_check();
 		ke_schedule();
+		save_sport_info2_datamanger();
 		auto_send_sport_record_to_app_timer();//today each historical segment
 		auto_send_sleep_record_to_app_timer();//yesterday sleep record
 		auto_send_sport_Live_to_app((UINT8*)&g_sportInfoDMItem,14,SERVICE_STEP);//now step data
