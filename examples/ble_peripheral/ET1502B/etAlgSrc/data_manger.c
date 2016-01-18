@@ -804,7 +804,7 @@ static void flash_gsensor_histry_sport_data_partition_refresh(void)
 static void flash_gsensor_data_partition_refresh(void)
 {
 	flash_gsensor_sport_sleep_data_partition_refresh(DATA_TYPE_SPORT);	//Nick Remove
-	flash_gsensor_sport_sleep_data_partition_refresh(DATA_TYPE_SLEEP);      //Nick Remove
+	//flash_gsensor_sport_sleep_data_partition_refresh(DATA_TYPE_SLEEP);      //Nick Remove
 	//flash_gsensor_histry_sport_data_partition_refresh();/*历史运动数据累计刷新*/
 }
 

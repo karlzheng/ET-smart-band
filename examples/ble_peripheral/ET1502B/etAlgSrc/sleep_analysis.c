@@ -5,6 +5,12 @@
 #include "et_debug.h"
 #include "sleep_data.h"
 
+#if TEST_SLEEP_ENABLE
+#define SLEEP_END_TIME				(3)
+#else
+#define SLEEP_END_TIME				(2400)
+#endif
+
 #define ERROR_XAXISSAMEAVGDATA		(250)//(4)
 #define SB_MAX_STEP_NUM				(10) // sleep begin case: step num
 #define SE_MAX_STEP_NUM 			(15) // sleep end case: step num >
@@ -51,8 +57,25 @@ void judgeSleepTimeStamp(unsigned char hour)
         gsensorEnum =  GSENSOR_CFG_MORING;
     else
         gsensorEnum =  GSENSOR_CFG_DAY;
-		
-    if (gsensorEnum == GSENSOR_CFG_DAY) {
+#if TEST_SLEEP_ENABLE	
+	if (gsensorEnum == GSENSOR_CFG_DAY) {
+		g_SleepNapAnalysisCfg.maxStepsBetweenNap = 10;
+		g_SleepNapAnalysisCfg.maxMinDurationBetweenNap = 3;
+	}
+	else if (gsensorEnum == GSENSOR_CFG_MORING) {
+		g_SleepNapAnalysisCfg.maxStepsBetweenNap = 10;
+		g_SleepNapAnalysisCfg.maxMinDurationBetweenNap = 3;
+	}
+	else if (gsensorEnum == GSENSOR_CFG_EVENING) {
+		g_SleepNapAnalysisCfg.maxStepsBetweenNap = 10;
+		g_SleepNapAnalysisCfg.maxMinDurationBetweenNap = 3;
+	}
+	else if (gsensorEnum == GSENSOR_CFG_NIGHT) {
+		g_SleepNapAnalysisCfg.maxStepsBetweenNap = 10;
+		g_SleepNapAnalysisCfg.maxMinDurationBetweenNap = 1;
+	} 
+#else
+	if (gsensorEnum == GSENSOR_CFG_DAY) {
         g_SleepNapAnalysisCfg.maxStepsBetweenNap = 100;
         g_SleepNapAnalysisCfg.maxMinDurationBetweenNap = 30;
     }
@@ -68,6 +91,7 @@ void judgeSleepTimeStamp(unsigned char hour)
         g_SleepNapAnalysisCfg.maxStepsBetweenNap = 100;
         g_SleepNapAnalysisCfg.maxMinDurationBetweenNap = 10;
     }
+#endif
 }
 
 unsigned char get_hour_from_sec(unsigned int sec)
@@ -181,7 +205,7 @@ void CESleepGSensorCfg(unsigned char gsensorEnum)
      }
      else if (gsensorEnum == GSENSOR_CFG_NIGHT) 
 	 {
-        g_gsensro_cfg.slopeThreshold 	= 7;//15;//20;
+        g_gsensro_cfg.slopeThreshold 	= 6;//7;//15;//20;
         g_gsensro_cfg.slopeDuration 	= 0;
         g_gsensro_cfg.rcdMinInterval 	= 5;
         g_gsensro_cfg.slopeDebounceSec 	= 3;
@@ -777,8 +801,11 @@ void getRealSleepData(void)
 				time = (g_pSleepStateItem[i+1].startSec - g_pSleepStateItem[i].startSec)/60;
 			
 				if((g_pSleepStateItem[i].sleepState & SLEEP_STATE_BEGIN) != 0 || 
-					(g_pSleepStateItem[i].sleepState & SLEEP_STATE_AWAKE) != 0 ||
 					(g_pSleepStateItem[i].sleepState & SLEEP_STATE_END) != 0)
+				{
+					g_sleep_info.shall_time += time;
+				}
+				else if((g_pSleepStateItem[i].sleepState & SLEEP_STATE_AWAKE) != 0)
 				{
 					g_sleep_info.awake_time += time;
 				}
@@ -804,12 +831,23 @@ void getRealSleepData(void)
 			g_sleep_record.state_item_start = g_sleep_info.state_item_start;
 			g_sleep_record.state_item_end 	= g_sleep_info.state_item_end; 
 			g_sleep_record.sleep_end_flg 	= last_end_flg; 
+
 			
-			QPRINTF("g_awake_time=%d,g_shall_time=%d,g_deep_time=%d,sleep_real_time=%d\r\n",
+			g_flash_sleeep_state_index = 0;
+			for(i=g_sleep_record.state_item_start;i<=g_sleep_record.state_item_end;i++)
+			{
+				g_flash_pSleepStateItem[g_flash_sleeep_state_index].sleepState 	= g_pSleepStateItem[i].sleepState;
+				g_flash_pSleepStateItem[g_flash_sleeep_state_index].startSec	= g_pSleepStateItem[i].startSec;
+				g_flash_sleeep_state_index++;
+			}
+
+			QPRINTF("g_awake_time=%d,g_shall_time=%d,g_deep_time=%d,sleep_real_time=%d,sleep_end_flg=%d,g_flash_sleeep_state_index=%d,\r\n",
 				g_sleep_info.awake_time,
 				g_sleep_info.shall_time,
 				g_sleep_info.deep_time,
-				g_sleep_info.sleep_real_time);
+				g_sleep_info.sleep_real_time,
+				last_end_flg,
+				g_flash_sleeep_state_index);
 		}
 	}
 }
@@ -838,7 +876,9 @@ void sleepDataAnalysis(void)
 		pCurRawDataItem = &gSleepRawItem[rawItemNum];
 		curTime 		= FourCharGetInt((char*)pCurRawDataItem->startSecs);
 		hour			= get_hour_from_sec(curTime);
+		#if TEST_SLEEP_ENABLE == 0
 		if(hour >= 16 || begin_analysis_flg)//from 16 hour start analysis
+		#endif
 		{
 			begin_analysis_flg = 1;
 
@@ -957,19 +997,12 @@ void write_sleep_rocrd_to_raw(unsigned char* pData)
 
 	if(sleep_begin_flag)
 	{
-		if(g_sleep_record.sleep_end_time + 2400 <= FourCharGetInt((char*)gSleepRawItem[g_sleep_rocord_size-1].startSecs) || //睡眠结束已经大于2个小时
+		if(g_sleep_record.sleep_end_time + SLEEP_END_TIME <= FourCharGetInt((char*)gSleepRawItem[g_sleep_rocord_size-1].startSecs) || //睡眠结束已经大于2个小时
 			g_sleep_record.sleep_end_flg )
 		{
 			sleep_begin_flag = 0;
 			g_sleep_record.sleep_end_flg =0;
 
-			g_flash_sleeep_state_index = 0;
-			for(i=g_sleep_record.state_item_start;i<=g_sleep_record.state_item_end;i++)
-			{
-				g_flash_pSleepStateItem[g_flash_sleeep_state_index].sleepState 	= g_pSleepStateItem[i].sleepState;
-				g_flash_pSleepStateItem[g_flash_sleeep_state_index].startSec	= g_pSleepStateItem[i].startSec;
-				g_flash_sleeep_state_index++;
-			}
 			memcpy(record_buf,(unsigned char*)&g_sleep_record,16);
 			
 		#if SLEEP_RECORD_DATA_ENABLE

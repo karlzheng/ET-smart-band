@@ -1055,7 +1055,7 @@ unsigned short yAverage = 0,yMax=0,yMin=0;
 
 void Arithmetic_Set_YAxis_Min_Threshold(unsigned short data) 
 {
-	g_yAxisDaltMinThreshold = data;
+	//g_yAxisDaltMinThreshold = data;
 }
 
 static void FIRProcess(unsigned short *InData, unsigned short length, unsigned short *OutData)
@@ -1618,7 +1618,7 @@ unsigned char deal_raw_data(unsigned short *yArray, unsigned short length, unsig
 		g_yAxisDaltMinThreshold		= 850;
 		MY_QPRINTF("MODE 0000\r\n");
 	}
-	if(yAverage < 18000)
+	else if(yAverage < 18000)
 	{
 		x_axis_run_min_threshold 	= X_AXIS_RUN_MIN_THRESHOLD+1;
 		x_axis_walk_min_threshold 	= X_AXIS_WALK_MIN_THRESHOLD+1;
@@ -1687,7 +1687,7 @@ unsigned char deal_raw_data(unsigned short *yArray, unsigned short length, unsig
 
 	derivativeYArray = (signed short*)buf_size_256_2;
 	memset(derivativeYArray,0,length*2);
-	derivativeFunc(length,yArray,derivativeYArray);// 求导
+	derivativeFunc(length,firYArray,derivativeYArray);// 求导
 
 	smoothYArray = (signed short*)buf_size_256_3;
 	memset(smoothYArray,0,length*2);

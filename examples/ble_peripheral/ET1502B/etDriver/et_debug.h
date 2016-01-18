@@ -2,8 +2,8 @@
 #include <stdint.h>
 #include "ET1502B.h"
 
-#define QPRINTF	DbgPrintf_nop//DbgPrintf
-#define MY_QPRINTF(fmt, ...)//		DbgPrintf
+#define QPRINTF	DbgPrintf_nop	//DbgPrintf
+#define MY_QPRINTF(fmt, ...)	//DbgPrintf		DbgPrintf
 // ce-link log debug 
 /* module log enable switchs */
 #define BOSCH_MODULE_LOG_EN		0
