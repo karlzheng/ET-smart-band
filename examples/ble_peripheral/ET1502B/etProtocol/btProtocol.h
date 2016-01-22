@@ -95,7 +95,7 @@
 
 #define PACKET_COS_MAX_BYTE 410//512
 
-#define PACKET_MAX_BYTE 410//512
+#define PACKET_STEP_MAX_BYTE 410//512
 #define PACKET_MARK_FULL 0x00
 #define PACKET_MARK_MULTI 0xc0
 #define PACKET_MARK_NEXT 0x80
@@ -159,13 +159,13 @@ typedef struct
   unsigned cos_revDataTotalLen:16;
 	unsigned cos_revDataLen:16;
 	union{
-			unsigned char cos_taltol_data[PACKET_MAX_BYTE];
+			unsigned char cos_taltol_data[PACKET_COS_MAX_BYTE];
 			struct{
 				unsigned char cos_head; //all data item number ;
 				unsigned char cos_CMD; //one data item size;
 				unsigned char cos_length_h; //data crc16 value
 				unsigned char cos_length_l;	//the user id num !
-				unsigned char cos_part_data[PACKET_MAX_BYTE-4];//eq:if cmd is cmd_ack,so argv[0]=ack_type;
+				unsigned char cos_part_data[PACKET_COS_MAX_BYTE-4];//eq:if cmd is cmd_ack,so argv[0]=ack_type;
 				//unsigned char check;
 				//unsigned char tail;
 				//unsigned char packet_num;
@@ -195,13 +195,13 @@ typedef struct
   unsigned revDataTotalLen:16;
 	unsigned revDataLen:16;
 	union{
-			unsigned char taltol_data[PACKET_COS_MAX_BYTE];
+			unsigned char taltol_data[PACKET_STEP_MAX_BYTE];
 			struct{
 				unsigned char head; //all data item number ;
 				unsigned char CMD; //one data item size;
 				unsigned char length_h; //data crc16 value
 				unsigned char length_l;	//the user id num !
-				unsigned char part_data[PACKET_COS_MAX_BYTE-4];//eq:if cmd is cmd_ack,so argv[0]=ack_type;
+				unsigned char part_data[PACKET_STEP_MAX_BYTE-4];//eq:if cmd is cmd_ack,so argv[0]=ack_type;
 				//unsigned char check;
 				//unsigned char tail;
 				//unsigned char packet_num;

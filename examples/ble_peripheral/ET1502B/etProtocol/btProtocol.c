@@ -36,7 +36,11 @@ hsTaskData theSink ;
 
 const UINT8 BT_DISCONNECT_CODE[]={0xaa,0x0d,0x00,0x05,0xFF,0x00,0x00,0x00,0x00,0xEE,0x55};
 extern uint32_t bt_send_to_AG(uint8_t* buff,uint16_t temp_length,UINT8 ser_flag);
-
+/*
+static uint8_t  ble_rev_data_buff[PACKET_COS_MAX_BYTE];
+static uint16_t ble_rev_index = 0;
+static uint16_t ble_send_index = 0;
+*/
 static void set_cos_mode(void)
 {
   uart_recv.cos_protocol_cos_mode=1;
@@ -1551,34 +1555,7 @@ static void Protocol_handle(UINT8 * data_prt,UINT16 packet_length,UINT8 flag)
     
 
 }
-/*
-static void Protocol_handle_statusPacket(UINT8 * data_prt,UINT16 packet_length)
-{
-				 //switch(data_prt[1])
-				 //{
 
-					//	case CMD_STATUS:
-					//	{
-							switch(data_prt[4])
-							{
-								case CMD_SEND_SPORT_DATA_TO_APP:
-									send_sport_get_app_ack(data_prt,packet_length);
-									break;
-								case CMD_SEND_SLEEP_DATA_TO_APP:
-									send_sleep_get_app_ack(data_prt,packet_length);
-									break;
-								
-								default:
-								break;
-							}
-					//	}
-					//	break;
-					//	default:
-					//	break;
-				 	//}
-
-
-}*/
 void protocol_data_can_send(void)
 {
     if(uart_recv.cos_protocol_rev_data_ready==1)
@@ -1639,7 +1616,7 @@ static void protocol_Save_data(UINT8 *buff,UINT16 temp_length,UINT8 ser_flag)
 						uart_recv.cos_protocol_rev_data_ready=0;
 					break;
 					case PACKET_MARK_NEXT:		  
-            if((uart_recv.cos_revDataLen+temp_length-CMD_PACKET_BASE_LENGTH)<PACKET_MAX_BYTE)
+            if((uart_recv.cos_revDataLen+temp_length-CMD_PACKET_BASE_LENGTH)<PACKET_COS_MAX_BYTE)
             {
 						memcpy((uart_recv.cos_uart_union.cos_taltol_data+uart_recv.cos_revDataLen),buff+PACKET_DATA_OFFSET,temp_length-CMD_PACKET_BASE_LENGTH);
 						uart_recv.cos_revDataLen	+=temp_length-CMD_PACKET_BASE_LENGTH;
@@ -1648,7 +1625,7 @@ static void protocol_Save_data(UINT8 *buff,UINT16 temp_length,UINT8 ser_flag)
 					break;
 					case PACKET_MARK_COMPLETE:
 					{
-            if((uart_recv.cos_revDataLen+temp_length-PACKET_DATA_OFFSET)<PACKET_MAX_BYTE)//kevin updated 151106
+            if((uart_recv.cos_revDataLen+temp_length-PACKET_DATA_OFFSET)<PACKET_COS_MAX_BYTE)//kevin updated 151106
             {
                 memcpy((uart_recv.cos_uart_union.cos_taltol_data+uart_recv.cos_revDataLen),buff+PACKET_DATA_OFFSET,temp_length-PACKET_DATA_OFFSET);
                 uart_recv.cos_revDataLen  +=temp_length-PACKET_DATA_OFFSET;
@@ -1689,8 +1666,20 @@ static void protocol_Save_data(UINT8 *buff,UINT16 temp_length,UINT8 ser_flag)
 		}
 
 	
-}
-
+}/*
+void Save_protocol_data(UINT8 * data_prt,UINT16 packet_length)
+{
+  static uint16_t ble_rev_index = 0;
+static uint16_t ble_send_index = 0;
+  for(unsigned char len=0;len<packet_length;len++)
+  {
+   ble_rev_data_buff[ble_rev_index]==data_prt[len];
+   ble_rev_index++;
+   if(ble_rev_index>=PACKET_COS_MAX_BYTE)
+    ble_rev_index=0;
+  }
+ 
+}*/
 void Protocol_data_manage(UINT8 * data_prt,UINT16 packet_length)
 {
     //UINT16 temp_length=0;
@@ -1768,7 +1757,7 @@ static void newService_protocol_Save_data(UINT8 *buff,UINT16 temp_length,UINT8 s
 						new_recv.protocol_rev_data_ready=0;
 					break;
 					case PACKET_MARK_NEXT:		  
-            if((new_recv.revDataLen+temp_length-CMD_PACKET_BASE_LENGTH)<PACKET_MAX_BYTE)
+            if((new_recv.revDataLen+temp_length-CMD_PACKET_BASE_LENGTH)<PACKET_STEP_MAX_BYTE)
             {
 						memcpy((new_recv.uart_union.taltol_data+new_recv.revDataLen),buff+PACKET_DATA_OFFSET,temp_length-CMD_PACKET_BASE_LENGTH);
 						new_recv.revDataLen	+=temp_length-CMD_PACKET_BASE_LENGTH;
@@ -1777,7 +1766,7 @@ static void newService_protocol_Save_data(UINT8 *buff,UINT16 temp_length,UINT8 s
 					break;
 					case PACKET_MARK_COMPLETE:
 					{
-            if((new_recv.revDataLen+temp_length-PACKET_DATA_OFFSET)<PACKET_MAX_BYTE)//kevin updated 151106
+            if((new_recv.revDataLen+temp_length-PACKET_DATA_OFFSET)<PACKET_STEP_MAX_BYTE)//kevin updated 151106
             {
                 memcpy((new_recv.uart_union.taltol_data+new_recv.revDataLen),buff+PACKET_DATA_OFFSET,temp_length-PACKET_DATA_OFFSET);
                 new_recv.revDataLen  +=temp_length-PACKET_DATA_OFFSET;

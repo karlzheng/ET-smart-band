@@ -28,7 +28,7 @@ static arth_personal_info g_arthPersonalInfo = {60,70,ARITHMETIC_STEPS_HAND};
 
 //s_tm curTime_Temp;
 //	system_time_get(&curTime_Temp);
-//static unsigned char Step_can_Save=0;
+static unsigned char Step_can_Save=0;
 
 unsigned int app_arthmetic_get_total_steps(void)
 {
@@ -318,7 +318,7 @@ static void app_arithmetic_save_sportinfo(const signed short steps, unsigned cha
 		g_walkInfoStruct.sustainSecs += daltSec;
 		
 		theSink.Step_Flag=1;//”–STEP ±Í÷æ
-//		Step_can_Save=1;
+		Step_can_Save=1;
 		#if ARI_MODULE_LOG_EN
 		unsigned char sportModeStr[3][12] = {"Walk","Run","HalfWalkRun"};
 		ARITH_INFO("arith %s : add %d steps, total %d steps\r\n", sportModeStr[sportMode], steps,g_walkInfoStruct.steps);
@@ -420,10 +420,10 @@ void app_arthmetic_clear_steps(unsigned char flag)
 
 void save_sport_info2_datamanger(void)
 {
-  if(Check_is_save_sportRecordTime()/*&&(Step_can_Save==1)*/)
+  if((Check_is_save_sportRecordTime())&&(Step_can_Save==1))
   {
     unsigned int temp=0;
-//		Step_can_Save=0;
+		Step_can_Save=0;
 	  send_sport_info2_datamanger(&g_sportInfoDMItem);//kevin delete
 	  temp=system_sec_get();
 	  g_sportInfoDMItem.startSecs[0]=temp&0xff;

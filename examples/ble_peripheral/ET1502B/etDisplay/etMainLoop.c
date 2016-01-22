@@ -209,9 +209,17 @@ void main_loop(void)
 		auto_send_histy_sport_record_to_app_timer();//history everyday sport data 
     auto_send_history_TotalSleepRecord();//history sleep record
     #if(ENABLE_TEST_I2C)
-    test_i2c();
+    //test_i2c();
     #endif
     }
+    else     
+    {
+       if(Protocol_check_BT_connected()==0)
+       {
+         clr_cos_mode();
+       }
+    }
+    
 #endif
 
 

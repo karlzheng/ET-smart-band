@@ -361,6 +361,7 @@ status_t LIS3DH_SetInt1Pin(LIS3DH_IntPinConf_t pinConf,unsigned char flg) {
 }
 
 #if(ENABLE_TEST_I2C)
+/*
 void test_i2c(void)
 {
   u8_t value = 0,value1=0,value_check=0;
@@ -409,6 +410,7 @@ void test_i2c(void)
 		  DbgPrintf("test i2c end\r\n");
 #endif
 }
+*/
 #endif
 /*******************************************************************************
 * Function Name  : LIS3DH_SetInt2Pin

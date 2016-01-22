@@ -294,7 +294,7 @@ unsigned char auto_send_sleep_record_to_app_timer(void)
 			//Read_SleepBlock=Read_SleepBlock+1;
       UINT8 flag=0;
       UINT8 PAGE_NUM=0;
-      UINT8 retu_len=0,i=0;      
+      UINT8 retu_len=0;      
       retu_len=get_sleep_state_from_ram(pbuf,256,&flag,Read_SleepBlock,&PAGE_NUM);
       Read_SleepBlock=retu_len;
 			/*if((pbuf[0]==0x1A)&&(pbuf[1]==0x2B)&&(pbuf[2]==0x3C)&&(pbuf[3]==0x4D))*/
@@ -303,13 +303,6 @@ unsigned char auto_send_sleep_record_to_app_timer(void)
         theSink.SleepDataFlg_over=0;
         if(retu_len>32)
           retu_len=32;
-		for(i=0;i<255;i++)
-		{
-			if(i%8 == 0)
-				QPRINTF("\r\n");
-
-			QPRINTF("%02x ",pbuf[i]);
-		}
 		
         #if SERVICE_STEP_EN
         {

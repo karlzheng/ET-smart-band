@@ -482,7 +482,7 @@ status_t LIS3DH_GetClickResponse(u8_t* res);
 
 //Other Reading Functions
 #if(ENABLE_TEST_I2C)
-extern void test_i2c(void);
+//extern void test_i2c(void);
 #endif
 //extern void lis3dh_init(void);
 extern void gSensor_Slope_Intr_config(void);
