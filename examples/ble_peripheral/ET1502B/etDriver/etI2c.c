@@ -38,11 +38,11 @@ static void IIcDelay_middle(void)
 	 __nop();
 	 __nop();
 	 __nop();
-  __nop();
+   __nop();
 	 __nop();
 	 __nop();
 	 __nop();
-	 __nop();	
+	 //__nop();	
 }
 static void IIcDelay_long(void)
 {
@@ -52,7 +52,7 @@ static void IIcDelay_long(void)
 	 __nop();
 	 __nop();
 	 __nop();
-  __nop();
+   __nop();
 }
 static void IIcDelay_short(void)
 {
@@ -300,12 +300,15 @@ static void sensor_IicStart(void)
       IIcDelay_long();
 	    IIcDelay_long();     
       G_IIC_SDA_HIGH;//IicSda=1;
-      IIcDelay_middle();
+      //IIcDelay_middle();
       G_IIC_SCK_HIGH;//IicScl=1;
+      IIcDelay_middle();
       IIcDelay_middle();
       G_IIC_SDA_LOW;//IicSda=0;
       IIcDelay_middle();
+      IIcDelay_middle();
       G_IIC_SCK_LOW;//IicScl=0;
+      IIcDelay_middle();
       IIcDelay_middle();
 }
 
@@ -314,11 +317,14 @@ static void sensor_IicStop(void)
 	    G_IIC_SDA_OUTPUT;//KEVIN
       G_IIC_SCK_OUTPUT;
       G_IIC_SDA_LOW;//IicSda=0;
-      IIcDelay_middle();
+      //IIcDelay_middle();
+      IIcDelay_long();
       G_IIC_SCK_HIGH;//IicScl=1;
-      IIcDelay_middle();
+      //IIcDelay_middle();
+      IIcDelay_long();
       G_IIC_SDA_HIGH;//IicSda=1;
-      IIcDelay_middle();      
+      //IIcDelay_middle();
+      IIcDelay_long();  
 }
 /*
 static void sensor_Iic_lowPW(void)// 
@@ -336,18 +342,19 @@ static void sensor_SendAcknowledge(unsigned char ack)
       G_IIC_SDA_OUTPUT;//KEVIN
       if(ack)//IicSda=ack;
       {
-          G_IIC_SDA_HIGH;
+        G_IIC_SDA_HIGH;
       }
       else
       {
-          G_IIC_SDA_LOW;
+        G_IIC_SDA_LOW;
       }
       IIcDelay_middle();
       G_IIC_SCK_HIGH;//IicScl=1;
       IIcDelay_middle();
       G_IIC_SCK_LOW;//IicScl=0;
-      IIcDelay_long();
-	    IIcDelay_long();
+      //IIcDelay_long();
+	    //IIcDelay_long();
+      IIcDelay_middle();
 } 
 
 static unsigned char sensor_IicReceiveByte(void)
@@ -356,6 +363,7 @@ static unsigned char sensor_IicReceiveByte(void)
       unsigned char bytedata=0;
 
       G_IIC_SDA_INPUT;//kevin
+      IIcDelay_Veryshort();
       for(i=0;i<8;i++)
       {
           bytedata<<=1;
@@ -373,25 +381,19 @@ static unsigned char sensor_IicReceiveByte(void)
                   //bytedata &=Write_code_rev[i];
           }
           G_IIC_SCK_LOW;//IicScl=0;
-          IIcDelay_Veryshort();
-      }
-//#if DEBUG_UART_EN    
-//	 DbgPrintf("read%x\r\n",bytedata);
-//#endif         
+          //IIcDelay_Veryshort();
+          IIcDelay_short();
+      }        
       return bytedata;
 }
 
 static void sensor_IicSentByte(unsigned char DataByte)               
 {
-    unsigned char i;
-//#if DEBUG_UART_EN    
-//	 DbgPrintf("write%x\r\n",DataByte);
-//#endif        
+    unsigned char i;       
 	  G_IIC_SDA_OUTPUT;//KEVIN
     for(i=0;i<8;i++)
     {
      if(DataByte & 0x80)
-     //if(DataByte & Write_code[i])
      {
       G_IIC_SDA_HIGH;//IicSda=1;
      }
@@ -399,18 +401,19 @@ static void sensor_IicSentByte(unsigned char DataByte)
      {
       G_IIC_SDA_LOW;//IicSda=0;
      }
-	 DataByte <<=1;//delay
-	 IIcDelay_short();
+     DataByte <<=1;//delay
+     IIcDelay_short();
      G_IIC_SCK_HIGH;//IicScl=1;
      IIcDelay_middle();
      G_IIC_SCK_LOW;//IicScl=0;
      //IIcDelay_short();
      //DataByte <<=1;
     }
-	  IIcDelay_middle();
+	  //IIcDelay_middle();
+    IIcDelay_short();
     G_IIC_SDA_HIGH;//IicSda=1;-----Y------D---IicSdaDirIn
-    //G_IIC_SDA_INPUT;//kevin
-    //IIcDelay();
+    G_IIC_SDA_INPUT;//kevin add 160119
+    IIcDelay_short();
     G_IIC_SCK_HIGH;//IicScl=1;
     IIcDelay_middle();
     G_IIC_SCK_LOW;//IicScl=0;
@@ -421,45 +424,41 @@ static void sensor_IicSentByte(unsigned char DataByte)
 void sensor_GPIO_i2c_read(unsigned char I2C_addr,unsigned char reg_addr, unsigned char *buffer, unsigned short len)
 {
     unsigned char i;
-
+    sensor_IicStop();
     sensor_IicStart();
+    //IIcDelay_Veryshort();
     sensor_IicSentByte(I2C_addr);
     sensor_IicSentByte(reg_addr);
     sensor_IicStart();
+    //IIcDelay_Veryshort();
     sensor_IicSentByte(I2C_addr+0x01);
-	  IIcDelay_long();
+    //IIcDelay_Veryshort();
     for(i=0;i<len;i++)
     {
     	*buffer=sensor_IicReceiveByte();
-		if(i==(len-1))
-		sensor_SendAcknowledge(1);
-		else
-		sensor_SendAcknowledge(0);
-        buffer++;
+      if(i==(len-1))
+      sensor_SendAcknowledge(1);
+      else
+      sensor_SendAcknowledge(0);
+      buffer++;
         
     }
-    //*buffer=IicReceiveByte();
-    //SendAcknowledge(1);
     sensor_IicStop();
-    
-    //sensor_Iic_lowPW();
 }
 
 void sensor_GPIO_i2c_write(unsigned char I2C_addr,unsigned char reg_addr, unsigned char *buffer, unsigned short len)
 {
-	unsigned char i;
-
+    unsigned char i;
+    //sensor_IicStop();
     sensor_IicStart();
+    //IIcDelay_Veryshort();
     sensor_IicSentByte(I2C_addr);
-    sensor_IicSentByte(reg_addr);
-
-	for(i=0;i<len;i++)
+    sensor_IicSentByte(reg_addr);    
+    for(i=0;i<len;i++)
     {
-        sensor_IicSentByte(buffer[i]); 
+      sensor_IicSentByte(buffer[i]); 
     }
     sensor_IicStop();
-    
-    //sensor_Iic_lowPW();
 }
 void sensor_GPIO_i2c_init(void)
 {
@@ -482,6 +481,13 @@ void sensor_GPIO_i2c_read(unsigned char I2C_addr,unsigned char reg_addr, unsigne
 {
     twi_master_transfer(I2C_addr,&reg_addr, 1, false);
 	twi_master_transfer(I2C_addr+0x01, buffer, len, true);
+#if DEBUG_UART_EN    
+  /*  DbgPrintf("sensor_hw_i2c_read,addr:%02x,reg:%02x,len:%02x\r\n",I2C_addr,reg_addr,len);
+    for(unsigned char i=0;i<len;i++)
+    DbgPrintf("%02x",buffer[i]);
+    DbgPrintf("\r\n");
+  */
+#endif  
 }
 
 void sensor_GPIO_i2c_write(unsigned char I2C_addr,unsigned char reg_addr,unsigned char *buffer, unsigned short len)
@@ -491,6 +497,13 @@ void sensor_GPIO_i2c_write(unsigned char I2C_addr,unsigned char reg_addr,unsigne
 	for(i=0;i<len;i++)
 		buf[i+1] = buffer[i];
 	twi_master_transfer(I2C_addr,buf, len+1, true);
+#if DEBUG_UART_EN    
+ /*   DbgPrintf("sensor_hw_i2c_write,addr:%02x,reg:%02x,len=%02x\r\n",I2C_addr,reg_addr,len);
+    for(unsigned char i=0;i<len;i++)
+    DbgPrintf("%02x",buffer[i]);
+    DbgPrintf("\r\n");
+  */
+#endif 
 }
 
 #endif

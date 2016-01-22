@@ -79,7 +79,7 @@ unsigned LCD_disp_distance_count:8;
 
 unsigned LCD_disp_MainMenu:8;
 unsigned LCD_disp_SlaveMenu:8;
-unsigned LCD_disp_PassWd_count:8;
+unsigned LCD_disp_SlaveSlaveMenu:8;
 unsigned LCD_disp_Logo:2;
 unsigned LCD_disp_SetpLogoFromPowerOff:2;
 unsigned LCD_disp_LCD_is_close:4;
@@ -107,21 +107,23 @@ typedef enum
 	DISP_TAG_STEP_NUM,//===MAIN MENU==
 	DISP_TAG_DISTANCE,
 	DISP_TAG_ENERGE,
-	DISP_TAG_SLEEP_STATUE,
+	DISP_TAG_SLEEP_INTERVAL,
 	DISP_TAG_SLEEP_TIME,
 	DISP_TAG_ID,
 	DISP_TAG_SYSTIME,
-	DISP_TAG_VERSION,
-	DISP_TAG_RSSI,//0x0c
+	DISP_TAG_VERSION,	
+	DISP_TAG_FIND_AG,//0x0c
 	DISP_TAG_STATUS,
-	/*//DISP_TAG_UPDATED,	
+	DISP_TAG_SLEEP_DETAILED1,
+	DISP_TAG_SLEEP_DETAILED2,
 	//DISP_TAG_STEP_NUM_SLAVE,//===SLAVE MENU==	
 	//DISP_TAG_DISTANCE_SLAVE,	
 	//DISP_TAG_ENERGE_SLAVE,
 	//DISP_TAG_SYSTIME_SLAVE,
 	//DISP_TAG_VERSION_SLAVE,
-	*/
-	DISP_TAG_RSSI_SLAVE,//0x0e
+	
+	DISP_TAG_FIND_AG_SLAVE,//0x0e
+	DISP_TAG_DATE_WEEK,//0x0e
 	//DISP_TAG_UPDATED_SLAVE,//MENU END
 	//DISP_TAG_POWER_OFF,
 	//DISP_TAG_OVERTIME_TO_POWEROFF,
@@ -147,22 +149,34 @@ typedef enum
   KeyBoard_Down_2_DISP_NULL=0,
   KeyBoard_Down_2_DISP_IDLE,
   KeyBoard_Down_2_DISP_STEP_NUM,
-  KeyBoard_Down_2_DISP_DISTANCE,
-  KeyBoard_Down_2_DISP_ENERGY,
-  KeyBoard_Down_2_DISP_SLEEP_STATUS,
-  KeyBoard_Down_2_DISP_SLEEP_TIME,
+  KeyBoard_Down_2_DISP_SLEEP_INTERVAL,
   KeyBoard_Down_2_DISP_ID,
   KeyBoard_Down_2_DISP_SYS_TIME,
-  KeyBoard_Down_2_DISP_RSSI,
-  KeyBoard_Down_2_DISP_VERSION,
-  //KeyBoard_Down_2_DISP_STATUS,
-  //KeyBoard_Down_2_DISP_UPDATED,  
   KeyBoard_Down_2_DISP_MAX
 }KeyBoard_Down_2_Disp_MainMenu;
 typedef enum
 {
+  KeyBoard_Down_2_DISP_DISTANCE=1,
+  KeyBoard_Down_2_DISP_ENERGY
+}KeyBoard_Down_2_Disp_STEP_SlaveMenu;
+typedef enum
+{
+  KeyBoard_Down_2_DISP_SLEEP_DETAILED1=1,
+	KeyBoard_Down_2_DISP_SLEEP_DETAILED2
+}KeyBoard_Down_2_Disp_SLEEP_SlaveMenu;
+typedef enum
+{  
+  KeyBoard_Down_2_DISP_VERSION=1,
+	KeyBoard_Down_2_DISP_DATE,
+	KeyBoard_Down_2_DISP_FIND_AG
+}KeyBoard_Down_2_Disp_OTHER_SLAVE_Menu;
+
+typedef enum
+{
   KeyBoard_Down_2_DISP_Slave_NULL=0,
-  KeyBoard_Down_2_DISP_Slave_UPDATED,
+  KeyBoard_Down_2_DISP_Slave_METU1,
+  KeyBoard_Down_2_DISP_Slave_METU2,
+  KeyBoard_Down_2_DISP_Slave_METU3,
   KeyBoard_Down_2_DISP_Slave_MAX
 }KeyBoard_Down_2_Disp_SlaveMenu;
 //#define IIC_RES_LOW    nrf_gpio_pin_clear(LCD_RES_PIN)

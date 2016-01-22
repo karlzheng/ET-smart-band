@@ -343,10 +343,31 @@ const unsigned char STEP_ICON[]=/*16*16*/
 0x00,0x00,0x00,0x01,0x01,0x01,0x01,0x01,0x01,0x01,0x01,0x01,0x00,0x00,0x00,0x00,
 0x03,0x7F,0xFF,0xFC,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00
 };
+const unsigned char PHONE_ICON[]=/*32*32*/
+{
+/*
+0x00,0x00,0x00,0x00,0x00,0x00,0xF8,0xFC,0x0F,0x0F,0x0E,0x0E,0x0E,0x0E,0x0E,0x0E,
+0x0E,0x0E,0x0E,0x0E,0x0E,0x0E,0x0E,0x0E,0xFC,0xF8,0x00,0x00,0x00,0x00,0x00,0x00,
+0x00,0x00,0x00,0x00,0x00,0x00,0xFF,0xFF,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xFF,0xFF,0x00,0x00,0x00,0x00,0x00,0x00,
+0x00,0x00,0x00,0x00,0x00,0x00,0xFF,0x03,0x03,0x2B,0x2B,0x2B,0x03,0x03,0x03,0x3B,
+0x3B,0x3B,0x03,0x03,0x2B,0x2B,0x2B,0x03,0x03,0xFF,0x00,0x00,0x00,0x00,0x00,0x00,
+0x00,0x00,0x00,0x00,0x00,0x00,0x3F,0x40,0x80,0x95,0x95,0x95,0x80,0x80,0x80,0x95,
+0x95,0x95,0x80,0x80,0x95,0x95,0x95,0x80,0x40,0x3F,0x00,0x00,0x00,0x00,0x00,0x00*/
+0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xE0,0xFE,0x3E,0x30,0x30,0x30,0x30,
+0x30,0x30,0x30,0x30,0x30,0x30,0x30,0xF0,0xE0,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xFF,0xFF,0x80,0x80,0x80,0x80,0x80,
+0x80,0x80,0x80,0x80,0x80,0x80,0x80,0xFF,0xFF,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xFF,0x01,0x01,0x95,0x95,0x01,0x01,
+0x8D,0x8D,0x01,0x01,0x95,0x95,0x01,0x01,0xFF,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x1F,0x20,0x20,0x2A,0x2A,0x20,0x20,
+0x2A,0x2A,0x20,0x20,0x2A,0x2A,0x20,0x20,0x1F,0x00,0x00,0x00,0x00,0x00,0x00,0x00
+};
 const unsigned char STEP_ICON_SMALL[]=/*16*16*/
 {
-	0x00,0x00,0x00,0xC0,0xF0,0x90,0xF8,0xF8,0xFF,0x3F,0x30,0x60,0x60,0x30,0x30,0x00,
-	0x60,0x60,0x60,0x31,0x38,0x1F,0x0F,0x03,0x07,0x07,0x7E,0xFE,0xE0,0x00,0x00,0x00
+	0x00,0x00,0x00,0xC0,0x70,0x10,0xD8,0xF8,0xFF,0x3F,0x30,0x60,0x60,0x30,0x30,0x00,
+	0x00,0x40,0x20,0x31,0x18,0x1C,0x0F,0x03,0x03,0x07,0x7E,0x7C,0x40,0x00,0x00,0x00
+
 };
 const unsigned char INCOMING_ICON_SMALL[]=/*16*16*/
 {
@@ -354,7 +375,15 @@ const unsigned char INCOMING_ICON_SMALL[]=/*16*16*/
 	0x00,0x03,0x07,0x1F,0x7E,0xF8,0xF8,0xF8,0xF9,0xF8,0xE0,0x00,0x01,0x00,0x00,0x01
 
 };
+const unsigned char DOWN_ICON_SMALL[]=/*8X8*/
+{
+0x00,0x00,0x20,0x40,0xFE,0xFE,0x40,0x20
+};
+const unsigned char UP_ICON_SMALL[]=/*8X8*/
+{
+	0x00,0x00,0x08,0x04,0xFE,0xFE,0x04,0x08
 
+};
 
 //=================================================
 const unsigned char ENERGE_ICON[]=/*16*16*/
@@ -390,15 +419,7 @@ const unsigned char DISTANCE_ICON[]=/*16*16*/
 };
 const unsigned char SLEEP_ICON[]=/*32*32*/
 {
-/*	0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x80,0x80,0x80,0xC0,0xC0,0xC0,0xC0,
-	0x80,0x80,0x80,0x00,0x00,0xC8,0xE8,0xB8,0x98,0x00,0x32,0x3A,0x2E,0x26,0x00,0x00,
-	0x00,0x00,0x80,0xE0,0xF8,0x7C,0x7E,0x7F,0x7F,0x7F,0x7F,0x7F,0x7F,0x7F,0x7F,0x7F,
-	0x7F,0x0F,0x7F,0x7F,0x7E,0x7C,0x7C,0xF0,0xE0,0x80,0x00,0x00,0x00,0x00,0x00,0x00,
-	0x00,0x1E,0xFF,0xFF,0xFF,0xC0,0x00,0x06,0x0C,0x9C,0x9C,0xDE,0xCE,0xC0,0xC0,0xCE,
-	0xDE,0x9C,0x9C,0x0C,0x06,0x00,0xC0,0xFF,0xFF,0xFF,0x1E,0x00,0x00,0x00,0x00,0x00,
-	0x00,0x00,0x00,0x01,0x07,0x0F,0x1F,0x1C,0x3B,0x3B,0x71,0x71,0x71,0x71,0x71,0x71,
-	0x71,0x71,0x3B,0x3B,0x1C,0x1F,0x0F,0x07,0x01,0x00,0x00,0x00,0x00,0x00,0x00,0x00
-	*/
+/*	
 	0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
 	0x00,0x80,0x80,0x80,0x80,0x80,0x80,0x80,0x80,0x00,0x10,0x90,0x50,0x30,0x00,0x00,
 	0x00,0x00,0x00,0x18,0x18,0x18,0x18,0x18,0x18,0x18,0x18,0x18,0x98,0xD8,0xF8,0x78,
@@ -407,9 +428,42 @@ const unsigned char SLEEP_ICON[]=/*32*32*/
 	0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
 	0x00,0x00,0x06,0x07,0x07,0x07,0x06,0x06,0x06,0x06,0x06,0x06,0x06,0x06,0x06,0x06,
 	0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00
-
+*/
+	0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xC0,0x20,0xA0,0xA0,0xA0,
+	0x20,0xC0,0x00,0x00,0x00,0x20,0xA0,0x60,0x00,0x48,0x68,0x58,0x40,0x00,0x00,0x00,
+	0x00,0x00,0x00,0x00,0xC0,0x70,0x18,0x08,0x04,0x04,0x03,0x00,0x07,0x08,0x0A,0x0B,
+	0x08,0x06,0x03,0x04,0x04,0x09,0x19,0x71,0xC1,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+	0x00,0x00,0x00,0x1E,0x61,0x80,0x00,0x03,0x06,0x0C,0x0C,0x0E,0xC7,0xC0,0xC0,0xC7,
+	0xCE,0x0C,0x0C,0x06,0x03,0x00,0x00,0x80,0x61,0x1E,0x00,0x00,0x00,0x00,0x00,0x00,
+	0x00,0x00,0x00,0x00,0x00,0x00,0x01,0x02,0x04,0x0C,0x08,0x08,0x10,0x11,0x11,0x11,
+	0x10,0x08,0x08,0x08,0x04,0x02,0x01,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00
 };
-
+const unsigned char SLEEP2_ICON[]=/*32*32*/
+{
+0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x40,0x40,0xC0,0x00,0x00,
+0x00,0x00,0x00,0x00,0x60,0x60,0x60,0x60,0x60,0x60,0x60,0x60,0xE0,0xE0,0x00,0x0C,
+0x8C,0xCC,0x6C,0x3C,0x1C,0x0C,0x01,0x19,0x15,0x13,0x10,0x00,0x03,0x02,0x02,0x00,
+0x00,0x00,0x00,0x00,0x80,0xC0,0xE0,0xB0,0x98,0x8C,0x86,0x83,0x81,0x80,0x80,0x03,
+0x03,0x03,0x03,0x03,0x03,0x03,0x03,0x03,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+0x00,0x00,0x00,0x00,0x01,0x01,0x01,0x01,0x01,0x01,0x01,0x01,0x01,0x01,0x01,0x00,
+0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00
+};
+const unsigned char LIGHT_SLEEP_ICON[]=//16x16
+{
+	0x00,0x00,0x00,0x80,0x80,0x80,0x80,0x00,0x20,0xA0,0x60,0x00,0x00,0x00,0x00,0x00,
+	0x00,0x00,0x00,0x08,0x0C,0x0A,0x09,0x08,0x01,0x01,0x01,0x01,0x00,0x00,0x00,0x00
+};
+const unsigned char DEEP_SLEEP_ICON[]=//16x16
+{
+	0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x40,0x40,0xC0,0x00,0x90,0xD0,0xB0,0x80,0x00,
+	0x00,0x00,0x10,0x19,0x15,0x13,0x10,0x02,0x03,0x02,0x02,0x00,0x00,0x00,0x00,0x00
+};
+const unsigned char NO_SLEEP_ICON[]=//16x16
+{
+0x00,0x00,0x00,0x80,0x80,0x80,0x80,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+0x00,0x00,0x00,0x08,0x0C,0x0A,0x09,0x08,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00
+};
 /********************************************************************************/
 const unsigned char USB_ICON_16x16[]=//16x16
 {
@@ -423,18 +477,19 @@ const unsigned char BLUETOOTH_ICON_16x16[]=
 	0x00,0x00,0x00,0x30,0x60,0xFF,0xFE,0x84,0x4C,0x38,0x10,0x00,0x00,0x00,0x00,0x00,
 	0x00,0x00,0x00,0x0C,0x06,0x7F,0x3F,0x10,0x19,0x0E,0x04,0x00,0x00,0x00,0x00,0x00
 };
+/*
 const unsigned char BLUETOOTH_DISCONNECT_16x16[]=
 {
 	0x80,0x80,0x00,0x00,0x80,0x80,0x00,0x20,0x40,0xFF,0xFE,0x84,0x4C,0x38,0x10,0x00,
 	0x01,0x01,0x00,0x00,0x01,0x01,0x00,0x04,0x02,0x7F,0x3F,0x10,0x19,0x0E,0x04,0x00
-};
+};*/
 const unsigned char BLUETOOTH_CONNECT_16x16[]=
-{
-	/*0x80,0x80,0x80,0xA0,0xC0,0x80,0x00,0x20,0x40,0xFF,0xFE,0x84,0x4C,0x38,0x10,0x00,
-	0x01,0x03,0x05,0x01,0x01,0x01,0x00,0x04,0x02,0x7F,0x3F,0x10,0x19,0x0E,0x04,0x00*/
+{/*
 	0x00,0x00,0x00,0x30,0x60,0xFE,0xFE,0x84,0x4C,0x38,0x10,0x00,0x00,0x00,0x00,0x00,
 	0x00,0x00,0x00,0x0C,0x06,0x3F,0x3F,0x10,0x19,0x0E,0x04,0x00,0x00,0x00,0x00,0x00
-
+*/
+		0x30,0x40,0xFF,0xFE,0x84,0x4C,0x38,0x10,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+		0x0C,0x02,0x7F,0x3F,0x10,0x19,0x0E,0x04,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00
 };
 
 
@@ -488,7 +543,7 @@ const unsigned char  display_down_key_logo[] = {
 };*/
 
 //=======================电池================================
-/*
+
 const unsigned char  BATTERY_4to4[]= //16x16
 {
 	0x00,0x00,0x00,0xFC,0x02,0xDB,0xDB,0xDB,0xDB,0xDB,0xDB,0x02,0xFC,0x00,0x00,0x00,
@@ -515,34 +570,36 @@ const unsigned char  BATTERY_0to4[]=//16x16
 {
 	0x00,0x00,0x00,0xFC,0x02,0x03,0x03,0x03,0x03,0x03,0x03,0x02,0xFC,0x00,0x00,0x00,
 	0x00,0x00,0x00,0xFF,0x80,0x80,0x80,0x80,0x80,0x80,0x80,0x80,0xFF,0x00,0x00,0x00
-};*/
+};
 //=======================电池================================
-const unsigned char  BATTERY_4to4[]= /*16*8*/
+/*
+const unsigned char  BATTERY_4to4[]= //16x16
 {
 	0xF8,0x08,0xE8,0xE8,0x08,0xE8,0xE8,0x08,0xE8,0xE8,0x08,0xE8,0xE8,0x08,0xF0,0xE0,
 	0x1F,0x10,0x17,0x17,0x10,0x17,0x17,0x10,0x17,0x17,0x10,0x17,0x17,0x10,0x0F,0x07
 };
 
-const unsigned char  BATTERY_3to4[]=/*16*8*/
+const unsigned char  BATTERY_3to4[]=//16x16
 {
 	0xF8,0x08,0xE8,0xE8,0x08,0xE8,0xE8,0x08,0xE8,0xE8,0x08,0x08,0x08,0x08,0xF0,0xE0,
 	0x1F,0x10,0x17,0x17,0x10,0x17,0x17,0x10,0x17,0x17,0x10,0x10,0x10,0x10,0x0F,0x07
 };
-const unsigned char  BATTERY_2to4[]=/*16*8*/
+const unsigned char  BATTERY_2to4[]=//16x16
 {
 	0xF8,0x08,0xE8,0xE8,0x08,0xE8,0xE8,0x08,0x08,0x08,0x08,0x08,0x08,0x08,0xF0,0xE0,
 	0x1F,0x10,0x17,0x17,0x10,0x17,0x17,0x10,0x10,0x10,0x10,0x10,0x10,0x10,0x0F,0x07
 };
-const unsigned char  BATTERY_1to4[]=/*16*32*/
+const unsigned char  BATTERY_1to4[]=//16x16
 {
 	0xF8,0x08,0xE8,0xE8,0x08,0x08,0x08,0x08,0x08,0x08,0x08,0x08,0x08,0x08,0xF0,0xE0,
 	0x1F,0x10,0x17,0x17,0x10,0x10,0x10,0x10,0x10,0x10,0x10,0x10,0x10,0x10,0x0F,0x07
 };
-const unsigned char  BATTERY_0to4[]=/*16*32*/
+const unsigned char  BATTERY_0to4[]=//16x16
 {
 	0xF8,0x08,0x08,0x08,0x08,0x08,0x08,0x08,0x08,0x08,0x08,0x08,0x08,0x08,0xF0,0xE0,
 	0x1F,0x10,0x10,0x10,0x10,0x10,0x10,0x10,0x10,0x10,0x10,0x10,0x10,0x10,0x0F,0x07
 };
+*/
 //====================== BT logo===========================
 /*
 const unsigned char  BLUETOOTH_ICON_8x8[]=//16x8
@@ -774,6 +831,62 @@ const unsigned char  Z8_STATUS_8to8_ICON[]= /*16*16*/
 };
 #endif
 
+//const unsigned char ParingAndConnectingMenu[]=" 可配对可连接 \n请打开应用，搜索并连接设备:\n";
+//const unsigned char BtHardwareVer[]="H-1.00.00C";//ET1302C
+
+//static struct bat_cos_level vBatCosLevel  = {0, 0, DISP_END};
+
+#if (DYNAMIC_DISPLAY_LOGO_BY_TIMER)
+//static unsigned int cos_sta_counter =100; //1000;
+#else
+//static unsigned int cos_sta_counter =1000; //1000;
+#endif
+
+//static struct bat_sta BatSta = {BAT_CHARGER_PROGRESS, 0};
+//static BOOL   bt_logo_flash_sta = BT_LOGO_FLASH_DISABLE;
+/*
+void BT_Get_KeyVersion(unsigned char * prt,unsigned char *str_length)
+{
+	uint8_t temp=0,temp2=0;
+
+	 prt[temp++]=FLAG_FIRMWARE_VERSION;	
+	 for(temp2=0;temp2<strlen(BTversion);temp2++)
+		prt[temp++]=BTversion[temp2];
+	
+	 prt[temp++]=FLAG_HW_VERSION;	 
+	 for(temp2=0;temp2<strlen(HWversion);temp2++)
+		prt[temp++]=HWversion[temp2];
+	
+	
+	 prt[temp++]=FLAG_COS_VERSION;	 
+	 for(temp2=0;temp2<strlen(cosversion);temp2++)
+	 {
+		prt[temp++]=cosversion[temp2];
+	 }
+	 *str_length=temp;
+}
+*/
+/*
+void set_display_flg(BOOL flg)
+{
+	vBatCosLevel.lcd_display_flg = flg;
+}
+
+static BOOL get_display_flg(void)
+{
+	return vBatCosLevel.lcd_display_flg;
+}
+*/
+
+//void set_bt_logo_flash_state(BOOL  bt_flash_enable)
+//{
+//	bt_logo_flash_sta = bt_flash_enable;
+//}
+
+//static BOOL get_bt_logo_flash_state(void)
+//{
+//	return bt_logo_flash_sta;
+//}
 void Set_lastDisplayTag(uint8_t now_tag)
 {
    disp_str.LCD_display_last_tag=now_tag;
@@ -795,7 +908,7 @@ uint8_t check_lastDisplayTag(uint8_t now_tag)
 
 static uint8_t check_StrCanDisplay(void)
 {
-   if((Get_lastDisplayTag()==DISP_TAG_COS_DATA)||(Get_lastDisplayTag()==DISP_TAG_RSSI)||(disp_str.LCD_display_keymode_delay>0))
+   if((Get_lastDisplayTag()==DISP_TAG_COS_DATA)||(Get_lastDisplayTag()==DISP_TAG_FIND_AG_SLAVE)||(disp_str.LCD_display_keymode_delay>0))
    	return 1;
    else
    	return 0;
@@ -939,7 +1052,7 @@ static void LCD_sector_close(void)
 	clear_secterScreen(0,4,0,LCD_LOG_COLUME_START); 
 	disp_str.LCD_disp_MainMenu=KeyBoard_Down_2_DISP_NULL;
 	disp_str.LCD_disp_SlaveMenu=KeyBoard_Down_2_DISP_Slave_NULL;
-	//clear_password_buffer();
+	disp_str.LCD_disp_SlaveSlaveMenu=KeyBoard_Down_2_DISP_Slave_NULL;
 }
 void lcd_power_control(unsigned char flg)
 {
@@ -988,7 +1101,7 @@ void Display_delay_check(void)
 	   {
        MotorCtr(0,0);
 		 }
-		 if((Get_lastDisplayTag()==DISP_TAG_RSSI_SLAVE))
+		 if((Get_lastDisplayTag()==DISP_TAG_FIND_AG_SLAVE))
 		 {
 		 Get_Rssi_stop();
 		 }
@@ -1108,6 +1221,7 @@ static void display_stepNUM(KeyBoard_Down_2_Disp_MainMenu disp_flag)
 	display_gb18030_string(pin,temp,0,0);
 }
 */
+#if 1
 static void display_sleep_day_clock(uint8_t start_page,uint16_t temp_year,uint8_t temp_month,uint8_t temp_day,uint8_t temp_week,uint8_t temp_hour,unsigned char temp_munite,unsigned char temp_second)
 {
 
@@ -1144,7 +1258,7 @@ static void display_sleep_day_clock(uint8_t start_page,uint16_t temp_year,uint8_
 	SetPageColume(start_page,42,PAGE_SET);
 	display_gb18030_string(temp_data,temp,0,0);
 }
-	
+#endif	
 static unsigned char display_int_2_char(UINT8* pin,UINT32 temp_data)
 {
  //unsigned char pin[16];
@@ -1171,8 +1285,167 @@ static unsigned char display_int_2_char(UINT8* pin,UINT32 temp_data)
 	} 
 	return temp;
 }
+/*
+static void display_step_menu(void)
+{
+  UINT32 temp_number=0;
+	unsigned char temp=0,
+	unsigned char pin[16];
+  temp_number=(UINT32)app_arthmetic_get_total_distance();
+    temp=display_int_2_char(pin,t_hour);
+		display_LOGO_message(0,4,16,32,SLEEP_ICON);//display icon	
+		SetPageColume(1,offset,PAGE_SET);
+		display_gb18030_string((const unsigned char *)pin,temp,0,0); //display digital	
 
-static void display_step_distance_engery(UINT8 data_type)
+
+	if(temp<7)
+	{
+		temp2=temp*12+52;
+		if(LCD_LOG_COLUME_START>temp2)
+			temp2=((LCD_LOG_COLUME_START-temp2)/2);
+		else
+			temp2=0;	
+		display_LOGO_message(0,4,temp2,32,STEP_ICON);//display icon
+		for(temp_length=0;temp_length<temp;temp_length++)
+		{
+		display_LOGO_message(0,4,(temp2+32+12*temp_length),12,DIGITAL_ICON_32x12[pin[temp_length]-0x30]);//display icon 
+		}
+		hzbmp16(SEL_GB,0xb2bd,0,32,data_srt);
+		display_LOGO_message(1,2,(temp2+36+12*temp_length),16,data_srt);//display icon			
+	}
+	else
+	{
+		if(temp<11)
+		{
+		temp2=temp*8+48;
+		}
+		else
+		{
+		temp2=temp*8+32;
+		}
+		if(LCD_LOG_COLUME_START>temp2)
+			temp2=((LCD_LOG_COLUME_START-temp2)/2);
+		else
+			temp2=0;	
+		display_LOGO_message(0,4,temp2,32,DISTANCE_ICON);//display icon 	
+		SetPageColume(1,temp2+32,PAGE_SET);
+		display_gb18030_string((const unsigned char *)pin,temp,0,0); //display digital
+		if(temp<11)
+		{
+		hzbmp16(SEL_GB,0xb2bd,0,32,data_srt);
+		display_LOGO_message(1,2,(temp2+32+8*temp),16,data_srt);//display icon	
+		}
+	}
+
+
+
+		
+}
+*/
+	static void display_sleep_menu(UINT8 main_slave,UINT8 data_type)
+	{  
+		UINT32 temp_number=0;//(UINT16)app_arthmetic_get_total_steps();;
+		unsigned char pin[16];
+		unsigned char temp=0;//,temp_length,temp2=0;
+		//uint8_t data_srt[32];
+		//UINT32 sleep_end=0;
+		if(main_slave==1)
+		{
+			temp_number=(UINT32)app_arthmetic_get_total_steps();	
+		}
+		else
+		{ 
+
+		}
+		temp=display_int_2_char(pin,temp_number);
+
+		if(main_slave==1)
+		{
+			unsigned int sleep_time=0;
+			unsigned char t_hour=0,t_minute=0,offset=0;
+			sleep_time=app_get_sleep_end()-app_get_sleep_begin();
+			t_hour=sleep_time/3600;
+			t_minute=(sleep_time%3600)/60;
+			offset=16;
+			display_LOGO_message(0,4,16,32,SLEEP_ICON);//display icon 	
+			offset +=32+8;
+			temp=display_int_2_char(pin,t_hour);
+			SetPageColume(1,offset,PAGE_SET);
+			display_gb18030_string((const unsigned char *)pin,temp,0,0); //display digital
+			offset +=8*temp;
+			SetPageColume(1,offset,PAGE_SET);
+			display_gb18030_string((const unsigned char *)"时",2,0,0); //display digital
+			offset +=16;
+			temp=display_int_2_char(pin,t_minute);
+			SetPageColume(1,offset,PAGE_SET);
+			display_gb18030_string((const unsigned char *)pin,temp,0,0); //display digital
+			offset +=8*temp;
+			SetPageColume(1,offset,PAGE_SET);
+			display_gb18030_string((const unsigned char *)"分",2,0,0); //display digital		
+			//if(temp<11)
+			//{
+			//display_LOGO_message(3,1,120,8,DOWN_ICON_SMALL);//display icon 	
+			//}
+			return;
+		}
+		else
+		{	
+					switch(data_type)
+					{
+					case KeyBoard_Down_2_DISP_SLEEP_DETAILED1:
+					{
+						s_tm t_tm;
+						t_tm.hour=0;
+						t_tm.year=0;
+						t_tm.month=0;
+						t_tm.day=0;
+						t_tm.weekdays=0;
+						t_tm.minute=0;
+						t_tm.second=0;
+            display_LOGO_message(0,4,0,32,SLEEP2_ICON);//display icon 
+							
+						system_time_get_hourS(&t_tm,app_get_sleep_begin()); 	
+						display_sleep_day_clock(0,t_tm.year,t_tm.month,t_tm.day,t_tm.weekdays,t_tm.hour,t_tm.minute,t_tm.second);
+						
+						system_time_get_hourS(&t_tm,app_get_sleep_end()); 		
+						display_sleep_day_clock(2,t_tm.year,t_tm.month,t_tm.day,t_tm.weekdays,t_tm.hour,t_tm.minute,t_tm.second);
+
+					}
+					break;
+					case KeyBoard_Down_2_DISP_SLEEP_DETAILED2:
+					{					
+						display_LOGO_message(0,2,0,16,NO_SLEEP_ICON);//display icon 
+						temp=display_int_2_char(pin,app_get_sleep_awake_time());
+						SetPageColume(0,16,PAGE_SET);
+						display_gb18030_string((const unsigned char *)pin,temp,0,0); //display digital
+						SetPageColume(0,temp*8+16,PAGE_SET);
+						display_gb18030_string((const unsigned char *)"m",1,0,0); //display digital
+						
+						display_LOGO_message(0,2,64,16,LIGHT_SLEEP_ICON);//display icon 
+						temp=display_int_2_char(pin,app_get_sleep_shall_time());
+						SetPageColume(0,64+16,PAGE_SET);
+						display_gb18030_string((const unsigned char *)pin,temp,0,0); //display digital	
+						SetPageColume(0,temp*8+64+16,PAGE_SET);
+						display_gb18030_string((const unsigned char *)"m",1,0,0); //display digital
+	
+						display_LOGO_message(2,2,0,16,DEEP_SLEEP_ICON);//display icon 	
+						temp=display_int_2_char(pin,app_get_sleep_deep_time());
+						SetPageColume(2,16,PAGE_SET);
+						display_gb18030_string((const unsigned char *)pin,temp,0,0); //display digital	
+						SetPageColume(2,temp*8+16,PAGE_SET);
+						display_gb18030_string((const unsigned char *)"m",1,0,0); //display digital
+					}
+					break;
+					default:
+					break;
+	
+					}			
+		} 
+
+	
+	}
+
+static void display_step_distance_engery_menu(UINT8 main_slave,UINT8 data_type)
 {	 
 	//char* stem_code1="步";
 	//const char* stem_code2="米";
@@ -1182,25 +1455,32 @@ static void display_step_distance_engery(UINT8 data_type)
 	unsigned char temp=0,temp_length,temp2=0;
 	uint8_t data_srt[32];
 	//UINT32 sleep_end=0;
-	
-	switch(data_type)
+	if(main_slave==1)
 	{
-      case KeyBoard_Down_2_DISP_STEP_NUM:
-	  	temp_number=(UINT32)app_arthmetic_get_total_steps();		
-	  break;
-      case KeyBoard_Down_2_DISP_DISTANCE:
-	  	temp_number=(UINT32)app_arthmetic_get_total_distance();
-	  break;	
-      case KeyBoard_Down_2_DISP_ENERGY:
-	  	temp_number=(UINT32)app_arthmetic_get_total_calorie();
-	  break;
-		case KeyBoard_Down_2_DISP_SLEEP_STATUS:
-			//app_arthmetic_get_sleep_status(&temp_number,&sleep_end);
-		break;
-	  default:
-	  break;
+		temp_number=(UINT32)app_arthmetic_get_total_steps();	
 	}
-
+	else
+	{	
+		switch(data_type)
+		{
+	    //  case KeyBoard_Down_2_DISP_STEP_NUM:
+		  //	temp_number=(UINT32)app_arthmetic_get_total_steps();		
+		  //break;
+	      case KeyBoard_Down_2_DISP_DISTANCE:
+		  	temp_number=(UINT32)app_arthmetic_get_total_distance();
+		  break;	
+	      case KeyBoard_Down_2_DISP_ENERGY:
+		  	temp_number=(UINT32)app_arthmetic_get_total_calorie();
+		  break;
+			case KeyBoard_Down_2_DISP_SLEEP_INTERVAL:
+				//app_arthmetic_get_sleep_status(&temp_number,&sleep_end);
+			break;
+		  default:
+		  break;
+		}
+	}
+	temp=display_int_2_char(pin,temp_number);
+/*
 	do
 	{
     pin[temp]=(temp_number) % 10;
@@ -1220,11 +1500,9 @@ static void display_step_distance_engery(UINT8 data_type)
 	  temp2=pin[temp_length];
 	  pin[temp_length]=pin[temp-temp_length-1];
 	  pin[temp-temp_length-1]=temp2;
-	}
-	//memcpy(data_srt,pin,temp);
-    switch(data_type)
-    {
-      case KeyBoard_Down_2_DISP_STEP_NUM:
+	}*/
+	if(main_slave==1)
+	{
 			if(temp<7)
 			{
 				temp2=temp*12+52;
@@ -1254,7 +1532,7 @@ static void display_step_distance_engery(UINT8 data_type)
 					temp2=((LCD_LOG_COLUME_START-temp2)/2);
 				else
 					temp2=0;	
-				display_LOGO_message(0,4,temp2,32,DISTANCE_ICON);//display icon 	
+				display_LOGO_message(0,4,temp2,32,STEP_ICON);//display icon 	
 				SetPageColume(1,temp2+32,PAGE_SET);
 				display_gb18030_string((const unsigned char *)pin,temp,0,0); //display digital
 				if(temp<11)
@@ -1263,144 +1541,170 @@ static void display_step_distance_engery(UINT8 data_type)
 				display_LOGO_message(1,2,(temp2+32+8*temp),16,data_srt);//display icon	
 				}
 			}
-		
-	  break;
-      case KeyBoard_Down_2_DISP_DISTANCE:
-
-	if(temp<7)
-	{
-		temp2=temp*12+52;
-		if(LCD_LOG_COLUME_START>temp2)
-			temp2=((LCD_LOG_COLUME_START-temp2)/2);
-		else
-			temp2=0;	
-		display_LOGO_message(0,4,temp2,32,DISTANCE_ICON);//display icon
-		for(temp_length=0;temp_length<temp;temp_length++)
-		{
-		display_LOGO_message(0,4,(temp2+32+12*temp_length),12,DIGITAL_ICON_32x12[pin[temp_length]-0x30]);//display icon 
-		}
-		hzbmp16(SEL_GB,0xc3d7,0,32,data_srt);
-		display_LOGO_message(1,2,(temp2+36+12*temp_length),16,data_srt);//display icon			
+			//if(temp<11)
+			//{
+			//display_LOGO_message(3,1,120,8,DOWN_ICON_SMALL);//display icon 	
+			//}
+			return;
 	}
 	else
 	{
-		if(temp<11)
-		{
-		temp2=temp*8+48;
-		}
-		else
-		{
-		temp2=temp*8+32;
-		}
-		if(LCD_LOG_COLUME_START>temp2)
-			temp2=((LCD_LOG_COLUME_START-temp2)/2);
-		else
-			temp2=0;	
-		display_LOGO_message(0,4,temp2,32,DISTANCE_ICON);//display icon 	
-		SetPageColume(1,temp2+32,PAGE_SET);
-		display_gb18030_string((const unsigned char *)pin,temp,0,0); //display digital
-		if(temp<11)
-		{
-		hzbmp16(SEL_GB,0xc3d7,0,32,data_srt);
-		display_LOGO_message(1,2,(temp2+32+8*temp),16,data_srt);//display icon	
-		}
-	}		  
-	
-	  break;
-      case KeyBoard_Down_2_DISP_ENERGY:
-		if(temp<7)
-		{
-			//temp2=temp+6;
-			//if(MAX_NUM_PER_COLUME>temp2)
-			//	temp2=((MAX_NUM_PER_COLUME-temp2)/2)*8;
-			//else
-			//	temp2=0;
-			temp2=temp*12+52;
-			if(LCD_LOG_COLUME_START>temp2)
-				temp2=((LCD_LOG_COLUME_START-temp2)/2);
-			else
-				temp2=0;	
-			display_LOGO_message(0,4,temp2,32,ENERGE_ICON);//display icon
-			for(temp_length=0;temp_length<temp;temp_length++)
-			{
-			display_LOGO_message(0,4,(temp2+32+12*temp_length),12,DIGITAL_ICON_32x12[pin[temp_length]-0x30]);//display icon 
-			}
-			hzbmp16(SEL_GB,0xbfa8,0,32,data_srt);
-			display_LOGO_message(1,2,(temp2+36+12*temp_length),16,data_srt);//display icon			
-		}
-		else
-		{
-		  if(temp<11)
-		  {
-			temp2=temp*8+48;
-		  }
-			else
-			{
-      temp2=temp*8+32;
-			}
-			if(LCD_LOG_COLUME_START>temp2)
-				temp2=((LCD_LOG_COLUME_START-temp2)/2);
-			else
-				temp2=0;	
-			display_LOGO_message(0,4,temp2,32,ENERGE_ICON);//display icon		
-			SetPageColume(1,temp2+32,PAGE_SET);
-			display_gb18030_string((const unsigned char *)pin,temp,0,0); //display digital
-			if(temp<11)
-			{
-			hzbmp16(SEL_GB,0xbfa8,0,32,data_srt);
-			display_LOGO_message(1,2,(temp2+32+8*temp),16,data_srt);//display icon	
-			}
-		}
-
-	  break;
-		case KeyBoard_Down_2_DISP_SLEEP_STATUS:
-	  {
-    s_tm t_tm;
-
-		t_tm.hour=0;
-		t_tm.year=0;
-		t_tm.month=0;
-		t_tm.day=0;
-		t_tm.weekdays=0;
-		t_tm.minute=0;
-		t_tm.second=0;
-		//memset((unsigned char *)&t_tm,0,sizeof((unsigned char *)&t_tm));	
-		
-		display_LOGO_message(0,4,0,32,SLEEP_ICON);//display icon		
-    system_time_get_hourS(&t_tm,app_get_sleep_begin());		
-    display_sleep_day_clock(0,t_tm.year,t_tm.month,t_tm.day,t_tm.weekdays,t_tm.hour,t_tm.minute,t_tm.second);
-		system_time_get_hourS(&t_tm,app_get_sleep_end());			
-		display_sleep_day_clock(2,t_tm.year,t_tm.month,t_tm.day,t_tm.weekdays,t_tm.hour,t_tm.minute,t_tm.second);
-
-		}
-		break;
-		case KeyBoard_Down_2_DISP_SLEEP_TIME:
+    		switch(data_type)
+		    {
+		      case KeyBoard_Down_2_DISP_DISTANCE:
+					if(temp<7)
+					{
+						temp2=temp*12+52;
+						if(LCD_LOG_COLUME_START>temp2)
+							temp2=((LCD_LOG_COLUME_START-temp2)/2);
+						else
+							temp2=0;	
+						display_LOGO_message(0,4,temp2,32,DISTANCE_ICON);//display icon
+						for(temp_length=0;temp_length<temp;temp_length++)
+						{
+						display_LOGO_message(0,4,(temp2+32+12*temp_length),12,DIGITAL_ICON_32x12[pin[temp_length]-0x30]);//display icon 
+						}
+						hzbmp16(SEL_GB,0xc3d7,0,32,data_srt);
+						display_LOGO_message(1,2,(temp2+36+12*temp_length),16,data_srt);//display icon			
+					}
+					else
+					{
+						if(temp<11)
+						{
+						temp2=temp*8+48;
+						}
+						else
+						{
+						temp2=temp*8+32;
+						}
+						if(LCD_LOG_COLUME_START>temp2)
+							temp2=((LCD_LOG_COLUME_START-temp2)/2);
+						else
+							temp2=0;	
+						display_LOGO_message(0,4,temp2,32,DISTANCE_ICON);//display icon 	
+						SetPageColume(1,temp2+32,PAGE_SET);
+						display_gb18030_string((const unsigned char *)pin,temp,0,0); //display digital
+						if(temp<11)
+						{
+						hzbmp16(SEL_GB,0xc3d7,0,32,data_srt);
+						display_LOGO_message(1,2,(temp2+32+8*temp),16,data_srt);//display icon	
+						}
+					}  
 			
-			temp=display_int_2_char(pin,app_get_sleep_awake_time());
-      SetPageColume(0,0,PAGE_SET);
-			display_gb18030_string((const unsigned char *)pin,temp,0,0); //display digital
-			SetPageColume(0,temp*8,PAGE_SET);
-      display_gb18030_string((const unsigned char *)"m",1,0,0); //display digital
-      
-			temp=display_int_2_char(pin,app_get_sleep_shall_time());
-      SetPageColume(0,64,PAGE_SET);
-			display_gb18030_string((const unsigned char *)pin,temp,0,0); //display digital	
-			SetPageColume(0,temp*8+64,PAGE_SET);
-      display_gb18030_string((const unsigned char *)"m",1,0,0); //display digital
+			  break;
+		    case KeyBoard_Down_2_DISP_ENERGY:
+				if(temp<7)
+				{
+					//temp2=temp+6;
+					//if(MAX_NUM_PER_COLUME>temp2)
+					//	temp2=((MAX_NUM_PER_COLUME-temp2)/2)*8;
+					//else
+					//	temp2=0;
+					temp2=temp*12+52;
+					if(LCD_LOG_COLUME_START>temp2)
+						temp2=((LCD_LOG_COLUME_START-temp2)/2);
+					else
+						temp2=0;	
+					display_LOGO_message(0,4,temp2,32,ENERGE_ICON);//display icon
+					for(temp_length=0;temp_length<temp;temp_length++)
+					{
+					display_LOGO_message(0,4,(temp2+32+12*temp_length),12,DIGITAL_ICON_32x12[pin[temp_length]-0x30]);//display icon 
+					}
+					hzbmp16(SEL_GB,0xbfa8,0,32,data_srt);
+					display_LOGO_message(1,2,(temp2+36+12*temp_length),16,data_srt);//display icon			
+				}
+				else
+				{
+				  if(temp<11)
+				  {
+					temp2=temp*8+48;
+				  }
+					else
+					{
+		      temp2=temp*8+32;
+					}
+					if(LCD_LOG_COLUME_START>temp2)
+						temp2=((LCD_LOG_COLUME_START-temp2)/2);
+					else
+						temp2=0;	
+					display_LOGO_message(0,4,temp2,32,ENERGE_ICON);//display icon		
+					SetPageColume(1,temp2+32,PAGE_SET);
+					display_gb18030_string((const unsigned char *)pin,temp,0,0); //display digital
+					if(temp<11)
+					{
+					hzbmp16(SEL_GB,0xbfa8,0,32,data_srt);
+					display_LOGO_message(1,2,(temp2+32+8*temp),16,data_srt);//display icon	
+					}
+				}
 
-			
-			temp=display_int_2_char(pin,app_get_sleep_deep_time());
-      SetPageColume(2,0,PAGE_SET);
-			display_gb18030_string((const unsigned char *)pin,temp,0,0); //display digital	
-			SetPageColume(2,temp*8,PAGE_SET);
-      display_gb18030_string((const unsigned char *)"m",1,0,0); //display digital			
-		break;
-		default:
-		break;
+			  break;
+				/*case KeyBoard_Down_2_DISP_SLEEP_INTERVAL:
+			  {
+		    //s_tm t_tm;
+				//t_tm.hour=0;
+				//t_tm.year=0;
+				//t_tm.month=0;
+				//t_tm.day=0;
+				//t_tm.weekdays=0;
+				//t_tm.minute=0;
+				//t_tm.second=0;
+				unsigned int sleep_time=0;
+				unsigned char t_hour=0,t_minute=0,offset=0;
+				sleep_time=app_get_sleep_end()-app_get_sleep_begin();
+				t_hour=sleep_time/3600;
+				t_minute=(sleep_time%3600)/60;
+				//memset((unsigned char *)&t_tm,0,sizeof((unsigned char *)&t_tm));	
+				offset=16;
+				display_LOGO_message(0,4,16,32,SLEEP_ICON);//display icon		
+				offset +=32+8;
+		    //system_time_get_hourS(&t_tm,app_get_sleep_begin());		
+		    //display_sleep_day_clock(0,t_tm.year,t_tm.month,t_tm.day,t_tm.weekdays,t_tm.hour,t_tm.minute,t_tm.second);
+				//system_time_get_hourS(&t_tm,app_get_sleep_end());			
+				//display_sleep_day_clock(2,t_tm.year,t_tm.month,t_tm.day,t_tm.weekdays,t_tm.hour,t_tm.minute,t_tm.second);
+		    temp=display_int_2_char(pin,t_hour);
+				SetPageColume(1,offset,PAGE_SET);
+				display_gb18030_string((const unsigned char *)pin,temp,0,0); //display digital
+				offset +=8*temp;
+				SetPageColume(1,offset,PAGE_SET);
+		    display_gb18030_string((const unsigned char *)"时",2,0,0); //display digital
+		    offset +=16;
+		    temp=display_int_2_char(pin,t_minute);
+				SetPageColume(1,offset,PAGE_SET);
+				display_gb18030_string((const unsigned char *)pin,temp,0,0); //display digital
+				offset +=8*temp;
+				SetPageColume(1,offset,PAGE_SET);
+		    display_gb18030_string((const unsigned char *)"分",2,0,0); //display digital			
+				}
+				break;*/
+#if 0
+				case KeyBoard_Down_2_DISP_SLEEP_TIME:
+					
+					temp=display_int_2_char(pin,app_get_sleep_awake_time());
+		      SetPageColume(0,0,PAGE_SET);
+					display_gb18030_string((const unsigned char *)pin,temp,0,0); //display digital
+					SetPageColume(0,temp*8,PAGE_SET);
+		      display_gb18030_string((const unsigned char *)"m",1,0,0); //display digital
+		      
+					temp=display_int_2_char(pin,app_get_sleep_shall_time());
+		      SetPageColume(0,64,PAGE_SET);
+					display_gb18030_string((const unsigned char *)pin,temp,0,0); //display digital	
+					SetPageColume(0,temp*8+64,PAGE_SET);
+		      display_gb18030_string((const unsigned char *)"m",1,0,0); //display digital
 
-	}
+					
+					temp=display_int_2_char(pin,app_get_sleep_deep_time());
+		      SetPageColume(2,0,PAGE_SET);
+					display_gb18030_string((const unsigned char *)pin,temp,0,0); //display digital	
+					SetPageColume(2,temp*8,PAGE_SET);
+		      display_gb18030_string((const unsigned char *)"m",1,0,0); //display digital			
+				break;
+#endif
+				default:
+				break;
+
+			}
 		
-		
+	}	
 	//Display_delay_set(DISP_LOGO_DELAY,100); 	
 	//Set_lastDisplayTag(DISP_TAG_STEP_NUM_SLAVE);
 
@@ -1610,7 +1914,7 @@ static void display_Clock(unsigned char temp_hour,unsigned char temp_munite,unsi
 	display_gb18030_string(temp_data,8,0,0);
 	//Set_lastDisplayTag(DISP_TAG_CLOCK);
 }*/
-	static void Display_battery_icon(uint8_t temp_level,unsigned char start_clo)
+	static void Display_battery_icon(uint8_t temp_level,unsigned char start_clo,unsigned char start_page)
 	{
 		//if(check_logoCanDisplay())
 		//{ 		
@@ -1618,31 +1922,31 @@ static void display_Clock(unsigned char temp_hour,unsigned char temp_munite,unsi
 			{
 				case 0:
 				 //display_LOGO_message(2,2,LCD_LOG_COLUME_START,16,BATTERY_0to4);
-				 display_LOGO_message(2,2,start_clo,16,BATTERY_0to4);
+				 display_LOGO_message(start_page,2,start_clo,16,BATTERY_0to4);
 				break;
 				case 1:
 				 //display_LOGO_message(2,2,LCD_LOG_COLUME_START,16,BATTERY_1to4);
-					display_LOGO_message(2,2,start_clo,16,BATTERY_1to4);
+					display_LOGO_message(start_page,2,start_clo,16,BATTERY_1to4);
 				break;
 				case 2:
 				 //display_LOGO_message(2,2,LCD_LOG_COLUME_START,16,BATTERY_2to4);
-					display_LOGO_message(2,2,start_clo,16,BATTERY_2to4);
+					display_LOGO_message(start_page,2,start_clo,16,BATTERY_2to4);
 				break;
 				case 3:
 				 //display_LOGO_message(2,2,LCD_LOG_COLUME_START,16,BATTERY_3to4);
-					display_LOGO_message(2,2,start_clo,16,BATTERY_3to4);
+					display_LOGO_message(start_page,2,start_clo,16,BATTERY_3to4);
 				break;
 				case 4:
 				 //display_LOGO_message(2,2,LCD_LOG_COLUME_START,16,BATTERY_4to4);
-					display_LOGO_message(2,2,start_clo,16,BATTERY_4to4);
+					display_LOGO_message(start_page,2,start_clo,16,BATTERY_4to4);
 				break;
 				default:
 				break;
 			}
 		//}
 	}
-	static void Display_Battery(unsigned char start_clo)
-	{
+static void Display_Battery(unsigned char start_clo,unsigned char start_page)
+{
 		 static uint8_t charging_icon=0;
 		 static uint8_t charging_icon_pro=0;
 		 static uint16_t charging_time=0;
@@ -1786,11 +2090,13 @@ static void display_Clock(unsigned char temp_hour,unsigned char temp_munite,unsi
 		}
 		if(temp_battery_percent>4)
 			temp_battery_percent=4;
-		Display_battery_icon(temp_battery_percent,start_clo); 
+		Display_battery_icon(temp_battery_percent,start_clo,start_page); 
 	
-	}
+}
 
-static void display_day_clock(uint16_t temp_year,uint8_t temp_month,uint8_t temp_day,uint8_t temp_week,uint8_t temp_hour,unsigned char temp_munite,unsigned char temp_second)
+//static void display_day_week(uint16_t temp_year,uint8_t temp_month,uint8_t temp_day,uint8_t temp_week,uint8_t temp_hour,unsigned char temp_munite,unsigned char temp_second)
+static void display_day_week(uint16_t temp_year,uint8_t temp_month,uint8_t temp_day,uint8_t temp_week)
+
 {
 
     unsigned char temp_data[16];//+strlen(day_year_code)+strlen(day_month_code)+strlen(day_day_code)+strlen(day_week_code[(temp_week)])];
@@ -1843,26 +2149,27 @@ SetPageColume(0,12,PAGE_SET);
 display_gb18030_string(temp_data,temp,0,0);//display Y-M-D	
 
 //=====================hour and minute========================
-	temp_data[0]=((temp_hour/10)&0x0f)+0x30;
+/*	temp_data[0]=((temp_hour/10)&0x0f)+0x30;
 	temp_data[1]=((temp_hour%10)&0x0f)+0x30;
 	temp_data[2]=0x3a;
 	temp_data[3]=((temp_munite/10)&0x0f)+0x30;
 	temp_data[4]=((temp_munite%10)&0x0f)+0x30;
-	/*temp_data[5]=0x3a;
-	temp_data[6]=((temp_second/10)&0x0f)+0x30;
-	temp_data[7]=((temp_second%10)&0x0f)+0x30;
-*/
+	//temp_data[5]=0x3a;
+	//temp_data[6]=((temp_second/10)&0x0f)+0x30;
+	//temp_data[7]=((temp_second%10)&0x0f)+0x30;
 
-	//SetPageColume(2,40,PAGE_SET);
+
+
 	SetPageColume(2,12,PAGE_SET);
 	display_gb18030_string(temp_data,5,0,0);
-
+*/
 
 //=============================================================
-  //SetPageColume(2,32+8*6+4,PAGE_SET);
-  SetPageColume(2,12+8*5+6,PAGE_SET);
+
+  //SetPageColume(2,12+8*5+6,PAGE_SET);
+  SetPageColume(2,8+8*4,PAGE_SET);
 	display_gb18030_string(day_week_code[(temp_week)],strlen((const char *)day_week_code[(temp_week)]),0,0);
-	Display_Battery(104);
+	/*Display_Battery(104);
 	if(Protocol_check_BT_connected()==1)
 	{
 	display_LOGO_message(0,2,104,16,BLUETOOTH_CONNECT_16x16);
@@ -1870,7 +2177,7 @@ display_gb18030_string(temp_data,temp,0,0);//display Y-M-D
 	else
 	{ 		
 	 display_LOGO_message(0,2,104,16,BLUETOOTH_DISCONNECT_16x16);
-	}
+	}*/
 
 
 }
@@ -1970,6 +2277,7 @@ void display_IncomingCall(uint8_t flag,unsigned char * data_srt,uint8_t temp_len
      display_gb18030_string((const unsigned char*)data_srt,temp_length,0,0);		 
      Display_delay_set(DISP_INCOMING_LOGO_DELAY);
      Set_lastDisplayTag(DISP_TAG_INCOMING_CALL);
+     Motor_str.Motor_dispAlarm_flag=1;
 		 MotorCtr(1,MOTOR_TYPE_ALARM);
 	}
 	else
@@ -2025,6 +2333,7 @@ void display_Keymode(KEY_MODE temp_mode)
 	Set_lastDisplayTag(DISP_TAG_KEYMODE);
 	
 }*/
+/*
 static void Display_sysTime(UINT8 candisp_flag)
 {
        s_tm t_tm;
@@ -2049,14 +2358,14 @@ static void Display_sysTime(UINT8 candisp_flag)
 	   display_day_clock(t_tm.year,t_tm.month,t_tm.day,t_tm.weekdays,t_tm.hour,t_tm.minute,t_tm.second);//candisp_flag);
 	   //Display_delay_set(DISP_LOGO_DELAY);
 	   //Set_lastDisplayTag(DISP_TAG_SYSTIME_SLAVE);	
-}
+}*/
 static void Display_Key_Version(void)
 {
     unsigned char temp=0;	
 	unsigned char dis_data[32];
 	//unsigned char* str="系统";
 	//unsigned char* str2="版本";
-	unsigned char* str="版本";
+	unsigned char* str="Ver:";
 	//unsigned char keyid[FLASH_GET_LENGTH];
 	//unsigned short temp_len=0;
 
@@ -2153,122 +2462,167 @@ static void Display_CheckMenuMode(UINT8 key_value)
 	{
 		case UP_KEY:
 		{
-			 switch(disp_str.LCD_disp_MainMenu)
-			 {	 
-				 case KeyBoard_Down_2_DISP_RSSI:
-					 /*if(disp_str.LCD_disp_SlaveMenu!=KeyBoard_Down_2_DISP_Slave_NULL)
-					 {
-					 break;
-					 }*/
-				 case KeyBoard_Down_2_DISP_STEP_NUM:
-				 case KeyBoard_Down_2_DISP_DISTANCE:
-				 case KeyBoard_Down_2_DISP_ENERGY:
-				 case KeyBoard_Down_2_DISP_ID:
-				 case KeyBoard_Down_2_DISP_SLEEP_STATUS:
-				 //case KeyBoard_Down_2_DISP_STATUS:
-				 case KeyBoard_Down_2_DISP_VERSION:
-				 case KeyBoard_Down_2_DISP_SYS_TIME:
-				 default:
+			if(disp_str.LCD_disp_SlaveMenu==KeyBoard_Down_2_DISP_Slave_NULL)
+			{
+				disp_str.LCD_disp_MainMenu++;
+				if(disp_str.LCD_disp_MainMenu>=KeyBoard_Down_2_DISP_MAX)
+				{
+						disp_str.LCD_disp_MainMenu=KeyBoard_Down_2_DISP_STEP_NUM;
+				}
+				else if(disp_str.LCD_disp_MainMenu<KeyBoard_Down_2_DISP_STEP_NUM)
+				{
+							disp_str.LCD_disp_MainMenu=KeyBoard_Down_2_DISP_STEP_NUM;
+				}
+
+			}
+			else
+			{
+				 switch(disp_str.LCD_disp_MainMenu)
 				 {
-				 	 if(disp_str.LCD_disp_MainMenu<KeyBoard_Down_2_DISP_STEP_NUM)
-				 	 {
-                      disp_str.LCD_disp_MainMenu=KeyBoard_Down_2_DISP_STEP_NUM;
-					  break;
-					 }
-					 disp_str.LCD_disp_MainMenu++;
-					 if(disp_str.LCD_disp_MainMenu>=KeyBoard_Down_2_DISP_MAX)
+					 case KeyBoard_Down_2_DISP_STEP_NUM:
 					 {
-				       disp_str.LCD_disp_MainMenu=KeyBoard_Down_2_DISP_STEP_NUM;
+            disp_str.LCD_disp_SlaveMenu++;
+						if(disp_str.LCD_disp_SlaveMenu>KeyBoard_Down_2_DISP_ENERGY)
+						{
+						   disp_str.LCD_disp_SlaveMenu=KeyBoard_Down_2_DISP_DISTANCE;
+
+						}
+						
 					 }
-					 else if(disp_str.LCD_disp_MainMenu<KeyBoard_Down_2_DISP_STEP_NUM)
+					 break;
+					 case KeyBoard_Down_2_DISP_SLEEP_INTERVAL:
 					 {
-			           disp_str.LCD_disp_MainMenu=KeyBoard_Down_2_DISP_STEP_NUM;
+					 	 disp_str.LCD_disp_SlaveMenu++;	
+						 if(disp_str.LCD_disp_SlaveMenu>KeyBoard_Down_2_DISP_SLEEP_DETAILED2)
+						 {
+							disp_str.LCD_disp_SlaveMenu=KeyBoard_Down_2_DISP_SLEEP_DETAILED1;						 
+						 }
+
 					 }
-					 disp_str.LCD_disp_SlaveMenu=KeyBoard_Down_2_DISP_Slave_NULL;
-					 //if(disp_str.LCD_disp_PassWd_count!=0)
-					 //clear_password_buffer();
-				 }
-				 break;
-			 }
-			 
+					 break;
+					 case KeyBoard_Down_2_DISP_SYS_TIME:
+					 {      
+					 	disp_str.LCD_disp_SlaveMenu++;
+						if(disp_str.LCD_disp_SlaveMenu>KeyBoard_Down_2_DISP_FIND_AG)
+						{
+						  disp_str.LCD_disp_SlaveMenu=KeyBoard_Down_2_DISP_VERSION;	 
+						}
+						
+					 }					 	
+					 break;
+					 default:
+					 break;
+				 }        
+			}
+			disp_str.LCD_disp_SlaveSlaveMenu=KeyBoard_Down_2_DISP_Slave_NULL;
 		}
 		//DbgPrintf("UP_KEY,main=%d,slave=%d\r\n",disp_str.LCD_disp_MainMenu,disp_str.LCD_disp_SlaveMenu);
 		break;
 		case DOWN_KEY:
 		{
-			switch(disp_str.LCD_disp_MainMenu)
-			{ 
-				 
-				 case KeyBoard_Down_2_DISP_RSSI:				 
+			if(disp_str.LCD_disp_SlaveMenu==KeyBoard_Down_2_DISP_Slave_NULL)
+			{
+			 	 if(disp_str.LCD_disp_MainMenu<KeyBoard_Down_2_DISP_STEP_NUM)
+			 	 {
+          disp_str.LCD_disp_MainMenu=KeyBoard_Down_2_DISP_STEP_NUM;
+				  break;
+				 }			
+				disp_str.LCD_disp_MainMenu--;
+				if(disp_str.LCD_disp_MainMenu<KeyBoard_Down_2_DISP_STEP_NUM)
+				{
+							disp_str.LCD_disp_MainMenu=KeyBoard_Down_2_DISP_MAX-1;
+				}
+
+			}
+			else
+			{
+				 switch(disp_str.LCD_disp_MainMenu)
 				 {
-					 /*if(disp_str.LCD_disp_SlaveMenu!=KeyBoard_Down_2_DISP_Slave_NULL)
+					 case KeyBoard_Down_2_DISP_STEP_NUM:
 					 {
-					 break;
-					 }*/
-				 }
-				 case KeyBoard_Down_2_DISP_STEP_NUM:
-				 case KeyBoard_Down_2_DISP_DISTANCE:
-				 case KeyBoard_Down_2_DISP_ENERGY:
-				 case KeyBoard_Down_2_DISP_ID:
-				 case KeyBoard_Down_2_DISP_SLEEP_STATUS:
-				 //case KeyBoard_Down_2_DISP_STATUS:
-				 case KeyBoard_Down_2_DISP_SYS_TIME:
-				 case KeyBoard_Down_2_DISP_VERSION:
-				 default:
-				 	 if(disp_str.LCD_disp_MainMenu<KeyBoard_Down_2_DISP_STEP_NUM)
-				 	 {
-                      disp_str.LCD_disp_MainMenu=KeyBoard_Down_2_DISP_STEP_NUM;
-					  break;
+						 disp_str.LCD_disp_SlaveMenu--;
+						 if(disp_str.LCD_disp_SlaveMenu<KeyBoard_Down_2_DISP_DISTANCE)
+						 {
+								disp_str.LCD_disp_SlaveMenu=KeyBoard_Down_2_DISP_ENERGY;
+								
+						 } 
+
+						
 					 }
+					 break;
+					 case KeyBoard_Down_2_DISP_SLEEP_INTERVAL:
+					 {
+					 	disp_str.LCD_disp_SlaveMenu--;
+						 if(disp_str.LCD_disp_SlaveMenu<KeyBoard_Down_2_DISP_SLEEP_DETAILED1)
+						 {
+								disp_str.LCD_disp_SlaveMenu=KeyBoard_Down_2_DISP_SLEEP_DETAILED2;						 
+						 }
 
-					disp_str.LCD_disp_MainMenu--;
-					if(disp_str.LCD_disp_MainMenu<KeyBoard_Down_2_DISP_STEP_NUM)
-					{
-					  disp_str.LCD_disp_MainMenu=KeyBoard_Down_2_DISP_MAX-1;
-					}
-					else if(disp_str.LCD_disp_MainMenu>=KeyBoard_Down_2_DISP_MAX)
-					{
-					  disp_str.LCD_disp_MainMenu=KeyBoard_Down_2_DISP_MAX-1;
-					}				 	
-				 	disp_str.LCD_disp_SlaveMenu=KeyBoard_Down_2_DISP_Slave_NULL;
-					//if(disp_str.LCD_disp_PassWd_count!=0)
-					//clear_password_buffer();
-				 break;
-			 }
-
+					 }					 	
+					 break;
+					 case KeyBoard_Down_2_DISP_SYS_TIME:
+					 {     
+					 	disp_str.LCD_disp_SlaveMenu--;
+						if(disp_str.LCD_disp_SlaveMenu<KeyBoard_Down_2_DISP_VERSION)
+						{
+						   disp_str.LCD_disp_SlaveMenu=KeyBoard_Down_2_DISP_FIND_AG;
+						}
+						
+					 }					 	
+					 break;
+					 default:
+					 break;
+				 }        
+			}
+			disp_str.LCD_disp_SlaveSlaveMenu=KeyBoard_Down_2_DISP_Slave_NULL;
 		}
 		//DbgPrintf("DOWN_KEY,main=%d,slave=%d\r\n",disp_str.LCD_disp_MainMenu,disp_str.LCD_disp_SlaveMenu);
 		break;
 		case OK_KEY:
 		{
-
+	
+      
 		   switch(disp_str.LCD_disp_MainMenu)
 		   {
-			 case KeyBoard_Down_2_DISP_RSSI:
-
+			 case KeyBoard_Down_2_DISP_STEP_NUM:
+			 case KeyBoard_Down_2_DISP_SLEEP_INTERVAL:			 		 
 			 if(disp_str.LCD_disp_SlaveMenu==KeyBoard_Down_2_DISP_Slave_NULL)
 			 {
-	           disp_str.LCD_disp_SlaveMenu=KeyBoard_Down_2_DISP_Slave_MAX-1;//KeyBoard_Down_2_DISP_Slave_UPDATED;
-			 }			 	
+	           disp_str.LCD_disp_SlaveMenu=KeyBoard_Down_2_DISP_Slave_METU1;//KeyBoard_Down_2_DISP_Slave_UPDATED;
+			 }				 	
 			 break;
-			 case KeyBoard_Down_2_DISP_STEP_NUM:
-			 case KeyBoard_Down_2_DISP_DISTANCE:
-			 case KeyBoard_Down_2_DISP_ENERGY:
-			 case KeyBoard_Down_2_DISP_ID:
-			 case KeyBoard_Down_2_DISP_SLEEP_STATUS:
 			 case KeyBoard_Down_2_DISP_SYS_TIME:
-			 case KeyBoard_Down_2_DISP_VERSION:
-			 //case KeyBoard_Down_2_DISP_STATUS:
+			 if(disp_str.LCD_disp_SlaveMenu==KeyBoard_Down_2_DISP_Slave_NULL)
+			 {
+	           disp_str.LCD_disp_SlaveMenu=KeyBoard_Down_2_DISP_Slave_METU1;//KeyBoard_Down_2_DISP_Slave_UPDATED;
+			 }
+			 else
+			 {
+				 if(disp_str.LCD_disp_SlaveMenu==KeyBoard_Down_2_DISP_FIND_AG)
+				 {
+							 disp_str.LCD_disp_SlaveSlaveMenu=KeyBoard_Down_2_DISP_Slave_METU1;//KeyBoard_Down_2_DISP_Slave_UPDATED;
+				 }
+
+			 }
+			 break;
+			 case KeyBoard_Down_2_DISP_ID:
 			 default:
 			 	disp_str.LCD_disp_SlaveMenu=KeyBoard_Down_2_DISP_Slave_NULL;
 			 break;
 		   }
-
+      
 		}
 		//DbgPrintf("OK_KEY,main=%d,slave=%d\r\n",disp_str.LCD_disp_MainMenu,disp_str.LCD_disp_SlaveMenu);
 		break;
 		case CANCEL_KEY:	
-           disp_str.LCD_disp_SlaveMenu=KeyBoard_Down_2_DISP_Slave_NULL;
+			     if(disp_str.LCD_disp_SlaveSlaveMenu==0)
+			     {
+           		disp_str.LCD_disp_SlaveMenu=KeyBoard_Down_2_DISP_Slave_NULL;
+			     }
+					 else
+					 {
+						 disp_str.LCD_disp_SlaveSlaveMenu=KeyBoard_Down_2_DISP_Slave_NULL;
+					 }
            //if(disp_str.LCD_disp_PassWd_count!=0)
 			//clear_password_buffer();
 		//DbgPrintf("CANCEL_KEY,main=%d,slave=%d\r\n",disp_str.LCD_disp_MainMenu,disp_str.LCD_disp_SlaveMenu);
@@ -2559,14 +2913,14 @@ BOOL Display_idle_logo(void)
   }
   //clear_secterScreen(2,2,colume_offset,LCD_LOG_COLUME_START-colume_offset);
   
-  Display_Battery(colume_offset+2);
+  Display_Battery(colume_offset,2);
 	 if(Protocol_check_BT_connected()==1)
 	 {
-	 display_LOGO_message(2,2,colume_offset+18,16,BLUETOOTH_CONNECT_16x16);
+	 display_LOGO_message(2,2,colume_offset+16,16,BLUETOOTH_CONNECT_16x16);
 	 }
 	 else
 	 {		 
-		display_LOGO_message(2,2,colume_offset+18,16,BLUETOOTH_0x00);
+		display_LOGO_message(2,2,colume_offset+16,16,BLUETOOTH_0x00);
 	 }
   //if(check_lastDisplayTag(DISP_TAG_IDLE_LOGO)==0)
   //{
@@ -2600,11 +2954,88 @@ BOOL Display_idle_logo(void)
 		
 }
 
+void Display_Time_Menu(void)
+{
+
+  s_tm t_tm;
+  uint8_t colume_offset=0;
+	//unsigned char start_page=0;
+  //unsigned char temp_data[16];//+strlen(day_year_code)+strlen(day_month_code)+strlen(day_day_code)+strlen(day_week_code[(temp_week)])];
+// UINT32 temp_number=0,temp_number2=0;
+// unsigned char pin[12];
+// unsigned char temp=0,temp2=0,temp_length=0;
+  unsigned char temp2=0;
+  
+ //  temp_number=app_arthmetic_get_total_steps();
+	// temp_number2=temp_number;
+ // temp=0;
+ /* do
+  {
+	pin[temp]=(temp_number) % 10;
+	temp_number=(temp_number) /10;
+	temp++;
+  }while(temp_number!=0);
+
+	temp2=0;*/ 
+  colume_offset=temp2;
+ lcd_power_control(LCD_OPEN);
+ if(check_lastDisplayTag(DISP_TAG_IDLE_LOGO))
+ {
+    display_check_to_clear_Screen();
+ }
+  system_time_get(&t_tm);
+  //===disp clock=======================
+  colume_offset=22;
+  temp2=(t_tm.hour/10) &0x03;
+  if(temp2>0)
+  {
+  display_LOGO_message(0,4,colume_offset,12,DIGITAL_ICON_32x12[temp2]);
+  }
+  else
+  {	  
+   display_LOGO_message(0,4,colume_offset,12,BLUETOOTH_0x00);
+  }
+  colume_offset +=12;
+ // SetPageColume(0,colume_offset,PAGE_SET);
+  temp2=(t_tm.hour%10) &0x0F;
+  display_LOGO_message(0,4,colume_offset,12,DIGITAL_ICON_32x12[temp2]);
+  colume_offset +=12;
+ // SetPageColume(0,colume_offset,PAGE_SET);
+  display_LOGO_message(0,4,colume_offset,12,DIGITAL_ICON_32x12[10]); 
+  colume_offset +=12;
+ // SetPageColume(0,colume_offset,PAGE_SET);  
+  temp2=(t_tm.minute/10) &0x0f;
+  display_LOGO_message(0,4,colume_offset,12,DIGITAL_ICON_32x12[temp2]);
+  colume_offset +=12;
+ // SetPageColume(0,colume_offset,PAGE_SET);
+  temp2=(t_tm.minute%10) &0x0f;
+  display_LOGO_message(0,4,colume_offset,12,DIGITAL_ICON_32x12[temp2]);
+   colume_offset +=12;
+	//if(temp<6)
+	//{
+	display_LOGO_message(0,4,colume_offset,8,BLUETOOTH_0x00);
+	colume_offset +=8;
+	//}
+
+  
+  
+	 if(Protocol_check_BT_connected()==1)
+	 {
+	 	 display_LOGO_message(0,2,colume_offset+6,16,BLUETOOTH_CONNECT_16x16);
+	 Display_Battery(colume_offset+2,2);
+
+	 }
+	 else
+	 {	 
+	 Display_Battery(colume_offset+2,1);
+	 }
+	 //display_LOGO_message(3,1,120,8,DOWN_ICON_SMALL);//display icon 	
+}
 
 void Check_RSSI_display(void)
 {
 //  signed char *p_rssi=0;
-	if(check_lastDisplayTag(DISP_TAG_RSSI_SLAVE))
+	if(check_lastDisplayTag(DISP_TAG_FIND_AG_SLAVE))
 		return;
 	if((Protocol_check_BT_connected()==0))
 	{
@@ -2645,7 +3076,8 @@ static void Display_Menu(UINT8 key_value)
     
 	Display_CheckMenuMode(key_value);
 	//DbgPrintf("SlaveMenu:0x%x,MainMenu=0x%x \r\n",disp_str.LCD_disp_SlaveMenu,disp_str.LCD_disp_MainMenu);
-	if((disp_str.LCD_disp_SlaveMenu!=KeyBoard_Down_2_DISP_Slave_UPDATED) &&(disp_str.LCD_disp_MainMenu!=KeyBoard_Down_2_DISP_RSSI))
+	/*if((disp_str.LCD_disp_SlaveMenu!=KeyBoard_Down_2_DISP_Slave_NULL) &&(disp_str.LCD_disp_MainMenu!=KeyBoard_Down_2_DISP_FIND_AG))*/
+	if((disp_str.LCD_disp_SlaveSlaveMenu==KeyBoard_Down_2_DISP_Slave_NULL))
 	{
 		Get_Rssi_stop();
 	}
@@ -2655,357 +3087,291 @@ static void Display_Menu(UINT8 key_value)
      {
         
         case KeyBoard_Down_2_DISP_STEP_NUM:
-		{
-			//unsigned char* stem_code1="运动步数";
-			if(Get_lastDisplayTag()!=DISP_TAG_STEP_NUM)
-			{
-			
-			clear_secterScreen(0,4,0,LCD_LOG_COLUME_START);//clear_AllScreen();
-			lcd_power_control(LCD_OPEN);
-			//temp =strlen((const char*)stem_code1);
-			//SetPageColume(0,Get_disp_start_colume(stem_code1,temp),PAGE_SET);
-			//display_gb18030_string(stem_code1,temp,0,0);			
-		    display_step_distance_engery(KeyBoard_Down_2_DISP_STEP_NUM);
-			}
-			Display_delay_set(DISP_LOGO_DELAY);		
-			Set_lastDisplayTag(DISP_TAG_STEP_NUM);
+        {
+          //unsigned char* stem_code1="运动步数";
+          if(Get_lastDisplayTag()!=DISP_TAG_STEP_NUM)
+          {
+          
+          clear_secterScreen(0,4,0,LCD_LOG_COLUME_START);//clear_AllScreen();
+          lcd_power_control(LCD_OPEN);
+          //temp =strlen((const char*)stem_code1);
+          //SetPageColume(0,Get_disp_start_colume(stem_code1,temp),PAGE_SET);
+          //display_gb18030_string(stem_code1,temp,0,0);			
+            display_step_distance_engery_menu(1,KeyBoard_Down_2_DISP_STEP_NUM);
+					  
+          }
+          Display_delay_set(DISP_LOGO_DELAY);		
+          Set_lastDisplayTag(DISP_TAG_STEP_NUM);
 			
         }	
-		break;
-        case KeyBoard_Down_2_DISP_DISTANCE:
-		{
-			//unsigned char* stem_code1="运动里程";
-			if(Get_lastDisplayTag()!=DISP_TAG_DISTANCE)
-			{
-			clear_secterScreen(0,4,0,LCD_LOG_COLUME_START);//clear_AllScreen();
-			lcd_power_control(LCD_OPEN);
+        break;
 
-			//temp =strlen((const char*)stem_code1);
-			//SetPageColume(0,Get_disp_start_colume(stem_code1,temp),PAGE_SET);
-			//display_gb18030_string(stem_code1,temp,0,0);
-			
+        case KeyBoard_Down_2_DISP_SLEEP_INTERVAL:
+        {
+    //=============
+          //unsigned char* stem_code1="消耗能量";
+          if(Get_lastDisplayTag()!=DISP_TAG_SLEEP_INTERVAL)
+          {
+          clear_secterScreen(0,4,0,LCD_LOG_COLUME_START);//clear_AllScreen();
+          lcd_power_control(LCD_OPEN);
 
-			display_step_distance_engery(KeyBoard_Down_2_DISP_DISTANCE);
-			}
-			Display_delay_set(DISP_LOGO_DELAY);		
-			Set_lastDisplayTag(DISP_TAG_DISTANCE);
+          
 
-		}	
-		break;	
-        case KeyBoard_Down_2_DISP_ENERGY:
-		{
-			//unsigned char* stem_code1="消耗能量";
-			if(Get_lastDisplayTag()!=DISP_TAG_ENERGE)
-			{
-			clear_secterScreen(0,4,0,LCD_LOG_COLUME_START);//clear_AllScreen();
-			lcd_power_control(LCD_OPEN);
+          //display_step_distance_engery(KeyBoard_Down_2_DISP_SLEEP_INTERVAL);
+          display_sleep_menu(1,KeyBoard_Down_2_DISP_SLEEP_INTERVAL);
+          }
+          Display_delay_set(DISP_LOGO_DELAY);		
+          Set_lastDisplayTag(DISP_TAG_SLEEP_INTERVAL);							
 
-			//temp =strlen((const char*)stem_code1);
-			//SetPageColume(0,Get_disp_start_colume(stem_code1,temp),PAGE_SET);
-			//display_gb18030_string(stem_code1,temp,0,0);
-			
+        }
+        break;
+    #if 0
+        case KeyBoard_Down_2_DISP_SLEEP_TIME:
+        {
+    //=============
+          //unsigned char* stem_code1="消耗能量";
+          if(Get_lastDisplayTag()!=DISP_TAG_SLEEP_TIME)
+          {
+          clear_secterScreen(0,4,0,LCD_LOG_COLUME_START);//clear_AllScreen();
+          lcd_power_control(LCD_OPEN);
 
-			display_step_distance_engery(KeyBoard_Down_2_DISP_ENERGY);
-			}
-			Display_delay_set(DISP_LOGO_DELAY);		
-			Set_lastDisplayTag(DISP_TAG_ENERGE);
-		}
-		break;
-		case KeyBoard_Down_2_DISP_SLEEP_STATUS:
-		{
-//=============
-			//unsigned char* stem_code1="消耗能量";
-			if(Get_lastDisplayTag()!=DISP_TAG_SLEEP_STATUE)
-			{
-			clear_secterScreen(0,4,0,LCD_LOG_COLUME_START);//clear_AllScreen();
-			lcd_power_control(LCD_OPEN);
+          
 
-			
+          display_step_distance_engery(KeyBoard_Down_2_DISP_SLEEP_TIME);
+          }
+          Display_delay_set(DISP_LOGO_DELAY);		
+          Set_lastDisplayTag(DISP_TAG_SLEEP_TIME);							
 
-			display_step_distance_engery(KeyBoard_Down_2_DISP_SLEEP_STATUS);
-			}
-			Display_delay_set(DISP_LOGO_DELAY);		
-			Set_lastDisplayTag(DISP_TAG_SLEEP_STATUE);							
-
-		}
-		break;
-		case KeyBoard_Down_2_DISP_SLEEP_TIME:
-		{
-//=============
-			//unsigned char* stem_code1="消耗能量";
-			if(Get_lastDisplayTag()!=DISP_TAG_SLEEP_TIME)
-			{
-			clear_secterScreen(0,4,0,LCD_LOG_COLUME_START);//clear_AllScreen();
-			lcd_power_control(LCD_OPEN);
-
-			
-
-			display_step_distance_engery(KeyBoard_Down_2_DISP_SLEEP_TIME);
-			}
-			Display_delay_set(DISP_LOGO_DELAY);		
-			Set_lastDisplayTag(DISP_TAG_SLEEP_TIME);							
-
-		}			
-		break;
-		case KeyBoard_Down_2_DISP_ID:
-		{
-				unsigned char* stem_code1="ID";//"手环ID";
-#if ENABLE_GET_FLASH_ID
-				unsigned char keyid[42];
-#endif
-				if(Get_lastDisplayTag()!=DISP_TAG_ID)
-				{
-				clear_secterScreen(0,4,0,LCD_LOG_COLUME_START);//clear_AllScreen();				
-				lcd_power_control(LCD_OPEN);
-				//SetPageColume(0,0,PAGE_SET);
-				temp =strlen((const char*)stem_code1);
-				SetPageColume(0,Get_disp_start_colume(stem_code1,temp),PAGE_SET);
-				display_gb18030_string(stem_code1,temp,0,0);
-				
-				//SetPageColume(1,32,PAGE_SET);
-				//display_LOGO_message(1,2,GetColume(),16,STEP_ICON);
-				//SetPageColume(1,56,PAGE_SET);
-				//display_stepNUM(KeyBoard_Down_2_DISP_STEP_NUM);
-				//SetPageColume(2,0,PAGE_SET);
-				//temp =strlen((const char*)stem_code);
-				//display_gb18030_string(stem_code,temp,0,0);
-				//display_step_distance_engery(KeyBoard_Down_2_DISP_ENERGY);
-#if ENABLE_GET_FLASH_ID				
-    		//etRead_KEYID_from_flash(keyid,30);
-    		etSpim1ReadNorFlashStdMode(KEYID_START_ADDR,keyid,40);
-					if((keyid[TAG1_ADDR_OFFSET]==MAC_VALID_TAG1) && (keyid[TAG2_ADDR_OFFSET]==MAC_VALID_TAG2))
-					{			
-					SetPageColume(2,Get_disp_start_colume(keyid+KEYID_DATA_ADDR_OFFSET,keyid[2]),PAGE_SET);
-					display_gb18030_string(keyid+KEYID_DATA_ADDR_OFFSET,keyid[KEYID_LENGHT_ADDR_OFFSET],0,0);					
-					}				
-	        else
-#endif
-	        {
-					temp =strlen((const char*)DEVICE_NAME);
-					SetPageColume(2,Get_disp_start_colume(DEVICE_NAME,temp),PAGE_SET);
-					display_gb18030_string(DEVICE_NAME,temp,0,0);
-	        }
-				}
-				Display_delay_set(DISP_KEYID_DELAY); 	
-				Set_lastDisplayTag(DISP_TAG_ID);
-
-		}
-		break;
-        case KeyBoard_Down_2_DISP_SYS_TIME:
-		{
-			//unsigned char* stem_code="按OK键查询";
-			//unsigned char* stem_code1="Date";//"日期时间";
-			if(Get_lastDisplayTag()!=DISP_TAG_SYSTIME)
-			{
-			/*clear_secterScreen(0,4,0,LCD_LOG_COLUME_START);//clear_AllScreen();
-			
+        }			
+        break;
+    #endif
+        case KeyBoard_Down_2_DISP_ID:
+        {
+            unsigned char* stem_code1="ID";//"手环ID";
+    #if ENABLE_GET_FLASH_ID
+            unsigned char keyid[42];
+    #endif
+            if(Get_lastDisplayTag()!=DISP_TAG_ID)
+            {
+            clear_secterScreen(0,4,0,LCD_LOG_COLUME_START);//clear_AllScreen();				
             lcd_power_control(LCD_OPEN);
-			//SetPageColume(0,0,PAGE_SET);
-			temp =strlen((const char*)stem_code1);
-			SetPageColume(0,Get_disp_start_colume(stem_code1,temp),PAGE_SET);
-			display_gb18030_string(stem_code1,temp,0,0);			
+            //SetPageColume(0,0,PAGE_SET);
+            temp =strlen((const char*)stem_code1);
+            SetPageColume(0,Get_disp_start_colume(stem_code1,temp),PAGE_SET);
+            display_gb18030_string(stem_code1,temp,0,0);
+            
+    #if ENABLE_GET_FLASH_ID            
+            etSpim1ReadNorFlashStdMode(KEYID_START_ADDR,keyid,40);
+              if((keyid[TAG1_ADDR_OFFSET]==MAC_VALID_TAG1) && (keyid[TAG2_ADDR_OFFSET]==MAC_VALID_TAG2))
+              {			
+              SetPageColume(2,Get_disp_start_colume(keyid+KEYID_DATA_ADDR_OFFSET,keyid[2]),PAGE_SET);
+              display_gb18030_string(keyid+KEYID_DATA_ADDR_OFFSET,keyid[KEYID_LENGHT_ADDR_OFFSET],0,0);					
+              }				
+              else
+    #endif
+              {
+              temp =strlen((const char*)DEVICE_NAME);
+              SetPageColume(2,Get_disp_start_colume(DEVICE_NAME,temp),PAGE_SET);
+              display_gb18030_string(DEVICE_NAME,temp,0,0);
+              }
+            }
+            Display_delay_set(DISP_KEYID_DELAY); 	
+            Set_lastDisplayTag(DISP_TAG_ID);
 
-			temp =strlen((const char*)stem_code);
-			SetPageColume(2,Get_disp_start_colume(stem_code,temp),PAGE_SET);
-			display_gb18030_string(stem_code,temp,0,0);	*/
-			}
-			if(Get_lastDisplayTag()!=DISP_TAG_SYSTIME)
-			{
-			 clear_secterScreen(0,4,0,LCD_LOG_COLUME_START);//clear_AllScreen();
-			
-			//lcd_power_control(LCD_OPEN);
-			 Display_sysTime(DISP_TIME_RIGHTNOW);
-			}
-			Display_delay_set(DISP_LOGO_DELAY);		
+        }
+        break;
+        case KeyBoard_Down_2_DISP_SYS_TIME:
+        {
+          if(Get_lastDisplayTag()!=DISP_TAG_SYSTIME)
+          {
+           clear_secterScreen(0,4,0,LCD_LOG_COLUME_START);//clear_AllScreen();
+          
+          //lcd_power_control(LCD_OPEN);
+           //Display_sysTime(DISP_TIME_RIGHTNOW);
+           Display_Time_Menu();
+          }
+          Display_delay_set(DISP_LOGO_DELAY);		
 	        Set_lastDisplayTag(DISP_TAG_SYSTIME);
 
 
-		}
-		break;
-
-		case KeyBoard_Down_2_DISP_RSSI:
-	    {
-			unsigned char* stem_code="按OK查询";
-			unsigned char* stem_code1="查找手机";
-			if(Get_lastDisplayTag()!=DISP_TAG_RSSI)
-			{
-			 clear_secterScreen(0,4,0,LCD_LOG_COLUME_START);//clear_AllScreen();
-			
-            lcd_power_control(LCD_OPEN);
-			//SetPageColume(0,0,PAGE_SET);
-			temp =strlen((const char*)stem_code1);
-			SetPageColume(0,Get_disp_start_colume(stem_code1,temp),PAGE_SET);
-			display_gb18030_string(stem_code1,temp,0,0);
-			
-			//SetPageColume(1,32,PAGE_SET);
-			//display_LOGO_message(1,2,GetColume(),16,STEP_ICON);
-			//SetPageColume(1,56,PAGE_SET);
-			//display_stepNUM(KeyBoard_Down_2_DISP_STEP_NUM);
-			//SetPageColume(2,0,PAGE_SET);
-			temp =strlen((const char*)stem_code);
-			SetPageColume(2,Get_disp_start_colume(stem_code,temp),PAGE_SET);
-			display_gb18030_string(stem_code,temp,0,0);	
-			}
-			Display_delay_set(DISP_LOGO_DELAY);		
-            Set_lastDisplayTag(DISP_TAG_RSSI);
-
-		}
-		break;
-		case KeyBoard_Down_2_DISP_VERSION:
-	    {
-			//unsigned char* stem_code="按OK查询";
-			//unsigned char* stem_code1="系统版本";
-			if(Get_lastDisplayTag()!=DISP_TAG_VERSION)
-			{
-			 clear_secterScreen(0,4,0,LCD_LOG_COLUME_START);//clear_AllScreen();
-			
-			lcd_power_control(LCD_OPEN);
-			/*temp =strlen((const char*)stem_code1);
-			SetPageColume(0,Get_disp_start_colume(stem_code1,temp),PAGE_SET);
-			display_gb18030_string(stem_code1,temp,0,0);
-			
-
-			temp =strlen((const char*)stem_code);
-			SetPageColume(2,Get_disp_start_colume(stem_code,temp),PAGE_SET);
-			display_gb18030_string(stem_code,temp,0,0);	
-			*/
-			Display_Key_Version();
-			}
-			Display_delay_set(DISP_LOGO_DELAY);		
-            Set_lastDisplayTag(DISP_TAG_VERSION);
-
-		}
-		break;
-		/*case KeyBoard_Down_2_DISP_STATUS:
-	    {
-			if(Get_lastDisplayTag()!=DISP_TAG_STATUS)
-			{
-			 clear_secterScreen(0,4,0,LCD_LOG_COLUME_START);//clear_AllScreen();			
-			 lcd_power_control(LCD_OPEN);
-
-			Display_Key_Status();
-			
-			}
-			Display_delay_set(DISP_LOGO_DELAY);		
-            Set_lastDisplayTag(DISP_TAG_STATUS);
-
-		}			
-		break;
-		
-        case  KeyBoard_Down_2_DISP_UPDATED:
-		{
-			unsigned char* stem_code="按OK键进入";
-			unsigned char* stem_code1="固件升级";
-			if(Get_lastDisplayTag()!=DISP_TAG_UPDATED)
-			{
-			 clear_secterScreen(0,4,0,LCD_LOG_COLUME_START);//clear_AllScreen();
-			
-            lcd_power_control(LCD_OPEN);
-			temp =strlen((const char*)stem_code1);
-			SetPageColume(0,Get_disp_start_colume(stem_code1,temp),PAGE_SET);
-			//SetPageColume(0,(LCD_LOG_COLUME_START-temp),PAGE_SET);
-			
-			display_gb18030_string(stem_code1,temp,0,0);
-			
-			//SetPageColume(1,32,PAGE_SET);
-			//display_LOGO_message(1,2,GetColume(),16,STEP_ICON);
-			//SetPageColume(1,56,PAGE_SET);
-			//display_stepNUM(KeyBoard_Down_2_DISP_STEP_NUM);
-			//SetPageColume(2,0,PAGE_SET);
-			temp =strlen((const char*)stem_code);
-			SetPageColume(2,Get_disp_start_colume(stem_code,temp),PAGE_SET);
-			display_gb18030_string(stem_code,temp,0,0);		
-			}
-			Display_delay_set(DISP_LOGO_DELAY,100);
-            Set_lastDisplayTag(DISP_TAG_UPDATED);
-		}
-		break;*/
-		default:
-		break;		
+        }
+        break;
+        default:
+        break;		
      	}
 	 
    	}
     else
     {
-		switch(disp_str.LCD_disp_MainMenu)
-		{
-
-				case KeyBoard_Down_2_DISP_RSSI:
+      switch(disp_str.LCD_disp_MainMenu)
+      {
+         case KeyBoard_Down_2_DISP_STEP_NUM://===slave menu 1===========
+         {
+             switch(disp_str.LCD_disp_SlaveMenu)
+             {
+                  case KeyBoard_Down_2_DISP_DISTANCE:
+                  {
+                    if(Get_lastDisplayTag()!=DISP_TAG_DISTANCE)
+                    {
+                    clear_secterScreen(0,4,0,LCD_LOG_COLUME_START);//clear_AllScreen();
+                    lcd_power_control(LCD_OPEN);           
+                    display_step_distance_engery_menu(0,KeyBoard_Down_2_DISP_DISTANCE);
+                    }
+                    Display_delay_set(DISP_LOGO_DELAY); 	
+                    Set_lastDisplayTag(DISP_TAG_DISTANCE);
+              
+                  } 
+                  break;
+                  case KeyBoard_Down_2_DISP_ENERGY:
+                  {
+                      if(Get_lastDisplayTag()!=DISP_TAG_ENERGE)
+                      {
+                      clear_secterScreen(0,4,0,LCD_LOG_COLUME_START);//clear_AllScreen();
+                      lcd_power_control(LCD_OPEN);               
+                      display_step_distance_engery_menu(0,KeyBoard_Down_2_DISP_ENERGY);
+                      }
+                      Display_delay_set(DISP_LOGO_DELAY);		
+                      Set_lastDisplayTag(DISP_TAG_ENERGE);
+                  }
+                  break;
+                  default:
+                  break;
+             }
+         }
+        break;
+				case KeyBoard_Down_2_DISP_SLEEP_INTERVAL:
 				{
-					if(Get_lastDisplayTag()!=DISP_TAG_RSSI_SLAVE)
-					{
-					   
-						 clear_secterScreen(0,4,0,LCD_LOG_COLUME_START);//clear_AllScreen();
-						lcd_power_control(LCD_OPEN);
-            Set_lastDisplayTag(DISP_TAG_RSSI_SLAVE);
-						if(Protocol_check_BT_connected())
-						{
-						    /*char * str="手机振动中";
-
-						    //display_Rssi_distance(*str,LCD_RSSI_GET_SUCCESS);
-						    Protocol_CMD_FIND_AG(SERVICE_STEP);
-				        SetPageColume(1,0,PAGE_SET);
-			          display_gb18030_string((const unsigned char *)str,strlen(str),0,0);
-                */
-						    char * str="测量中";
-						    
-						    //display_Rssi_distance(*str,LCD_RSSI_GET_SUCCESS);
-						    Protocol_CMD_FIND_AG(SERVICE_STEP);
-				        SetPageColume(1,0,PAGE_SET);
-			          display_gb18030_string((const unsigned char *)str,strlen(str),0,0);	
-								Display_delay_set(DISP_RSSI_DELAY*2);
-								start_Rssi();
-						}
-						else
-						{
-							char * str="未连手机";
-							SetPageColume(1,0,PAGE_SET);
-							display_gb18030_string((const unsigned char *)str,strlen(str),0,0); 
-              Display_delay_set(DISP_LOGO_DELAY);
-						    //display_Rssi_distance(0,LCD_RSSI_NOT_CONNECTED);//NOT CONNECTED	
-						}
+          switch(disp_str.LCD_disp_SlaveMenu)
+          {
+						case KeyBoard_Down_2_DISP_SLEEP_DETAILED1:
+            {
+                    if(Get_lastDisplayTag()!=DISP_TAG_SLEEP_DETAILED1)
+                    {
+                    clear_secterScreen(0,4,0,LCD_LOG_COLUME_START);//clear_AllScreen();
+                    lcd_power_control(LCD_OPEN);           
+                    display_sleep_menu(0,KeyBoard_Down_2_DISP_SLEEP_DETAILED1);
+                    }
+                    Display_delay_set(DISP_LOGO_DELAY); 	
+                    Set_lastDisplayTag(DISP_TAG_SLEEP_DETAILED1);
+              
+            } 						
+						break;
+						case KeyBoard_Down_2_DISP_SLEEP_DETAILED2:
+            {
+                    if(Get_lastDisplayTag()!=DISP_TAG_SLEEP_DETAILED2)
+                    {
+                    clear_secterScreen(0,4,0,LCD_LOG_COLUME_START);//clear_AllScreen();
+                    lcd_power_control(LCD_OPEN);           
+                    display_sleep_menu(0,KeyBoard_Down_2_DISP_SLEEP_DETAILED2);
+                    }
+                    Display_delay_set(DISP_LOGO_DELAY); 	
+                    Set_lastDisplayTag(DISP_TAG_SLEEP_DETAILED2);
+              
+            } 							
+						break;
+						default:
+						break;
 					}
-					
-					
-#if (DEBUG_UART_EN)
-						DbgPrintf("set distag=%x\r\n",Get_lastDisplayTag());
-#endif		
-				}
+				}					
 				break;
-				/*case KeyBoard_Down_2_DISP_VERSION:
-				{
-					if(Get_lastDisplayTag()!=DISP_TAG_VERSION_SLAVE)
-					{
-					 clear_secterScreen(0,4,0,LCD_LOG_COLUME_START);//clear_AllScreen();
-					
-					lcd_power_control(LCD_OPEN);
-					Display_Key_Version();			
-					}
-					Display_delay_set(DISP_LOGO_DELAY);
-					Set_lastDisplayTag(DISP_TAG_VERSION_SLAVE);
-		
-				}
-				break;
-				case  KeyBoard_Down_2_DISP_UPDATED:
-				{
-				   
-					 //UINT8* disp_data="固件升级";
-					 //UINT8* disp_data2="按OK键进入";
-					 if(Get_lastDisplayTag()!=DISP_TAG_UPDATED_SLAVE)
-					 {
-					  clear_secterScreen(0,4,0,LCD_LOG_COLUME_START);//clear_AllScreen();
-					 }
-					 lcd_power_control(LCD_OPEN);
-					 //SetPageColume(0,0,PAGE_SET);
-					 //display_gb18030_string(disp_data,strlen((const char *)disp_data),0,0);
-					 //SetPageColume(2,0,PAGE_SET);
-					// display_gb18030_string(disp_data2,strlen((const char *)disp_data2),0,0);
-				   Display_slave_menu(disp_str.LCD_disp_SlaveMenu);
-				
-				   Display_delay_set(DISP_LOGO_DELAY,100);
-				   Set_lastDisplayTag(DISP_TAG_UPDATED_SLAVE);
-				}
-				break;*/
+        case KeyBoard_Down_2_DISP_SYS_TIME: //===slave menu 2===========
+        {
+          switch(disp_str.LCD_disp_SlaveMenu)
+          {
+             case KeyBoard_Down_2_DISP_VERSION:
+             {
+               if(Get_lastDisplayTag()!=DISP_TAG_VERSION)
+               {
+                clear_secterScreen(0,4,0,LCD_LOG_COLUME_START);//clear_AllScreen();
+               
+               lcd_power_control(LCD_OPEN);
+         
+               Display_Key_Version();
+               }
+               Display_delay_set(DISP_LOGO_DELAY);	 
+                     Set_lastDisplayTag(DISP_TAG_VERSION);
+         
+             }
+             break;
+						case KeyBoard_Down_2_DISP_DATE:
+            {
+               if(Get_lastDisplayTag()!=DISP_TAG_DATE_WEEK)
+               {
+								s_tm t_tm;
+								t_tm.hour=0;
+								t_tm.year=0;
+								t_tm.month=0;
+								t_tm.day=0;
+								t_tm.weekdays=0;
+								t_tm.minute=0;
+								t_tm.second=0;  
+								system_time_get(&t_tm);	
+                clear_secterScreen(0,4,0,LCD_LOG_COLUME_START);//clear_AllScreen();
+               
+               lcd_power_control(LCD_OPEN);         
+               display_day_week(t_tm.year,t_tm.month,t_tm.day,t_tm.weekdays);;
+               }
+               Display_delay_set(DISP_LOGO_DELAY);	 
+               Set_lastDisplayTag(DISP_TAG_DATE_WEEK);
+         
+            }							
+							
+						break;
+            case KeyBoard_Down_2_DISP_FIND_AG:
+            {
+							if(disp_str.LCD_disp_SlaveSlaveMenu==KeyBoard_Down_2_DISP_Slave_NULL)
+							{
+								if(Get_lastDisplayTag()!=DISP_TAG_FIND_AG)
+								{
+								unsigned char offset=0;
+								unsigned char* stem_code1="Find";								
+								clear_secterScreen(0,4,0,LCD_LOG_COLUME_START);//clear_AllScreen();								
+								lcd_power_control(LCD_OPEN);
+								temp =strlen((const char*)stem_code1);
+								offset=24;//Get_disp_start_colume(stem_code1,temp);
+								SetPageColume(1,offset,PAGE_SET);
+								display_gb18030_string(stem_code1,temp,0,0);
+								display_LOGO_message(0,4,offset+temp*8+8,32,PHONE_ICON);//display icon 
+								
+ 
+								}
+								Display_delay_set(DISP_LOGO_DELAY); 	
+								Set_lastDisplayTag(DISP_TAG_FIND_AG);
+
+							}
+							else
+							{
+	              if(Get_lastDisplayTag()!=DISP_TAG_FIND_AG_SLAVE)
+	              {	                 
+	                 clear_secterScreen(0,4,0,LCD_LOG_COLUME_START);//clear_AllScreen();
+	                lcd_power_control(LCD_OPEN);
+	                Set_lastDisplayTag(DISP_TAG_FIND_AG_SLAVE);
+	                if(Protocol_check_BT_connected())
+	                {
+	                    char * str="Finding";
+	                    Protocol_CMD_FIND_AG(SERVICE_STEP);
+	                    SetPageColume(1,0,PAGE_SET);
+	                    display_gb18030_string((const unsigned char *)str,strlen(str),0,0);	
+	                    Display_delay_set(DISP_RSSI_DELAY*2);
+	                    start_Rssi();
+	                }
+	                else
+	                {
+	                  char * str="No Connected";
+	                  SetPageColume(1,0,PAGE_SET);
+	                  display_gb18030_string((const unsigned char *)str,strlen(str),0,0); 
+	                  Display_delay_set(DISP_LOGO_DELAY);
+	                }
+	              }
+							}
+      
+            }
+            break;   
+          }  
+
+        }
+        break;
+//======================================				
 				default:
 				break;		
 		}
@@ -3245,7 +3611,7 @@ void display_clr_COSdata(void)
 {
 	if(disp_str.LCD_display_last_tag==DISP_TAG_COS_DATA)//add 150825
 	{
-	 Set_lastDisplayTag(DISP_TAG_NULL);
+	   Set_lastDisplayTag(DISP_TAG_NULL);
      Display_delay_set(5);	
 	}
 

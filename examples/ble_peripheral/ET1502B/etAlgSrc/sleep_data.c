@@ -113,12 +113,32 @@ void read_sleep_record_from_flash(unsigned char *buf,unsigned short len)
 	flash_read(SLEEP_RECORD_FLASH_ADDR,buf,len);
 }
 
+#define SLEEP_STATE_FLASH_ADDR		(0x16000)
+void write_sleep_state_to_flash(void)
+{
+	unsigned char i =0;
+	unsigned char flashBuf[(SLEEP_STATUS_SIZE+1)*8]={0};
+	QPRINTF("write_sleep_state_to_flash g_flash_sleeep_state_index=%d,flash addr:0x%02x\r\n",g_flash_sleeep_state_index,SLEEP_STATE_FLASH_ADDR);
+	flash_erase(SLEEP_STATE_FLASH_ADDR,1);
+	
+	flashBuf[0] = 0x1a;
+	flashBuf[1] = 0x2b;
+	flashBuf[2] = 0x3c;
+	flashBuf[3] = g_flash_sleeep_state_index;
+	for(i=0;i<g_flash_sleeep_state_index;i++)
+	{
+		flashBuf[(i+1)*8] = g_flash_pSleepStateItem[i].sleepState;
+		IntSetFourChar((char*)&flashBuf[(i+1)*8+1], g_flash_pSleepStateItem[i].startSec);
+		IntSetThreeChar((char*)&flashBuf[(i+1)*8+5], 0);//set receive 3 char
+	}
+
+	flash_write(SLEEP_STATE_FLASH_ADDR,flashBuf,(g_flash_sleeep_state_index+1)*8);
+}
 
 /*
 	return 0:no sleep data
 	return n:stateBuf count (n>0) n*8 < 256
 */
-
 unsigned char get_sleep_state_from_ram(unsigned char *stateBuf,
 									unsigned short bufLength,
 									unsigned char *transferFg,

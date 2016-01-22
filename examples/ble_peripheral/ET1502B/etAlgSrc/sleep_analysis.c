@@ -240,8 +240,8 @@ void CESleepGSensorCfg(unsigned char gsensorEnum)
         g_gsensro_cfg.middle_ss_max_slope_num = 4;
         g_gsensro_cfg.middle_sd_nomotion_ratio = 85;//0.85;
         g_gsensro_cfg.middle_sd_max_slope_num = 1;
-        g_gsensro_cfg.begin_samp_num= 2;//12;
-		g_gsensro_cfg.end_samp_num = 2;//6;
+        g_gsensro_cfg.begin_samp_num= 1;//12;
+		g_gsensro_cfg.end_samp_num = 1;//6;
      }
      else if (gsensorEnum == GSENSOR_CFG_MORING) 
 	 {
@@ -259,8 +259,8 @@ void CESleepGSensorCfg(unsigned char gsensorEnum)
         g_gsensro_cfg.middle_ss_max_slope_num = 4;
         g_gsensro_cfg.middle_sd_nomotion_ratio = 85;//0.85;
         g_gsensro_cfg.middle_sd_max_slope_num = 1;
-        g_gsensro_cfg.begin_samp_num = 2;
-		g_gsensro_cfg.end_samp_num = 2;
+        g_gsensro_cfg.begin_samp_num = 1;
+		g_gsensro_cfg.end_samp_num = 1;
      }
      else if (gsensorEnum == GSENSOR_CFG_EVENING) 
 	 {
@@ -278,8 +278,8 @@ void CESleepGSensorCfg(unsigned char gsensorEnum)
         g_gsensro_cfg.middle_ss_max_slope_num = 3;
         g_gsensro_cfg.middle_sd_nomotion_ratio = 85;//0.85;
         g_gsensro_cfg.middle_sd_max_slope_num = 1;
-        g_gsensro_cfg.begin_samp_num = 2;
-		g_gsensro_cfg.end_samp_num = 2;
+        g_gsensro_cfg.begin_samp_num = 1;
+		g_gsensro_cfg.end_samp_num = 1;
      }
      else if (gsensorEnum == GSENSOR_CFG_NIGHT) 
 	 {
@@ -297,8 +297,8 @@ void CESleepGSensorCfg(unsigned char gsensorEnum)
         g_gsensro_cfg.middle_ss_max_slope_num = 4;
         g_gsensro_cfg.middle_sd_nomotion_ratio = 80;//0.85;
         g_gsensro_cfg.middle_sd_max_slope_num = 1;
-        g_gsensro_cfg.begin_samp_num = 2;
-		g_gsensro_cfg.end_samp_num = 2;
+        g_gsensro_cfg.begin_samp_num = 1;
+		g_gsensro_cfg.end_samp_num = 1;
       }
 	#endif
 	 preEnum = gsensorEnum;
@@ -1006,6 +1006,7 @@ void write_sleep_rocrd_to_raw(unsigned char* pData)
 			memcpy(record_buf,(unsigned char*)&g_sleep_record,16);
 			
 		#if SLEEP_RECORD_DATA_ENABLE
+			write_sleep_state_to_flash();
 			write_sleep_record_to_flash(record_buf,16);
 		#endif
 			
@@ -1013,6 +1014,11 @@ void write_sleep_rocrd_to_raw(unsigned char* pData)
 			memset((unsigned char*)(gSleepRawItem),0,SLEEP_ROCORD_SIZE * sizeof(sleepRawDataStruct));
 		}
 	}
+}
+
+void sleep_data_clear(void)
+{
+	memset((unsigned char*)(&g_sleep_record),0,sizeof(sleep_record_struct));
 }
 
 unsigned int app_get_sleep_begin(void)

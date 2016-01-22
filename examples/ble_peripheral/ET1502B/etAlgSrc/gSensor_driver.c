@@ -1,6 +1,10 @@
 #include "ET1502B.h"
 #include "gSensor.h"
 #include "gSensor_driver.h"
+#if(ENABLE_TEST_I2C)
+#include "et_debug.h"
+#include "sys_time.h"
+#endif
 static unsigned char sensor_INT_enable=1;
 static unsigned char sensor_INT_check=0;
 #if  GSENSOR_ACCESS_TYPE	== GSENSOR_ACCESS_BY_SPI
@@ -69,7 +73,7 @@ void lis3dh_init(void)
 static u8_t LIS3DH_ReadReg(u8_t Reg, u8_t* Data) 
 {
 #if GSENSOR_ACCESS_TYPE	== GSENSOR_ACCESS_BY_I2C
-	lis3dh_i2c_read(Reg,Data,1);
+    lis3dh_i2c_read(Reg,Data,1);
 #elif  GSENSOR_ACCESS_TYPE	== GSENSOR_ACCESS_BY_SPI
   	lis3dh_spi_read(Reg,Data,1);
 #endif
@@ -80,8 +84,7 @@ static u8_t LIS3DH_WriteReg(u8_t WriteAddr, u8_t Data)
 {
 #if GSENSOR_ACCESS_TYPE	== GSENSOR_ACCESS_BY_I2C
 	unsigned char i=0,test_value=0;
-
-	while(i++ <10)
+	while(i++ <12)
 	{
 		test_value = 0;
 		lis3dh_i2c_write(WriteAddr,&Data,1);
@@ -357,7 +360,56 @@ status_t LIS3DH_SetInt1Pin(LIS3DH_IntPinConf_t pinConf,unsigned char flg) {
   return MEMS_SUCCESS;
 }
 
+#if(ENABLE_TEST_I2C)
+void test_i2c(void)
+{
+  u8_t value = 0,value1=0,value_check=0;
+	static unsigned int test_i2c_err_count=0,test_i2c_err2_count=0;
+	unsigned int test=0;
+#if DEBUG_UART_EN    
+		  DbgPrintf("test i2c start\r\n");
+#endif  
+  while(test<1000000)
+  {
+     test++;
+     LIS3DH_ReadReg(LIS3DH_CTRL_REG3, &value);
+     value1=value;
+     value1 |= LIS3DH_I1_INT1_ON_PIN_INT1_ENABLE;
+     LIS3DH_WriteReg(LIS3DH_CTRL_REG3, value1);
+     value_check=0;
+     LIS3DH_ReadReg(LIS3DH_CTRL_REG3, &value_check);
+     if(value_check!=value1)
+     {
+        test_i2c_err_count++;
+#if DEBUG_UART_EN    
+        DbgPrintf("R:%02x,W1:%02x,R2:%02x,err:%d,tcount:%d\r\n",value,value1,value_check,test_i2c_err_count,test);
+#endif
 
+     }
+     value=0;
+		 LIS3DH_ReadReg(LIS3DH_CTRL_REG3, &value);
+		 value1=value;
+		 value1 &= ~(LIS3DH_I1_INT1_ON_PIN_INT1_ENABLE); 
+		 LIS3DH_WriteReg(LIS3DH_CTRL_REG3, value1);
+		 value_check=0;
+		 LIS3DH_ReadReg(LIS3DH_CTRL_REG3, &value_check);
+		 if(value_check!=value1)
+		 {
+			test_i2c_err2_count++;
+#if DEBUG_UART_EN    
+				DbgPrintf("R:%02x,W0:%02x,R2:%02x,err:%d,tcount:%d\r\n",value,value1,value_check,test_i2c_err2_count,test);
+#endif	
+		 }
+#if DEBUG_UART_EN 
+     if((test==1000)||(test==10000)||(test==100000)||(test==1000000))     
+		  DbgPrintf("test count=%d,%d\r\n",test,system_sec_get());
+#endif 
+   }
+#if DEBUG_UART_EN    
+		  DbgPrintf("test i2c end\r\n");
+#endif
+}
+#endif
 /*******************************************************************************
 * Function Name  : LIS3DH_SetInt2Pin
 * Description    : Set Interrupt2 pin Function

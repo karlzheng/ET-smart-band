@@ -572,7 +572,7 @@ static void on_ble_evt(ble_evt_t * p_ble_evt)
  #if (DEBUG_UART_EN)
 					//	DbgPrintf("CHANGED RSSI =%d,distag=%x\r\n",p_ble_evt->evt.gap_evt.params.rssi_changed.rssi,Get_lastDisplayTag());
 #endif				
-					if((check_lastDisplayTag(DISP_TAG_RSSI_SLAVE)==0)&&(disp_str_rssi.LCD_disp_Rssi_flag==1))
+					if((check_lastDisplayTag(DISP_TAG_FIND_AG)==0)&&(disp_str_rssi.LCD_disp_Rssi_flag==1))
 					{
 				   /*// display_Rssi_distance(p_ble_evt->evt.gap_evt.params.rssi_changed.rssi,LCD_RSSI_GET_SUCCESS);
 						//if((Protocol_check_BT_connected()==1))

@@ -11,6 +11,8 @@
 #include "etSpi.h"
 #include "btprotocol.h"
 #include "data_manger.h"
+#include "sleep_analysis.h"
+
 #if ENABLE_ALARM
 
 //alarm_data_block_t g_RamAlarmBlock={0xAA,ALARM_ITEM_ONE_SIZE,1,{{0x08,0x7f,7,30},}};//{0x09,0x7f,11,58},{0x09,0x7f,12,01}{0xAA,ALARM_ITEM_MAX_SIZE,1,{0x7f,11,12},};
@@ -95,6 +97,10 @@ unsigned char clock_alarm_check(void)
 		#if WALK_STEP_RECORD_ARITHMETIC
 		SaveEveryDayHistySport_Data_info2_datamanger();
 		//app_arthmetic_clear_steps(0);
+		#endif
+
+		#if SLEEP_RECORD_ARITHMETIC
+		sleep_data_clear();
 		#endif
 	}
 	

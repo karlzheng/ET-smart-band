@@ -63,7 +63,7 @@ void send_sleep_get_app_ack(unsigned char * data,unsigned short length)
 	{
 		timeOut_count = 0;
 		ke_timer_clear(USR_SEND_DATA_TIMEOUT_TIMER);
-		theSink.AutoSend_SleepDataFlg=1;
+    theSink.SleepDataFlg_over=1;
 	}	
 }
 
@@ -271,7 +271,7 @@ unsigned char auto_send_sleep_record_to_app_timer(void)
 	}
 
 
-	if((theSink.SleepDataFlg_end==1)&& get_auto_send_SleepData_to_app_status())
+	if((theSink.SleepDataFlg_end==1)&& (theSink.SleepDataFlg_over==1)/*get_auto_send_SleepData_to_app_status()*/)
 		{
 			#if SERVICE_STEP_EN
 				Protocol_send_sleep_data_to_ag(0,0,SERVICE_STEP);
@@ -294,17 +294,23 @@ unsigned char auto_send_sleep_record_to_app_timer(void)
 			//Read_SleepBlock=Read_SleepBlock+1;
       UINT8 flag=0;
       UINT8 PAGE_NUM=0;
-      UINT8 retu_len=0;
-      theSink.SleepDataFlg_over=0;
+      UINT8 retu_len=0,i=0;      
       retu_len=get_sleep_state_from_ram(pbuf,256,&flag,Read_SleepBlock,&PAGE_NUM);
       Read_SleepBlock=retu_len;
 			/*if((pbuf[0]==0x1A)&&(pbuf[1]==0x2B)&&(pbuf[2]==0x3C)&&(pbuf[3]==0x4D))*/
       if(retu_len>0)
 			{	
-				//theSink.AutoSend_SleepDataFlg=0;
-        //theSink.SleepDataFlg_over=0;
+        theSink.SleepDataFlg_over=0;
         if(retu_len>32)
           retu_len=32;
+		for(i=0;i<255;i++)
+		{
+			if(i%8 == 0)
+				QPRINTF("\r\n");
+
+			QPRINTF("%02x ",pbuf[i]);
+		}
+		
         #if SERVICE_STEP_EN
         {
           if(flag==0)
@@ -329,48 +335,15 @@ unsigned char auto_send_sleep_record_to_app_timer(void)
           Protocol_send_sleep_data_to_ag(pbuf,retu_len*8,SERVICE_COS);/*send*/
           }
         }
-				#endif      
-        //#if 0
-				//#if SERVICE_STEP_EN
-				//Protocol_send_sleep_data_to_ag(pbuf,(pbuf[7]+1)*16,SERVICE_STEP);//send
-				//#else
-				//Protocol_send_sleep_data_to_ag(pbuf,(pbuf[7]+1)*16,SERVICE_COS);//send
-				//#endif
-				//ke_timer_set(USR_SEND_DATA_TIMEOUT_TIMER,SEND_DATA_TIME_OUT_TIME);//time out
-        #endif
+				#endif
+        //#endif
 			}
       else
-      {
-        //theSink.AutoSend_SleepDataFlg=0;
-        //theSink.SleepDataFlg_over=0;
+      {    
+        theSink.AutoSend_SleepDataFlg=0;
         theSink.SleepDataFlg_end=1;
         Read_SleepBlock=0;
       }
-			/*else
-			{
-				if(pRamBlock->head->dataItemNums)
-				{	
-					theSink.AutoSend_SleepDataFlg=0;
-					data_manger_set_previous_head(pRamBlock->head->previousHead);//add the head
-					#if SERVICE_STEP_EN
-					Protocol_send_sleep_data_to_ag((unsigned char*)pRamBlock->head,(pRamBlock->head->dataItemNums+1)*16,SERVICE_STEP);//STEP通道
-					#else
-					Protocol_send_sleep_data_to_ag((unsigned char*)pRamBlock->head,(pRamBlock->head->dataItemNums+1)*16,SERVICE_COS);//COS 通道
-					#endif
-					ke_timer_set(USR_SEND_DATA_TIMEOUT_TIMER,SEND_DATA_TIME_OUT_TIME);
-				}
-				theSink.SleepDataFlg_over=0;
-				theSink.SleepDataFlg_end=1;
-				Read_SleepBlock=0;
-			}*/
-		//}
-		//else
-		//{
-		//	theSink.AutoSend_SleepDataFlg=0;
-		//	theSink.SleepDataFlg_over=0;
-		//	theSink.SleepDataFlg_end=1;
-		//	Read_SleepBlock=0;
-		//}
 	}
 	return 1;
 }
@@ -611,7 +584,7 @@ void receive_app_free_notic_info(unsigned char * data,unsigned short length)
 	Protocol_send_ack_to_ag_by_usr_info(AckBuf,2);
 }
 #endif
-
+#endif
 
 
 

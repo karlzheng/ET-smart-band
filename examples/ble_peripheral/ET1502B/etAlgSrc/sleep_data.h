@@ -6,6 +6,7 @@
 void sleep_record_flash_init(void);
 void write_sleep_record_to_flash(unsigned char *buf,unsigned char size);
 void read_sleep_record_from_flash(unsigned char *buf,unsigned short len);
+void write_sleep_state_to_flash(void);
 unsigned char get_sleep_state_from_ram(unsigned char *stateBuf,
 									unsigned short bufLength,
 									unsigned char *transferFg,

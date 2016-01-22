@@ -208,6 +208,9 @@ void main_loop(void)
 		//SaveEveryDayHistySport_Data_info2_datamanger();
 		auto_send_histy_sport_record_to_app_timer();//history everyday sport data 
     auto_send_history_TotalSleepRecord();//history sleep record
+    #if(ENABLE_TEST_I2C)
+    test_i2c();
+    #endif
     }
 #endif
 

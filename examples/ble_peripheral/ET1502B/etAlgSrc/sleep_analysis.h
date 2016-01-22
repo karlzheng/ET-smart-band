@@ -123,6 +123,7 @@ typedef struct{
 void sleep_gsensor_cfg_judge(unsigned char hour);
 void write_sleep_rocrd_to_raw(unsigned char* pData);
 
+void sleep_data_clear(void);
 unsigned int app_get_sleep_begin(void);
 unsigned int app_get_sleep_end(void);
 unsigned int app_get_sleep_all_time(void);
