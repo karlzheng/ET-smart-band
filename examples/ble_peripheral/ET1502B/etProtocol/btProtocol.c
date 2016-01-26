@@ -1,7 +1,7 @@
 #include "ET1502B.h"
 #include "btprotocol.h"
 #include "uartProtocol.h"
-
+#include "etkeyboard.h"
 //#include "typedefine.h"
 //#include "toshiba.h"
 //#include "display.h"
@@ -28,6 +28,7 @@
 #include "et_flash_offset.h"
 #include "data_manger.h"
 #include "gSensor_driver.h"
+#include "gSensor.h"
 
 stru_uart_recv uart_recv;
 stru_new_recv new_recv;
@@ -36,6 +37,7 @@ hsTaskData theSink ;
 
 const UINT8 BT_DISCONNECT_CODE[]={0xaa,0x0d,0x00,0x05,0xFF,0x00,0x00,0x00,0x00,0xEE,0x55};
 extern uint32_t bt_send_to_AG(uint8_t* buff,uint16_t temp_length,UINT8 ser_flag);
+extern void disconntec_AG(void);
 /*
 static uint8_t  ble_rev_data_buff[PACKET_COS_MAX_BYTE];
 static uint16_t ble_rev_index = 0;
@@ -73,6 +75,7 @@ void Protocol_set_BT_Disconnected(void)
 	theSink.BLE_connected=0;
   clr_cos_mode();
   display_clr_COSdata();
+  Key_value_reset();
 }
 
 void Protocol_set_notify(unsigned char val)
@@ -803,14 +806,15 @@ static void Protocol_DataToCos(unsigned char * data_prt,unsigned short packet_le
 			   (data_prt[7]==BT_DISCONNECT_CODE[7])&&
 			   (data_prt[8]==BT_DISCONNECT_CODE[8]))
 			{
-				//Toshiba_TCU_MNG_LE_DISCONNECT_REQ();
+				 //Toshiba_TCU_MNG_LE_DISCONNECT_REQ();
+         disconntec_AG();
+         Key_value_reset();
 				 return;
 			
 			}
 		}
 		
 #if ENABLE_COS
-
 
       if(Get_Cos_Ready()==0)
 		  {
@@ -1604,8 +1608,6 @@ static void protocol_Save_data(UINT8 *buff,UINT16 temp_length,UINT8 ser_flag)
 
 				 break;
          case PACKET_MARK_MULTI:
-
-
 						uart_recv.cos_revDataTotalLen=buff[PACKET_DATA_OFFSET]<<8 | buff[PACKET_DATA_OFFSET+1];			
 						uart_recv.cos_uart_union.cos_data_str.cos_head=PACKET_DATA_HEAD;
 						uart_recv.cos_uart_union.cos_data_str.cos_CMD=buff[PACKET_CMD_OFFSET];
@@ -1635,12 +1637,12 @@ static void protocol_Save_data(UINT8 *buff,UINT16 temp_length,UINT8 ser_flag)
                   uart_recv.cos_uart_union.cos_taltol_data[uart_recv.cos_revDataTotalLen-2]=Get_Datacheck(&uart_recv.cos_uart_union.cos_taltol_data[1],uart_recv.cos_revDataTotalLen-3);//check byte
                   uart_recv.cos_uart_union.cos_taltol_data[uart_recv.cos_revDataTotalLen-1]=0x55;//tail byte
                   uart_recv.cos_protocol_rev_data_ready=1;
-                 /* if(buff[PACKET_CMD_OFFSET]==CMD_COS_DATA)
+                  if(buff[PACKET_CMD_OFFSET]==CMD_COS_DATA)
                    {
 #if ENABLE_COS                     
                       simple_uart_init(UART_POWEROFF_BT_DELAY);
 #endif
-                   }*/
+                   }
                   return;
 
                  

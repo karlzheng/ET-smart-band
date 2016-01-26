@@ -126,6 +126,7 @@
 extern void DbgPrintf( const char * format, ... );
 extern void DbgPrintfbuff(uint8_t * tx_buf, uint16_t len );
 extern void DbgPrintf_COS_log( const char * format, ... );
+extern void DbgPrintf_ble_log( unsigned char *str,unsigned int len);
 extern void DbgPrintf_nop( const char * format, ... );
 
 

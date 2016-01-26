@@ -1019,6 +1019,9 @@ void write_sleep_rocrd_to_raw(unsigned char* pData)
 void sleep_data_clear(void)
 {
 	memset((unsigned char*)(&g_sleep_record),0,sizeof(sleep_record_struct));
+
+	g_flash_sleeep_state_index = 0;
+	memset((unsigned char*)(g_flash_pSleepStateItem),0,SLEEP_STATUS_SIZE * sizeof(CESleepStateStruct));
 }
 
 unsigned int app_get_sleep_begin(void)

@@ -88,10 +88,10 @@
 #define NUS_SERVICE_UUID_TYPE           BLE_UUID_TYPE_BLE//BLE_UUID_TYPE_VENDOR_BEGIN                  /**< UUID type for the Nordic UART Service (vendor specific). */
 
 #define APP_ADV_SLOW_INTERVAL                1280//                                          /**< The advertising interval (in units of 0.625 ms. This value corresponds to 40 ms). */
-#define APP_ADV_SLOW_TIMEOUT_IN_SECONDS      300//60                                         /**< The advertising timeout (in units of seconds). */
+#define APP_ADV_SLOW_TIMEOUT_IN_SECONDS      300//300//60                                         /**< The advertising timeout (in units of seconds). */
 
 #define APP_ADV_FAST_INTERVAL           320//64
-#define APP_ADV_FAST_TIMEOUT_IN_SECONDS 10
+#define APP_ADV_FAST_TIMEOUT_IN_SECONDS 30
 
 #define APP_TIMER_PRESCALER             0                                           /**< Value of the RTC1 PRESCALER register. */
 #define APP_1SECOND_TIMER 1
@@ -159,14 +159,17 @@ uint32_t bt_send_to_AG(uint8_t* buff,uint16_t temp_length,UINT8 ser_flag)
 	 return new_service_ble_nus_string_send(&new_m_nus, buff, temp_length);
 	 }
 }
-
+void disconntec_AG(void)
+{
+  sd_ble_gap_disconnect(m_conn_handle, BLE_HCI_REMOTE_USER_TERMINATED_CONNECTION);
+}
 void start_Rssi(void)
 {
 	//sd_ble_gap_rssi_get(m_conn_handle,p_rssi);
 	sd_ble_gap_rssi_start(m_conn_handle,2,15);//kevin add
 	disp_str_rssi.LCD_disp_Rssi_flag=1;
 #if (DEBUG_UART_EN)
-		DbgPrintf("start_Rssi\r\n");
+		//DbgPrintf("start_Rssi\r\n");
 #endif	
 
 }
@@ -183,7 +186,7 @@ void Get_Rssi_stop(void)
        sd_ble_gap_rssi_stop(m_conn_handle);
 			disp_str_rssi.LCD_disp_Rssi_flag=0;
 #if (DEBUG_UART_EN)
-			DbgPrintf("Get_Rssi_stop\r\n");
+			//DbgPrintf("Get_Rssi_stop\r\n");
 #endif						 
       }
 }
@@ -510,7 +513,7 @@ static void on_adv_evt(ble_adv_evt_t ble_adv_evt)
         case BLE_ADV_EVT_IDLE:
          //sleep_mode_enter();//kevin delete
 #if DEBUG_UART_EN    
-//    DbgPrintf("go to advertising8\r\n");
+    //DbgPrintf("go to advertising8\r\n");
 #endif         
 				err_code = ble_advertising_start(BLE_ADV_MODE_SLOW);//KEVIN 
         APP_ERROR_CHECK(err_code);
@@ -1018,7 +1021,7 @@ int main(void)
 
 		etSpim1NorFlashInit();
 #if DEBUG_UART_EN    
-   DbgPrintf("\r\n===flash_init===\r\n");
+   //DbgPrintf("\r\n===flash_init===\r\n");
 #endif
     ble_stack_init();
     

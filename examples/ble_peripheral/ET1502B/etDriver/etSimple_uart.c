@@ -23,7 +23,7 @@
 #include "btprotocol.h"
 #include "etLcdDisplayApp.h"
 #include "et_debug.h"
-#define SIMPLE_UART_RX_BUF_SIZE                512
+#define SIMPLE_UART_RX_BUF_SIZE                1024//512
 #define UART_INIT_ENABLE 1
 #define UART_INIT_DISABLE 0
 
@@ -270,7 +270,7 @@ void simple_uart_init(unsigned char t_delay)
     
     simple_uart_config(RTS_PIN_NUMBER, TX_PIN_NUMBER, CTS_PIN_NUMBER, RX_PIN_NUMBER, HWFC);    
     NRF_UART0->INTENSET = UART_INTENSET_RXDRDY_Enabled << UART_INTENSET_RXDRDY_Pos;    
-    NVIC_SetPriority(UART0_IRQn, APP_IRQ_PRIORITY_LOW);
+    NVIC_SetPriority(UART0_IRQn,APP_IRQ_PRIORITY_HIGH/*APP_IRQ_PRIORITY_LOW*/);
     NVIC_EnableIRQ(UART0_IRQn);
     uart_init_check=UART_INIT_ENABLE;
 #if(ENABLE_COS)

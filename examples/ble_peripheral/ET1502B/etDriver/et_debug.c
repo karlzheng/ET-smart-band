@@ -127,6 +127,41 @@ void DbgPrintf_COS_log( const char * format, ... )
 #endif			
 	//	return ret;
 }
+void DbgPrintf_ble_log( unsigned char *str,unsigned int len)
+{
+//	int ret=0;
+#if DEBUG_BLE_EN
+     #if ENABLE_COS
+	      char tx_buf[400];
+				int i=0,offset=0;
+        unsigned char check=0;
+     
+        tx_buf[0]=0xaa;
+        tx_buf[1]=0xdd;
+        check +=0xdd;
+        tx_buf[2]=len/256;
+        tx_buf[3]=len%256;
+        check +=tx_buf[2];
+        check +=tx_buf[3];
+        offset=4;
+        for (i = 0; i < len; i++)
+        {
+            check += str[i];
+            tx_buf[offset]=str[i];
+            offset++;
+        }
+        tx_buf[offset++]=(~check)&0xff;
+        tx_buf[offset++]=0x55;
+        
+        //va_end(args);				
+				//simple_uart_putstring((const uint8_t *)tx_buf);
+				simple_uart_putstringbuff((uint8_t *)tx_buf,offset);
+     #endif
+
+#endif			
+	//	return ret;
+}
+
 void DbgPrintf_nop( const char * format, ... )
 {
 }

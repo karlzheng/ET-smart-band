@@ -129,7 +129,7 @@ void dev_init(void)
 #endif
 
 #if DEBUG_UART_EN    
-    //DbgPrintf_COS_log("et_Z8_powerCtr OK\r\n");
+    //DbgPrintf("et_Z8_powerCtr OK\r\n");
 #endif	
 #if ENABLE_ALARM
 	 MotorInit();
@@ -167,7 +167,7 @@ void dev_init(void)
 	  gSensor_init();
 #endif
 #if DEBUG_UART_EN    
-	 //DbgPrintf_COS_log("gSensor_init OK\r\n");
+	 //DbgPrintf("gSensor_init OK\r\n");
 #endif
    ETTimer1Init();
 #if ENABLE_DISPLAY

@@ -488,8 +488,11 @@ const unsigned char BLUETOOTH_CONNECT_16x16[]=
 	0x00,0x00,0x00,0x30,0x60,0xFE,0xFE,0x84,0x4C,0x38,0x10,0x00,0x00,0x00,0x00,0x00,
 	0x00,0x00,0x00,0x0C,0x06,0x3F,0x3F,0x10,0x19,0x0E,0x04,0x00,0x00,0x00,0x00,0x00
 */
-		0x30,0x40,0xFF,0xFE,0x84,0x4C,0x38,0x10,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+/*		0x30,0x40,0xFF,0xFE,0x84,0x4C,0x38,0x10,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
 		0x0C,0x02,0x7F,0x3F,0x10,0x19,0x0E,0x04,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00
+  */
+0x00,0x00,0x30,0x60,0xFF,0xFE,0x84,0x4C,0x38,0x10,0x00,0x00,0x00,0x00,0x00,0x00,
+0x00,0x00,0x0C,0x06,0x7F,0x3F,0x10,0x19,0x0E,0x04,0x00,0x00,0x00,0x00,0x00,0x00
 };
 
 
@@ -543,7 +546,7 @@ const unsigned char  display_down_key_logo[] = {
 };*/
 
 //=======================µç³Ø================================
-
+/*
 const unsigned char  BATTERY_4to4[]= //16x16
 {
 	0x00,0x00,0x00,0xFC,0x02,0xDB,0xDB,0xDB,0xDB,0xDB,0xDB,0x02,0xFC,0x00,0x00,0x00,
@@ -570,9 +573,9 @@ const unsigned char  BATTERY_0to4[]=//16x16
 {
 	0x00,0x00,0x00,0xFC,0x02,0x03,0x03,0x03,0x03,0x03,0x03,0x02,0xFC,0x00,0x00,0x00,
 	0x00,0x00,0x00,0xFF,0x80,0x80,0x80,0x80,0x80,0x80,0x80,0x80,0xFF,0x00,0x00,0x00
-};
+};*/
 //=======================µç³Ø================================
-/*
+
 const unsigned char  BATTERY_4to4[]= //16x16
 {
 	0xF8,0x08,0xE8,0xE8,0x08,0xE8,0xE8,0x08,0xE8,0xE8,0x08,0xE8,0xE8,0x08,0xF0,0xE0,
@@ -599,7 +602,7 @@ const unsigned char  BATTERY_0to4[]=//16x16
 	0xF8,0x08,0x08,0x08,0x08,0x08,0x08,0x08,0x08,0x08,0x08,0x08,0x08,0x08,0xF0,0xE0,
 	0x1F,0x10,0x10,0x10,0x10,0x10,0x10,0x10,0x10,0x10,0x10,0x10,0x10,0x10,0x0F,0x07
 };
-*/
+
 //====================== BT logo===========================
 /*
 const unsigned char  BLUETOOTH_ICON_8x8[]=//16x8
@@ -1221,7 +1224,7 @@ static void display_stepNUM(KeyBoard_Down_2_Disp_MainMenu disp_flag)
 	display_gb18030_string(pin,temp,0,0);
 }
 */
-#if 1
+#if(ENABLE_TEST_DISPLAY_SLEEP) 
 static void display_sleep_day_clock(uint8_t start_page,uint16_t temp_year,uint8_t temp_month,uint8_t temp_day,uint8_t temp_week,uint8_t temp_hour,unsigned char temp_munite,unsigned char temp_second)
 {
 
@@ -1389,7 +1392,8 @@ static void display_step_menu(void)
 			return;
 		}
 		else
-		{	
+		{
+#if(ENABLE_TEST_DISPLAY_SLEEP)     
 					switch(data_type)
 					{
 					case KeyBoard_Down_2_DISP_SLEEP_DETAILED1:
@@ -1439,7 +1443,8 @@ static void display_step_menu(void)
 					default:
 					break;
 	
-					}			
+					}	
+#endif          
 		} 
 
 	
@@ -1956,14 +1961,14 @@ static void Display_Battery(unsigned char start_clo,unsigned char start_page)
 		 lcd_power_control(LCD_OPEN);
 		 temp_battery_percent=Get_BatteryPercent();
 #if DEBUG_UART_EN 
-				//		DbgPrintf("temp_battery_percent:%d\r\n",temp_battery_percent);
+			//			DbgPrintf("temp_battery_percent:%d\r\n",temp_battery_percent);
 #endif  
 		 if(USB_detect()==1)
 		 {
 			if(Charge_full_detect()==1)
 			{
  #if DEBUG_UART_EN 
-			//			DbgPrintf("charge ing...,temp_battery_percent=%x\r\n",temp_battery_percent);
+			//		DbgPrintf("charge ing...,temp_battery_percent=%x\r\n",temp_battery_percent);
 #endif         
 				 if(temp_battery_percent<=10)
 				 {
@@ -2044,7 +2049,7 @@ static void Display_Battery(unsigned char start_clo,unsigned char start_page)
 				 }		 
 				 if(temp_battery_percent==5)//charging full
 					charging_icon=4; 
-				 if(charging_time>4200) //charging full
+				 if(charging_time>5400) //set charging full when changing morh than 2 hours
 				 {
 					charging_icon=4;
 				 }
@@ -2052,13 +2057,13 @@ static void Display_Battery(unsigned char start_clo,unsigned char start_page)
 			else
 			{
 #if DEBUG_UART_EN 
-			//			DbgPrintf("charge full\r\n");
+			//			DbgPrintf("===charge full===\r\n");
 #endif      
 				charging_icon=4;
 			}
 			 temp_battery_percent=charging_icon;
 #if DEBUG_UART_EN 
-			//					 DbgPrintf("level=%x,charging_time=%x\r\n",temp_battery_percent,charging_time);
+			//					 DbgPrintf("level=%d,charging_time=%d\r\n",temp_battery_percent,charging_time);
 #endif
 	
 		}
@@ -2490,6 +2495,7 @@ static void Display_CheckMenuMode(UINT8 key_value)
 						
 					 }
 					 break;
+#if(ENABLE_TEST_DISPLAY_SLEEP)
 					 case KeyBoard_Down_2_DISP_SLEEP_INTERVAL:
 					 {
 					 	 disp_str.LCD_disp_SlaveMenu++;	
@@ -2500,6 +2506,7 @@ static void Display_CheckMenuMode(UINT8 key_value)
 
 					 }
 					 break;
+#endif
 					 case KeyBoard_Down_2_DISP_SYS_TIME:
 					 {      
 					 	disp_str.LCD_disp_SlaveMenu++;
@@ -2550,6 +2557,7 @@ static void Display_CheckMenuMode(UINT8 key_value)
 						
 					 }
 					 break;
+#if(ENABLE_TEST_DISPLAY_SLEEP)
 					 case KeyBoard_Down_2_DISP_SLEEP_INTERVAL:
 					 {
 					 	disp_str.LCD_disp_SlaveMenu--;
@@ -2560,6 +2568,7 @@ static void Display_CheckMenuMode(UINT8 key_value)
 
 					 }					 	
 					 break;
+#endif
 					 case KeyBoard_Down_2_DISP_SYS_TIME:
 					 {     
 					 	disp_str.LCD_disp_SlaveMenu--;
@@ -2585,12 +2594,15 @@ static void Display_CheckMenuMode(UINT8 key_value)
 		   switch(disp_str.LCD_disp_MainMenu)
 		   {
 			 case KeyBoard_Down_2_DISP_STEP_NUM:
-			 case KeyBoard_Down_2_DISP_SLEEP_INTERVAL:			 		 
+#if(ENABLE_TEST_DISPLAY_SLEEP)
+			 case KeyBoard_Down_2_DISP_SLEEP_INTERVAL:	
+#endif		 		 
 			 if(disp_str.LCD_disp_SlaveMenu==KeyBoard_Down_2_DISP_Slave_NULL)
 			 {
 	           disp_str.LCD_disp_SlaveMenu=KeyBoard_Down_2_DISP_Slave_METU1;//KeyBoard_Down_2_DISP_Slave_UPDATED;
-			 }				 	
+			 }       
 			 break;
+
 			 case KeyBoard_Down_2_DISP_SYS_TIME:
 			 if(disp_str.LCD_disp_SlaveMenu==KeyBoard_Down_2_DISP_Slave_NULL)
 			 {
@@ -2913,14 +2925,44 @@ BOOL Display_idle_logo(void)
   }
   //clear_secterScreen(2,2,colume_offset,LCD_LOG_COLUME_START-colume_offset);
   
-  Display_Battery(colume_offset,2);
+  
 	 if(Protocol_check_BT_connected()==1)
 	 {
-	 display_LOGO_message(2,2,colume_offset+16,16,BLUETOOTH_CONNECT_16x16);
+     if(temp<=1)
+     {
+     temp_length=colume_offset;
+     }
+     else if(temp<=6)
+     {
+      temp_length=colume_offset+(DEFAULT_STEP_WIDTH+temp*8-32)/2;
+     }
+     else
+     {
+      temp_length=colume_offset+(DEFAULT_STEP_WIDTH+6*8-32)/2;
+     } 
+     display_LOGO_message(2,2,colume_offset,temp_length-colume_offset,BLUETOOTH_0x00);
+     colume_offset=temp_length;     
+     Display_Battery(colume_offset,2);
+     display_LOGO_message(2,2,colume_offset+16,16,BLUETOOTH_CONNECT_16x16);
 	 }
 	 else
-	 {		 
-		display_LOGO_message(2,2,colume_offset+16,16,BLUETOOTH_0x00);
+	 {		
+     if(temp<=1)
+     {
+     temp_length=colume_offset+(DEFAULT_STEP_WIDTH+temp*8-16)/2;
+     }
+     else if(temp<=6)
+     {
+      temp_length=colume_offset+(DEFAULT_STEP_WIDTH+temp*8-16)/2;
+     }
+     else
+     {
+      temp_length=colume_offset+(DEFAULT_STEP_WIDTH+6*8-16)/2;
+     }    
+     display_LOGO_message(2,2,colume_offset,temp_length-colume_offset,BLUETOOTH_0x00);
+     colume_offset=temp_length; 
+    Display_Battery(colume_offset,2);     
+		display_LOGO_message(2,2,colume_offset+16,110-colume_offset,BLUETOOTH_0x00);
 	 }
   //if(check_lastDisplayTag(DISP_TAG_IDLE_LOGO)==0)
   //{
@@ -3021,8 +3063,9 @@ void Display_Time_Menu(void)
   
 	 if(Protocol_check_BT_connected()==1)
 	 {
-	 	 display_LOGO_message(0,2,colume_offset+6,16,BLUETOOTH_CONNECT_16x16);
-	 Display_Battery(colume_offset+2,2);
+	 	 //display_LOGO_message(0,2,colume_offset+6,16,BLUETOOTH_CONNECT_16x16);
+    display_LOGO_message(0,2,colume_offset+4,16,BLUETOOTH_CONNECT_16x16);
+	  Display_Battery(colume_offset+2,2);
 
 	 }
 	 else
@@ -3239,6 +3282,7 @@ static void Display_Menu(UINT8 key_value)
              }
          }
         break;
+#if(ENABLE_TEST_DISPLAY_SLEEP)
 				case KeyBoard_Down_2_DISP_SLEEP_INTERVAL:
 				{
           switch(disp_str.LCD_disp_SlaveMenu)
@@ -3274,6 +3318,7 @@ static void Display_Menu(UINT8 key_value)
 					}
 				}					
 				break;
+#endif
         case KeyBoard_Down_2_DISP_SYS_TIME: //===slave menu 2===========
         {
           switch(disp_str.LCD_disp_SlaveMenu)

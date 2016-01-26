@@ -192,6 +192,7 @@ void system_time_tick(void * p_context)
 	gTime_sec++;
 	second_ready=1;
   ke_timer_flag_set();
+ // g_walkInfoStruct.steps +=110;
 }
 UINT8 system_time_get_second_ready(void)
 {

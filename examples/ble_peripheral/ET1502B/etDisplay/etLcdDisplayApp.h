@@ -159,11 +159,13 @@ typedef enum
   KeyBoard_Down_2_DISP_DISTANCE=1,
   KeyBoard_Down_2_DISP_ENERGY
 }KeyBoard_Down_2_Disp_STEP_SlaveMenu;
+#if(ENABLE_TEST_DISPLAY_SLEEP)
 typedef enum
 {
   KeyBoard_Down_2_DISP_SLEEP_DETAILED1=1,
 	KeyBoard_Down_2_DISP_SLEEP_DETAILED2
 }KeyBoard_Down_2_Disp_SLEEP_SlaveMenu;
+#endif
 typedef enum
 {  
   KeyBoard_Down_2_DISP_VERSION=1,

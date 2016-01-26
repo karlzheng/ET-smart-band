@@ -109,7 +109,8 @@ uint8_t USB_detect(void)
     //nrf_gpio_cfg_input(USB_DETECT_PIN, NRF_GPIO_PIN_PULLDOWN);
     if(chargeing_init==DISABLE_CHARGING_PIN_INIT)
     {
-      nrf_gpio_cfg_input(CHARGE_PIN, NRF_GPIO_PIN_NOPULL);
+      //nrf_gpio_cfg_input(CHARGE_PIN, NRF_GPIO_PIN_NOPULL);
+      nrf_gpio_cfg_input(CHARGE_PIN, NRF_GPIO_PIN_PULLUP);
       chargeing_init=ENABLE_CHARGING_PIN_INIT;
     }
    	return 1;

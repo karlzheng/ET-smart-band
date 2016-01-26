@@ -102,7 +102,7 @@ static void save_cos_data(uint8_t *str, unsigned short len)
   COS_ReSend_buff.resend_total_len=len;
 	for(temp_len=0;temp_len<len;temp_len++)
 	{
-	  if(temp_len<(FRAME_DATA_MAX+6))
+	  if(temp_len<(PACKET_COS_MAX_BYTE))
 	  {
 		COS_ReSend_buff.resend_data[temp_len]=str[temp_len];
 	  }
@@ -815,8 +815,14 @@ static void ParseRecvUartData(void)
     {
 			//send_error(uart_recv_buff.tag,CMD_STATUS_ERROR);
     send_ack(uart_recv_buff.tag,CMD_STATUS_ERROR);
+    cos_clear_buff();
+    return;
     }
 	}
+  else if (st == 1)
+  {
+   send_ack(uart_recv_buff.tag,CMD_STATUS_OVERTIMER);
+  }
 	//else if (st == 2)
 	//	return tag;
 	cos_clear_buff();

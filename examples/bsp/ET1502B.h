@@ -300,13 +300,14 @@
 
 #define USER_TIMER_COUNT					(3 + FIFO_USER_TIMER_COUNT)
 
-#define DEBUG_UART_EN 						(0)
-#define ENABLE_TEST_I2C           			(0)
-
+#define DEBUG_UART_EN 					(0)
+#define DEBUG_BLE_EN 						(0)
+#define ENABLE_TEST_I2C         (0)
+#define ENABLE_TEST_DISPLAY_SLEEP         (0)
 /* version */
 #define COS_VERSION		"1.00.00"
-#define HW_VERSION		"2.0-2.0"
-#define BT_VERSION		"1.00.09"
+#define HW_VERSION		"2.0-2.1"
+#define BT_VERSION		"1.00.21"
 
 
 #endif // PCA10028_H

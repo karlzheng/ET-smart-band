@@ -1,6 +1,7 @@
 #ifndef _UART_PROTOCOL_H_
 #define _UART_PROTOCOL_H_
 #include"ET1502B.h"
+#include "btProtocol.h"
 #if(ENABLE_COS)
 //====================
 #define POWER_ON  1
@@ -69,7 +70,7 @@ struct _uart_recv{
 
 struct _COS_resend_Str{
   unsigned short resend_total_len;
-	unsigned char resend_data[FRAME_DATA_MAX+6];
+	unsigned char resend_data[PACKET_COS_MAX_BYTE];
 };
 
 extern struct _uart_recv uart_recv_buff;
