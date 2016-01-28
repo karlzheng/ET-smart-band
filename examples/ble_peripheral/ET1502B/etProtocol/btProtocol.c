@@ -29,6 +29,7 @@
 #include "data_manger.h"
 #include "gSensor_driver.h"
 #include "gSensor.h"
+#include "app_arithmetic.h"
 
 stru_uart_recv uart_recv;
 stru_new_recv new_recv;
@@ -457,7 +458,15 @@ static void Protocol_SetClock(unsigned char * data_prt,unsigned short packet_len
    temp_time |=data_prt[5]<<16;
    temp_time |=data_prt[6]<<8;
    temp_time |=data_prt[7];
+  
+#if WALK_STEP_RECORD_ARITHMETIC
+   arithmetic_calibrate_before_rtc_change();
+#endif
    system_time_updated(temp_time);
+
+#if WALK_STEP_RECORD_ARITHMETIC
+   arithmetic_calibrate_after_rtc_change();
+#endif
    system_day_sec_init();
  
 }

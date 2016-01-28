@@ -306,7 +306,7 @@
 #define ENABLE_TEST_DISPLAY_SLEEP         (0)
 /* version */
 #define COS_VERSION		"1.00.00"
-#define HW_VERSION		"2.0-2.1"
+#define HW_VERSION		"2.0-2.2"
 #define BT_VERSION		"1.00.21"
 
 

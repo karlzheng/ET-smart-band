@@ -327,6 +327,9 @@ void Init_SleepArithmetic(void)
 #if SLEEP_RECORD_DATA_ENABLE
 	sleep_record_flash_init();
 #endif
+
+	app_sleep_clear();
+
 	app_sleep_store_item_begin_info();
 	app_sleep_gsensor_cfg_judge();
 	

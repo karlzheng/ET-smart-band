@@ -19,6 +19,9 @@ extern void app_start_step_arithmetic_cal(void);
 extern void app_stop_step_arithmetic_cal(void);
 extern unsigned char app_get_pedometer_state(void);
 
+void arithmetic_calibrate_before_rtc_change(void);
+void arithmetic_calibrate_after_rtc_change(void);
+
 #endif
 
 

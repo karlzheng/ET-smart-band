@@ -1024,6 +1024,20 @@ void sleep_data_clear(void)
 	memset((unsigned char*)(g_flash_pSleepStateItem),0,SLEEP_STATUS_SIZE * sizeof(CESleepStateStruct));
 }
 
+void app_sleep_clear(void)
+{
+	g_sleep_rocord_size = 0;
+	memset((unsigned char*)(gSleepRawItem),0,SLEEP_ROCORD_SIZE * sizeof(sleepRawDataStruct));
+
+	gNapArrayCount = 0;
+	memset((unsigned char*)(gNapArray),0,SLEEP_NAP_SIZE * sizeof(CENapDataStruct));
+
+	g_sleeep_state_index = 0;
+	memset((unsigned char*)(g_pSleepStateItem),0,SLEEP_STATUS_SIZE * sizeof(CESleepStateStruct));
+
+	sleep_data_clear();
+}
+
 unsigned int app_get_sleep_begin(void)
 {
 	return g_sleep_record.sleep_begin_time;
